@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cura - Doctor Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Exact Color Palette Extracted From Sign-In Screenshot */
+            --bg-dark: #2a1030;            /* Rich Deep Eggplant / Dark Plum Canvas */
+            --purple-surface: #1e0321;     /* Ultra-Dark Plum Surface (Left Panel Vibe) */
+            --purple-card: #2f1334;        /* Deep Purple Card Surface (Right Panel Vibe) */
+            --purple-border: #4a2152;      /* Soft Muted Plum Border */
+
+            --olive-primary: #687a38;      /* Warm Olive Green (Matches "Sign In" Button) */
+            --olive-hover: #55652d;        /* Darker Olive Hover */
+            --olive-bright: #849b45;       /* Bright Olive Highlight */
+            --olive-dark: #3a4720;         /* Slate Deep Olive Accent */
+
+            --lime-cream: #f1f58f;         /* Pale Yellowish-Lime ("C U R A" & "Sign In" Title) */
+            --light-gold: #deda98;         /* Light Cream Accent Text */
+            --text-main: #f5f2f7;          /* Soft Off-White Main Text */
+            --text-muted: #9f88a8;         /* Muted Purple Subtitle Text */
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* NAVBAR */
+        .navbar {
+            height: 70px; background-color: var(--purple-surface); display: flex;
+            align-items: center; justify-content: space-between; padding: 0 2rem;
+            border-bottom: 2px solid var(--olive-primary); box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 15px; }
+        .nav-logo { letter-spacing: 6px; font-size: 1.3rem; color: var(--lime-cream); font-weight: 300; }
+        .badge { background-color: var(--olive-dark); color: var(--lime-cream); padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; border: 1px solid var(--olive-primary); font-weight: 600; }
+        .nav-actions { display: flex; gap: 10px; }
+        .btn-nav { background: transparent; border: 1px solid var(--olive-bright); color: var(--lime-cream); padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 600; text-decoration: none; }
+        .btn-nav:hover { background: var(--olive-primary); color: #fff; }
+
+        /* CONTAINER */
+        .container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 2.5rem 2rem; display: flex; flex-direction: column; gap: 2rem; }
+
+        /* HEADER BANNER */
+        .banner { background: linear-gradient(135deg, var(--olive-dark), var(--purple-surface)); padding: 2rem; border-radius: 20px; border: 1px solid var(--olive-primary); display: flex; justify-content: space-between; align-items: center; }
+        .banner h2 { color: var(--lime-cream); font-weight: 400; margin-bottom: 6px; }
+        .banner p { color: var(--light-gold); font-size: 0.95rem; }
+        .btn-reset { background: transparent; border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
+        .btn-reset:hover { background: #ff6b6b; color: #fff; }
+
+        /* APPOINTMENTS LIST */
+        .section-header { display: flex; justify-content: space-between; align-items: center; }
+        .section-title { font-size: 1.2rem; color: var(--lime-cream); font-weight: 400; }
+
+        .appointments-grid { display: flex; flex-direction: column; gap: 1rem; }
+        .apt-card { background-color: var(--purple-surface); border: 1px solid rgba(101, 116, 58, 0.4); border-radius: 16px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .apt-card:hover { border-color: var(--olive-bright); transform: translateY(-2px); }
+
+        .patient-details h4 { font-size: 1.1rem; color: var(--lime-cream); margin-bottom: 4px; }
+        .patient-details p { font-size: 0.88rem; color: var(--light-gold); opacity: 0.85; }
+
+        .schedule-meta { display: flex; align-items: center; gap: 15px; }
+        .time-badge { background-color: var(--olive-dark); color: var(--lime-cream); border: 1px solid var(--olive-primary); padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
+
+        .status-select { background-color: var(--bg-dark); border: 1px solid var(--olive-primary); color: var(--lime-cream); padding: 6px 12px; border-radius: 8px; outline: none; font-size: 0.85rem; }
+
+        .empty-state { text-align: center; padding: 3rem; background-color: var(--purple-surface); border-radius: 16px; border: 1px dashed var(--olive-primary); color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-brand">
+        <h1 class="nav-logo">C U R A</h1>
+        <span class="badge">Doctor Portal</span>
+    </div>
+    <div class="nav-actions">
+        <a href="patient-dashboard.html" class="btn-nav"><i class="fa-solid fa-plus"></i> Book New</a>
+        <a href="dashboard.html" class="btn-nav"><i class="fa-solid fa-house"></i> Admin Router</a>
+        <button class="btn-nav" onclick="location.href='index.html'"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+</header>
+
+<div class="container">
+    <div class="banner">
+        <div>
+            <h2>Doctor Schedule & Patient Queue</h2>
+            <p>Real-time view of appointments booked through the Patient Portal.</p>
+        </div>
+        <button class="btn-reset" onclick="resetDemoData()"><i class="fa-solid fa-rotate-right"></i> Reset Demo Data</button>
+    </div>
+
+    <div class="section-header">
+        <h3 class="section-title"><i class="fa-solid fa-clipboard-list"></i> Scheduled Appointments</h3>
+    </div>
+
+    <div class="appointments-grid" id="appointmentsContainer"></div>
+</div>
+
+<script>
+    // Default Mock Data if LocalStorage is empty
+    const defaultAppointments = [
+        { id: 101, patientName: "Keya Joshi", doctorName: "Dr. Ashwini Joshi (Homoeopathy)", day: "Monday", timeSlot: "09:00 AM", status: "Confirmed" },
+        { id: 102, patientName: "Ananya Kumar", doctorName: "Dr. Priya Gupta (Psychology)", day: "Wednesday", timeSlot: "11:00 AM", status: "Completed" },
+        { id: 103, patientName: "Kartik Swami", doctorName: "Dr. Aarav Sharma (Allopathy)", day: "Friday", timeSlot: "05:00 PM", status: "Pending" }
+    ];
+
+    function loadAppointments() {
+        let appointments = JSON.parse(localStorage.getItem('cura_appointments'));
+
+        // If empty, initialize with default list
+        if (!appointments || appointments.length === 0) {
+            appointments = defaultAppointments;
+            localStorage.setItem('cura_appointments', JSON.stringify(appointments));
+        }
+
+        const container = document.getElementById('appointmentsContainer');
+
+        if (appointments.length === 0) {
+            container.innerHTML = `<div class="empty-state">No appointments booked yet.</div>`;
+            return;
+        }
+
+        container.innerHTML = appointments.map(apt => `
+                <div class="apt-card">
+                    <div class="patient-details">
+                        <h4>${apt.patientName}</h4>
+                        <p><i class="fa-solid fa-user-doctor"></i> ${apt.doctorName}</p>
+                    </div>
+                    <div class="schedule-meta">
+                        <span class="time-badge"><i class="fa-regular fa-calendar"></i> ${apt.day} | ${apt.timeSlot}</span>
+                        <select class="status-select" onchange="updateStatus(${apt.id}, this.value)">
+                            <option value="Confirmed" ${apt.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                            <option value="Completed" ${apt.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                            <option value="Pending" ${apt.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                        </select>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function updateStatus(id, newStatus) {
+        let appointments = JSON.parse(localStorage.getItem('cura_appointments')) || [];
+        appointments = appointments.map(a => a.id === id ? { ...a, status: newStatus } : a);
+        localStorage.setItem('cura_appointments', JSON.stringify(appointments));
+    }
+
+    function resetDemoData() {
+        localStorage.setItem('cura_appointments', JSON.stringify(defaultAppointments));
+        loadAppointments();
+        alert('Demo appointments reset!');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadAppointments);
+</script>
+</body>
+</html>

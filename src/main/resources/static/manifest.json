@@ -1,0 +1,8 @@
+{
+  "name": "Cura",
+  "shortname": "Cura",
+  "display": "standalone",
+  "background_color":"#b8a8fd",
+  "theme-color":"#1c393f",
+  "icons": []
+}

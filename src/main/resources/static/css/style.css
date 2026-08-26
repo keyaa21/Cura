@@ -1,0 +1,194 @@
+/* Color Palette Variables */
+:root {
+    --lime-cream: #F4FDAF;
+    --light-gold: #EFDD8D;
+    --fern: #65743A;
+    --dark-slate-grey: #394F49;
+    --midnight-violet: #210124;
+    --bg-main: #18011a;
+    --card-surface: #2b032f;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--lime-cream);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Split Card Container */
+.auth-wrapper {
+    width: 100%;
+    max-width: 850px;
+    padding: 20px;
+}
+
+.auth-card {
+    display: flex;
+    background-color: var(--card-surface);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(239, 221, 141, 0.15);
+    min-height: 440px;
+}
+
+/* Left Branding Panel */
+.brand-panel {
+    flex: 1;
+    background-color: var(--midnight-violet);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    position: relative;
+}
+
+.circle-base {
+    width: 160px;
+    height: 160px;
+    background-color: #3f0945;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.shape-wave {
+    position: absolute;
+    width: 120%;
+    height: 40px;
+    background: var(--dark-slate-grey);
+    border-radius: 20px;
+    opacity: 0.8;
+}
+
+.shape-wave.w1 { top: 25px; left: -10px; }
+.shape-wave.w2 { bottom: 30px; right: -10px; background: var(--fern); }
+
+.brand-icon {
+    font-size: 3rem;
+    color: var(--lime-cream);
+    z-index: 2;
+}
+
+.brand-logo {
+    letter-spacing: 12px;
+    font-size: 1.5rem;
+    color: var(--light-gold);
+    font-weight: 300;
+}
+
+/* Right Form Panel */
+.form-panel {
+    flex: 1.2;
+    padding: 45px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(57, 79, 73, 0.3), rgba(33, 1, 36, 0.9));
+}
+
+.form-header h2 {
+    color: var(--lime-cream);
+    font-weight: 400;
+}
+
+.form-header p {
+    color: var(--light-gold);
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+    opacity: 0.8;
+}
+
+/* Input Fields */
+.input-field {
+    margin-bottom: 18px;
+}
+
+.input-field input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(244, 253, 175, 0.4);
+    padding: 10px 5px;
+    color: var(--lime-cream);
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-field input:focus {
+    border-bottom-color: var(--lime-cream);
+}
+
+/* Buttons */
+.action-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--fern);
+    color: var(--white);
+    flex: 1;
+}
+
+.btn-primary:hover {
+    background-color: #4f5b2d;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--lime-cream);
+    color: var(--lime-cream);
+    flex: 1;
+}
+
+.btn-secondary:hover {
+    background: rgba(244, 253, 175, 0.1);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.forgot-pass {
+    color: var(--light-gold);
+    text-decoration: none;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.forgot-pass:hover {
+    opacity: 1;
+}
+
+/* Utilities */
+.hidden {
+    display: none !important;
+}

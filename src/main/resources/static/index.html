@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cura - Sign In</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* COLOR PALETTE VARIABLES */
+        :root {
+            --lime-cream: #F4FDAF;
+            --light-gold: #EFDD8D;
+            --fern: #65743A;
+            --dark-slate-grey: #394F49;
+            --midnight-violet: #210124;
+            --bg-main: #37153d;
+            --card-surface: #2b032f;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--lime-cream);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* SPLIT CARD CONTAINER */
+        .auth-wrapper {
+            width: 100%;
+            max-width: 850px;
+            padding: 20px;
+        }
+
+        .auth-card {
+            display: flex;
+            background-color: var(--card-surface);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(239, 221, 141, 0.15);
+            min-height: 440px;
+        }
+
+        /* LEFT BRANDING PANEL */
+        .brand-panel {
+            flex: 1;
+            background-color: var(--midnight-violet);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        .circle-base {
+            width: 160px;
+            height: 160px;
+            background-color: #3f0945;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .shape-wave {
+            position: absolute;
+            width: 120%;
+            height: 40px;
+            background: var(--dark-slate-grey);
+            border-radius: 20px;
+            opacity: 0.8;
+        }
+
+        .shape-wave.w1 { top: 25px; left: -10px; }
+        .shape-wave.w2 { bottom: 30px; right: -10px; background: var(--fern); }
+
+        .brand-icon {
+            font-size: 3rem;
+            color: var(--lime-cream);
+            z-index: 2;
+        }
+
+        .brand-logo {
+            letter-spacing: 12px;
+            font-size: 1.5rem;
+            color: var(--light-gold);
+            font-weight: 300;
+        }
+
+        /* RIGHT FORM PANEL */
+        .form-panel {
+            flex: 1.2;
+            padding: 45px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(57, 79, 73, 0.3), rgba(33, 1, 36, 0.9));
+        }
+
+        .form-header h2 {
+            color: var(--lime-cream);
+            font-weight: 400;
+        }
+
+        .form-header p {
+            color: var(--light-gold);
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+            opacity: 0.8;
+        }
+
+        /* INPUT FIELDS */
+        .input-field {
+            margin-bottom: 18px;
+        }
+
+        .input-field input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(244, 253, 175, 0.4);
+            padding: 10px 5px;
+            color: var(--lime-cream);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-field input:focus {
+            border-bottom-color: var(--lime-cream);
+        }
+
+        /* BUTTONS */
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--fern);
+            color: var(--white);
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background-color: #4f5b2d;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--lime-cream);
+            color: var(--lime-cream);
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(244, 253, 175, 0.1);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .forgot-pass {
+            color: var(--light-gold);
+            text-decoration: none;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .forgot-pass:hover {
+            opacity: 1;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <!-- Left Branding Panel (Shapes & Logo) -->
+        <div class="brand-panel">
+            <div class="brand-graphic">
+                <div class="circle-base">
+                </div>
+            </div>
+            <h1 class="brand-logo">C U R A</h1>
+        </div>
+
+        <!-- Right Form Panel -->
+        <div class="form-panel">
+            <div class="form-header">
+                <h2 id="form-title">Sign In</h2>
+                <p id="form-subtitle">Enter your credentials to enter the portal</p>
+            </div>
+
+            <form id="auth-form">
+                <div class="input-field hidden" id="name-field">
+                    <input type="text" id="user-name" placeholder="Full Name">
+                </div>
+
+                <div class="input-field">
+                    <input type="email" id="user-email" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-field">
+                    <input type="password" id="user-password" placeholder="Password" required>
+                </div>
+
+                <div class="action-row">
+                    <button type="submit" class="btn btn-primary" id="submit-btn">Sign In</button>
+                    <button type="button" class="btn btn-secondary" id="toggle-btn">Sign Up</button>
+                </div>
+
+                <div class="form-footer">
+                    <a href="#" class="forgot-pass">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const authForm = document.getElementById('auth-form');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const nameField = document.getElementById('name-field');
+        const formTitle = document.getElementById('form-title');
+        const formSubtitle = document.getElementById('form-subtitle');
+        const submitBtn = document.getElementById('submit-btn');
+
+        let isSignInMode = true;
+
+        // Toggle between Sign In and Sign Up modes
+        toggleBtn.addEventListener('click', () => {
+            isSignInMode = !isSignInMode;
+
+            nameField.classList.toggle('hidden', isSignInMode);
+            formTitle.textContent = isSignInMode ? 'Sign In' : 'Create Account';
+            formSubtitle.textContent = isSignInMode
+                ? 'Enter your credentials to enter the portal'
+                : 'Register as a new patient';
+            submitBtn.textContent = isSignInMode ? 'Sign In' : 'Register';
+            toggleBtn.textContent = isSignInMode ? 'Sign Up' : 'Sign In';
+        });
+
+        // Form Submission Logic
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Redirect directly to dashboard page
+            window.location.href = 'dashboard.html';
+        });
+    });
+</script>
+</body>
+</html>

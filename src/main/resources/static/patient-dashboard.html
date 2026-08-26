@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cura - Patient Booking Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Exact Color Palette Extracted From Sign-In Screenshot */
+            --bg-dark: #2a1030;            /* Rich Deep Eggplant / Dark Plum Canvas */
+            --purple-surface: #1e0321;     /* Ultra-Dark Plum Surface (Left Panel Vibe) */
+            --purple-card: #2f1334;        /* Deep Purple Card Surface (Right Panel Vibe) */
+            --purple-border: #4a2152;      /* Soft Muted Plum Border */
+
+            --olive-primary: #687a38;      /* Warm Olive Green (Matches "Sign In" Button) */
+            --olive-hover: #55652d;        /* Darker Olive Hover */
+            --olive-bright: #849b45;       /* Bright Olive Highlight */
+            --olive-dark: #3a4720;         /* Slate Deep Olive Accent */
+
+            --lime-cream: #f1f58f;         /* Pale Yellowish-Lime ("C U R A" & "Sign In" Title) */
+            --light-gold: #deda98;         /* Light Cream Accent Text */
+            --text-main: #f5f2f7;          /* Soft Off-White Main Text */
+            --text-muted: #9f88a8;         /* Muted Purple Subtitle Text */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* NAVBAR */
+        .navbar {
+            height: 70px; background-color: var(--purple-surface); display: flex;
+            align-items: center; justify-content: space-between; padding: 0 2rem;
+            border-bottom: 2px solid var(--olive-primary); box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 15px; }
+        .nav-logo { letter-spacing: 6px; font-size: 1.3rem; color: var(--lime-cream); font-weight: 300; }
+        .badge { background-color: var(--olive-dark); color: var(--lime-cream); padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; border: 1px solid var(--olive-primary); font-weight: 600; }
+        .nav-actions { display: flex; gap: 10px; }
+        .btn-nav { background: transparent; border: 1px solid var(--olive-bright); color: var(--lime-cream); padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 600; text-decoration: none; }
+        .btn-nav:hover { background: var(--olive-primary); color: #fff; }
+
+        /* CONTAINER */
+        .container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 2.5rem 2rem; display: flex; flex-direction: column; gap: 2rem; }
+
+        /* HEADER */
+        .booking-header { background: linear-gradient(135deg, var(--olive-dark), var(--purple-surface)); padding: 2rem; border-radius: 20px; border: 1px solid var(--olive-primary); }
+        .booking-header h2 { color: var(--lime-cream); font-weight: 400; margin-bottom: 6px; }
+        .booking-header p { color: var(--light-gold); font-size: 0.95rem; }
+
+        /* FORM CONTROLS */
+        .selection-panel { background-color: var(--purple-surface); padding: 1.8rem; border-radius: 16px; border: 1px solid rgba(101, 116, 58, 0.4); display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-group label { font-size: 0.88rem; color: var(--light-gold); font-weight: 600; }
+        .input-group input, .input-group select { background-color: var(--bg-dark); border: 1px solid var(--olive-primary); padding: 12px; border-radius: 8px; color: var(--lime-cream); outline: none; font-size: 0.9rem; }
+
+        /* WEEKLY CALENDAR */
+        .calendar-section { background-color: var(--purple-surface); padding: 1.8rem; border-radius: 16px; border: 1px solid rgba(101, 116, 58, 0.4); }
+        .section-title { font-size: 1.1rem; color: var(--lime-cream); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 10px; }
+
+        .days-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 2rem; }
+        .day-card { background-color: var(--bg-dark); border: 1px solid var(--purple-border); border-radius: 12px; padding: 14px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .day-card:hover { border-color: var(--olive-bright); }
+        .day-card.selected { background-color: var(--olive-primary); border-color: var(--lime-cream); }
+        .day-name { font-size: 0.9rem; font-weight: 700; color: var(--lime-cream); }
+        .day-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* TIME SLOTS */
+        .slot-group-title { font-size: 0.9rem; color: var(--light-gold); margin: 1rem 0 0.8rem; font-weight: 600; }
+        .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+        .time-slot { background-color: var(--bg-dark); border: 1px solid var(--purple-border); padding: 10px; border-radius: 8px; text-align: center; font-size: 0.85rem; color: var(--lime-cream); cursor: pointer; transition: 0.2s; }
+        .time-slot:hover { border-color: var(--olive-bright); }
+        .time-slot.selected { background-color: var(--olive-bright); color: #120514; font-weight: 700; border-color: var(--lime-cream); }
+        .time-slot.booked { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; border-color: transparent; }
+
+        /* SUBMIT BUTTON */
+        .btn-book { background-color: var(--olive-primary); color: #fff; border: 1px solid var(--olive-bright); padding: 16px; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 1.5rem; }
+        .btn-book:hover { background-color: var(--olive-hover); color: var(--lime-cream); border-color: var(--lime-cream); }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-brand">
+        <h1 class="nav-logo">C U R A</h1>
+        <span class="badge">Patient Portal</span>
+    </div>
+    <div class="nav-actions">
+        <a href="dashboard.html" class="btn-nav"><i class="fa-solid fa-house"></i> Admin Router</a>
+        <button class="btn-nav" onclick="location.href='index.html'"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+</header>
+
+<div class="container">
+    <div class="booking-header">
+        <h2>Book an Appointment</h2>
+        <p>Select your physician, pick an available morning or evening slot, and confirm your schedule.</p>
+    </div>
+
+    <!-- DETAILS FORM -->
+    <div class="selection-panel">
+        <div class="input-group">
+            <label>Patient Full Name</label>
+            <input type="text" id="patientName" placeholder="e.g. Keya Joshi" value="Keya Joshi" required>
+        </div>
+        <div class="input-group">
+            <label>Select your Doctor</label>
+            <select id="doctorSelect">
+                <option value="Dr. Aarav Sharma (Allopathy)">Dr. Aarav Sharma (Allopathy)</option>
+                <option value="Dr. Priya Gupta (Psychology)">Dr. Priya Gupta (Psychology)</option>
+                <option value="Dr. Ashwini Joshi (Homoeopathy)">Dr. Ashwini Joshi (Homoeopathy)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- WEEKLY CALENDAR & SLOTS -->
+    <div class="calendar-section">
+        <h3 class="section-title"><i class="fa-regular fa-calendar-check"></i> Select Day (Monday - Saturday)</h3>
+
+        <div class="days-grid" id="daysGrid"></div>
+
+        <div class="slot-group-title"><i class="fa-regular fa-sun"></i> Morning Slots (09:00 AM – 01:00 PM)</div>
+        <div class="slots-grid" id="morningSlots"></div>
+
+        <div class="slot-group-title"><i class="fa-regular fa-moon"></i> Evening Slots (05:00 PM – 08:00 PM)</div>
+        <div class="slots-grid" id="eveningSlots"></div>
+
+        <button class="btn-book" onclick="confirmBooking()">Confirm & Book Appointment</button>
+    </div>
+</div>
+
+<script>
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const morningTimes = ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM'];
+    const eveningTimes = ['05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM'];
+
+    let selectedDay = 'Monday';
+    let selectedTime = null;
+
+    function initCalendar() {
+        const daysGrid = document.getElementById('daysGrid');
+        daysGrid.innerHTML = days.map(day => `
+                <div class="day-card ${day === selectedDay ? 'selected' : ''}" onclick="selectDay('${day}')">
+                    <div class="day-name">${day}</div>
+                    <div class="day-sub">Available</div>
+                </div>
+            `).join('');
+
+        renderSlots();
+    }
+
+    function selectDay(day) {
+        selectedDay = day;
+        selectedTime = null;
+        initCalendar();
+    }
+
+    function renderSlots() {
+        const morningContainer = document.getElementById('morningSlots');
+        const eveningContainer = document.getElementById('eveningSlots');
+
+        morningContainer.innerHTML = morningTimes.map(time => `
+                <div class="time-slot ${selectedTime === time ? 'selected' : ''}" onclick="selectTime('${time}')">${time}</div>
+            `).join('');
+
+        eveningContainer.innerHTML = eveningTimes.map(time => `
+                <div class="time-slot ${selectedTime === time ? 'selected' : ''}" onclick="selectTime('${time}')">${time}</div>
+            `).join('');
+    }
+
+    function selectTime(time) {
+        selectedTime = time;
+        renderSlots();
+    }
+
+    function confirmBooking() {
+        const name = document.getElementById('patientName').value.trim();
+        const doctor = document.getElementById('doctorSelect').value;
+
+        if (!name) { alert('Please enter patient name'); return; }
+        if (!selectedTime) { alert('Please select a time slot'); return; }
+
+        const newAppointment = {
+            id: Date.now(),
+            patientName: name,
+            doctorName: doctor,
+            day: selectedDay,
+            timeSlot: selectedTime,
+            status: 'Confirmed'
+        };
+
+        // Get existing or init empty array
+        let appointments = JSON.parse(localStorage.getItem('cura_appointments')) || [];
+        appointments.push(newAppointment);
+        localStorage.setItem('cura_appointments', JSON.stringify(appointments));
+
+        alert(`Appointment booked successfully for ${name} on ${selectedDay} at ${selectedTime}!`);
+        window.location.href = 'doctor-dashboard.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', initCalendar);
+</script>
+</body>
+</html>
