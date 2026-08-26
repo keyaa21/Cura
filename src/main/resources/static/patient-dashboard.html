@@ -3,203 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cura - Patient Booking Portal</title>
+    <meta name="theme-color" content="#4A7A57">
+    <title>Cura — Patient Booking &amp; Triage Quiz</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            /* Exact Color Palette Extracted From Sign-In Screenshot */
-            --bg-dark: #2a1030;            /* Rich Deep Eggplant / Dark Plum Canvas */
-            --purple-surface: #1e0321;     /* Ultra-Dark Plum Surface (Left Panel Vibe) */
-            --purple-card: #2f1334;        /* Deep Purple Card Surface (Right Panel Vibe) */
-            --purple-border: #4a2152;      /* Soft Muted Plum Border */
-
-            --olive-primary: #687a38;      /* Warm Olive Green (Matches "Sign In" Button) */
-            --olive-hover: #55652d;        /* Darker Olive Hover */
-            --olive-bright: #849b45;       /* Bright Olive Highlight */
-            --olive-dark: #3a4720;         /* Slate Deep Olive Accent */
-
-            --lime-cream: #f1f58f;         /* Pale Yellowish-Lime ("C U R A" & "Sign In" Title) */
-            --light-gold: #deda98;         /* Light Cream Accent Text */
-            --text-main: #f5f2f7;          /* Soft Off-White Main Text */
-            --text-muted: #9f88a8;         /* Muted Purple Subtitle Text */
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-
-        /* NAVBAR */
-        .navbar {
-            height: 70px; background-color: var(--purple-surface); display: flex;
-            align-items: center; justify-content: space-between; padding: 0 2rem;
-            border-bottom: 2px solid var(--olive-primary); box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
-        .nav-brand { display: flex; align-items: center; gap: 15px; }
-        .nav-logo { letter-spacing: 6px; font-size: 1.3rem; color: var(--lime-cream); font-weight: 300; }
-        .badge { background-color: var(--olive-dark); color: var(--lime-cream); padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; border: 1px solid var(--olive-primary); font-weight: 600; }
-        .nav-actions { display: flex; gap: 10px; }
-        .btn-nav { background: transparent; border: 1px solid var(--olive-bright); color: var(--lime-cream); padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 600; text-decoration: none; }
-        .btn-nav:hover { background: var(--olive-primary); color: #fff; }
-
-        /* CONTAINER */
-        .container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 2.5rem 2rem; display: flex; flex-direction: column; gap: 2rem; }
-
-        /* HEADER */
-        .booking-header { background: linear-gradient(135deg, var(--olive-dark), var(--purple-surface)); padding: 2rem; border-radius: 20px; border: 1px solid var(--olive-primary); }
-        .booking-header h2 { color: var(--lime-cream); font-weight: 400; margin-bottom: 6px; }
-        .booking-header p { color: var(--light-gold); font-size: 0.95rem; }
-
-        /* FORM CONTROLS */
-        .selection-panel { background-color: var(--purple-surface); padding: 1.8rem; border-radius: 16px; border: 1px solid rgba(101, 116, 58, 0.4); display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        .input-group label { font-size: 0.88rem; color: var(--light-gold); font-weight: 600; }
-        .input-group input, .input-group select { background-color: var(--bg-dark); border: 1px solid var(--olive-primary); padding: 12px; border-radius: 8px; color: var(--lime-cream); outline: none; font-size: 0.9rem; }
-
-        /* WEEKLY CALENDAR */
-        .calendar-section { background-color: var(--purple-surface); padding: 1.8rem; border-radius: 16px; border: 1px solid rgba(101, 116, 58, 0.4); }
-        .section-title { font-size: 1.1rem; color: var(--lime-cream); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 10px; }
-
-        .days-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 2rem; }
-        .day-card { background-color: var(--bg-dark); border: 1px solid var(--purple-border); border-radius: 12px; padding: 14px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .day-card:hover { border-color: var(--olive-bright); }
-        .day-card.selected { background-color: var(--olive-primary); border-color: var(--lime-cream); }
-        .day-name { font-size: 0.9rem; font-weight: 700; color: var(--lime-cream); }
-        .day-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
-
-        /* TIME SLOTS */
-        .slot-group-title { font-size: 0.9rem; color: var(--light-gold); margin: 1rem 0 0.8rem; font-weight: 600; }
-        .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
-        .time-slot { background-color: var(--bg-dark); border: 1px solid var(--purple-border); padding: 10px; border-radius: 8px; text-align: center; font-size: 0.85rem; color: var(--lime-cream); cursor: pointer; transition: 0.2s; }
-        .time-slot:hover { border-color: var(--olive-bright); }
-        .time-slot.selected { background-color: var(--olive-bright); color: #120514; font-weight: 700; border-color: var(--lime-cream); }
-        .time-slot.booked { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; border-color: transparent; }
-
-        /* SUBMIT BUTTON */
-        .btn-book { background-color: var(--olive-primary); color: #fff; border: 1px solid var(--olive-bright); padding: 16px; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 1.5rem; }
-        .btn-book:hover { background-color: var(--olive-hover); color: var(--lime-cream); border-color: var(--lime-cream); }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<!-- TOP NAVBAR -->
 <header class="navbar">
     <div class="nav-brand">
-        <h1 class="nav-logo">C U R A</h1>
-        <span class="badge">Patient Portal</span>
+        <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
+        <h1 class="nav-logo">CURA<span>.</span></h1>
+        <span class="nav-badge">Patient Portal</span>
     </div>
     <div class="nav-actions">
-        <a href="dashboard.html" class="btn-nav"><i class="fa-solid fa-house"></i> Admin Router</a>
-        <button class="btn-nav" onclick="location.href='index.html'"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        <a href="doctor-dashboard.html" class="btn-nav-link"><i class="fa-solid fa-user-doctor"></i> <span>Doctor View</span></a>
+        <a href="assistant-dashboard.html" class="btn-nav-link"><i class="fa-solid fa-user-nurse"></i> <span>Assistant View</span></a>
+        <a href="dashboard.html" class="btn-nav-link"><i class="fa-solid fa-house"></i> <span>Admin Hub</span></a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="btn-logout" onclick="CuraAuth.logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
     </div>
 </header>
 
-<div class="container">
-    <div class="booking-header">
-        <h2>Book an Appointment</h2>
-        <p>Select your physician, pick an available morning or evening slot, and confirm your schedule.</p>
-    </div>
+<!-- MAIN APP CONTAINER -->
+<main class="main-container">
 
-    <!-- DETAILS FORM -->
-    <div class="selection-panel">
-        <div class="input-group">
-            <label>Patient Full Name</label>
-            <input type="text" id="patientName" placeholder="e.g. Keya Joshi" value="Keya Joshi" required>
+    <!-- HERO HEADER -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h2>Book Your Clinical Consultation</h2>
+            <p>Complete the 3-question intake quiz so our clinic can allocate sufficient consultation time with your doctor.</p>
         </div>
-        <div class="input-group">
-            <label>Select your Doctor</label>
-            <select id="doctorSelect">
-                <option value="Dr. Aarav Sharma (Allopathy)">Dr. Aarav Sharma (Allopathy)</option>
-                <option value="Dr. Priya Gupta (Psychology)">Dr. Priya Gupta (Psychology)</option>
-                <option value="Dr. Ashwini Joshi (Homoeopathy)">Dr. Ashwini Joshi (Homoeopathy)</option>
-            </select>
-        </div>
-    </div>
+    </section>
 
-    <!-- WEEKLY CALENDAR & SLOTS -->
-    <div class="calendar-section">
-        <h3 class="section-title"><i class="fa-regular fa-calendar-check"></i> Select Day (Monday - Saturday)</h3>
+    <!-- BOOKING FORM -->
+    <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
 
-        <div class="days-grid" id="daysGrid"></div>
-
-        <div class="slot-group-title"><i class="fa-regular fa-sun"></i> Morning Slots (09:00 AM – 01:00 PM)</div>
-        <div class="slots-grid" id="morningSlots"></div>
-
-        <div class="slot-group-title"><i class="fa-regular fa-moon"></i> Evening Slots (05:00 PM – 08:00 PM)</div>
-        <div class="slots-grid" id="eveningSlots"></div>
-
-        <button class="btn-book" onclick="confirmBooking()">Confirm & Book Appointment</button>
-    </div>
-</div>
-
-<script>
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const morningTimes = ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM'];
-    const eveningTimes = ['05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM'];
-
-    let selectedDay = 'Monday';
-    let selectedTime = null;
-
-    function initCalendar() {
-        const daysGrid = document.getElementById('daysGrid');
-        daysGrid.innerHTML = days.map(day => `
-                <div class="day-card ${day === selectedDay ? 'selected' : ''}" onclick="selectDay('${day}')">
-                    <div class="day-name">${day}</div>
-                    <div class="day-sub">Available</div>
+        <!-- 1. PATIENT BASIC DETAILS -->
+        <section class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-user"></i> Patient Contact Information</h3>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
+                <div class="form-group">
+                    <label for="patientName"><i class="fa-regular fa-user"></i> Full Name *</label>
+                    <input type="text" id="patientName" class="form-control" placeholder="e.g. Keya Joshi" value="Keya Joshi" required>
                 </div>
-            `).join('');
+                <div class="form-group">
+                    <label for="patientPhone"><i class="fa-solid fa-phone"></i> Mobile Phone</label>
+                    <input type="tel" id="patientPhone" class="form-control" placeholder="+91 98230 12345" value="+91 98230 67890">
+                </div>
+                <div class="form-group">
+                    <label for="doctorSelect"><i class="fa-solid fa-user-doctor"></i> Select Physician *</label>
+                    <select id="doctorSelect" class="form-select" required>
+                        <option value="Dr. Ashwini Joshi" data-spec="Homoeopathy">Dr. Ashwini Joshi (Homoeopathy Specialist)</option>
+                        <option value="Dr. Aarav Sharma" data-spec="Allopathy">Dr. Aarav Sharma (Allopathy &amp; General Medicine)</option>
+                        <option value="Dr. Priya Gupta" data-spec="Psychology">Dr. Priya Gupta (Psychology &amp; Mental Wellness)</option>
+                    </select>
+                </div>
+            </div>
+        </section>
 
-        renderSlots();
-    }
+        <!-- 2. THE 3-QUESTION TRIAGE QUIZ (REQUESTED BY USER) -->
+        <section class="quiz-section">
+            <div class="quiz-header">
+                <div class="quiz-step-badge">1</div>
+                <div>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Intake &amp; Duration Quiz</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">Your responses determine your consultation time slot length.</p>
+                </div>
+            </div>
 
-    function selectDay(day) {
-        selectedDay = day;
-        selectedTime = null;
-        initCalendar();
-    }
+            <!-- Quiz Question 1: Health Issue Type -->
+            <div class="quiz-question-box">
+                <div class="quiz-question-title">
+                    <i class="fa-solid fa-stethoscope" style="color: var(--primary);"></i>
+                    <span>Question 1: What type of health issue are you experiencing?</span>
+                </div>
+                <div class="quiz-options-grid">
+                    <div class="quiz-option-card health-issue-option selected" data-value="ACUTE" onclick="setHealthIssue('ACUTE')">
+                        <div class="quiz-option-info">
+                            <h4><i class="fa-solid fa-bolt" style="color: var(--status-ongoing);"></i> Acute Issue</h4>
+                            <p>Recent/sudden onset (e.g. fever, cold, acute throat infection, headache)</p>
+                        </div>
+                    </div>
 
-    function renderSlots() {
-        const morningContainer = document.getElementById('morningSlots');
-        const eveningContainer = document.getElementById('eveningSlots');
+                    <div class="quiz-option-card health-issue-option" data-value="CHRONIC" onclick="setHealthIssue('CHRONIC')">
+                        <div class="quiz-option-info">
+                            <h4><i class="fa-solid fa-heart-pulse" style="color: var(--primary);"></i> Chronic Condition</h4>
+                            <p>Long-standing illness (e.g. migraine, allergies, skin, joint pain, asthma)</p>
+                        </div>
+                    </div>
 
-        morningContainer.innerHTML = morningTimes.map(time => `
-                <div class="time-slot ${selectedTime === time ? 'selected' : ''}" onclick="selectTime('${time}')">${time}</div>
-            `).join('');
+                    <div class="quiz-option-card health-issue-option" data-value="PSYCHOLOGICAL" onclick="setHealthIssue('PSYCHOLOGICAL')">
+                        <div class="quiz-option-info">
+                            <h4><i class="fa-solid fa-brain" style="color: var(--accent-peach);"></i> Psychological / Wellness</h4>
+                            <p>Mental wellness, stress, anxiety, counseling, emotional patterns</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        eveningContainer.innerHTML = eveningTimes.map(time => `
-                <div class="time-slot ${selectedTime === time ? 'selected' : ''}" onclick="selectTime('${time}')">${time}</div>
-            `).join('');
-    }
+            <!-- Quiz Question 2: First-Time Appointment -->
+            <div class="quiz-question-box">
+                <div class="quiz-question-title">
+                    <i class="fa-solid fa-clipboard-question" style="color: var(--accent-peach);"></i>
+                    <span>Question 2: Is this your first time visiting Cura Clinic?</span>
+                </div>
+                <div class="quiz-options-grid">
+                    <div class="quiz-option-card first-time-option selected" data-value="true" onclick="setFirstTime(true)">
+                        <div class="quiz-option-info">
+                            <h4><i class="fa-solid fa-circle-check" style="color: var(--primary);"></i> Yes — First Time Patient</h4>
+                            <p>Requires in-depth constitutional case taking &amp; medical history (Allocates <strong>1 Full Hour</strong>)</p>
+                        </div>
+                    </div>
 
-    function selectTime(time) {
-        selectedTime = time;
-        renderSlots();
-    }
+                    <div class="quiz-option-card first-time-option" data-value="false" onclick="setFirstTime(false)">
+                        <div class="quiz-option-info">
+                            <h4><i class="fa-solid fa-rotate" style="color: var(--sage-500);"></i> No — Returning Patient</h4>
+                            <p>Follow-up visit or routine medicine check (Allocates <strong>30-50 mins</strong>)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    function confirmBooking() {
-        const name = document.getElementById('patientName').value.trim();
-        const doctor = document.getElementById('doctorSelect').value;
+            <!-- Quiz Question 3: Group Size -->
+            <div class="quiz-question-box" style="border-bottom: none; margin-bottom: 0.5rem; padding-bottom: 0;">
+                <div class="quiz-question-title">
+                    <i class="fa-solid fa-people-group" style="color: var(--primary);"></i>
+                    <span>Question 3: How many people will be attending this appointment?</span>
+                </div>
+                <div class="quiz-options-grid">
+                    <div class="quiz-option-card group-size-option selected" data-value="1" onclick="setGroupSize(1)">
+                        <div class="quiz-option-info">
+                            <h4>1 Person (Individual)</h4>
+                            <p>Standard single patient slot</p>
+                        </div>
+                    </div>
 
-        if (!name) { alert('Please enter patient name'); return; }
-        if (!selectedTime) { alert('Please select a time slot'); return; }
+                    <div class="quiz-option-card group-size-option" data-value="2" onclick="setGroupSize(2)">
+                        <div class="quiz-option-info">
+                            <h4>2 People (Family / Couple)</h4>
+                            <p>+15 minutes added to slot</p>
+                        </div>
+                    </div>
 
-        const newAppointment = {
-            id: Date.now(),
-            patientName: name,
-            doctorName: doctor,
-            day: selectedDay,
-            timeSlot: selectedTime,
-            status: 'Confirmed'
-        };
+                    <div class="quiz-option-card group-size-option" data-value="3" onclick="setGroupSize(3)">
+                        <div class="quiz-option-info">
+                            <h4>3+ People (Family Group)</h4>
+                            <p>+30 minutes added to slot</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        // Get existing or init empty array
-        let appointments = JSON.parse(localStorage.getItem('cura_appointments')) || [];
-        appointments.push(newAppointment);
-        localStorage.setItem('cura_appointments', JSON.stringify(appointments));
+            <!-- Dynamic Duration Result Badge -->
+            <div style="margin-top: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <div id="allocatedDurationBadge" class="duration-summary-pill">
+                    <i class="fa-solid fa-stopwatch"></i>
+                    <span><strong>60 mins</strong> allocated (Comprehensive 1st-Time Intake)</span>
+                </div>
+            </div>
+        </section>
 
-        alert(`Appointment booked successfully for ${name} on ${selectedDay} at ${selectedTime}!`);
-        window.location.href = 'doctor-dashboard.html';
-    }
+        <!-- 3. SYMPTOMS & NOTES -->
+        <section class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa-regular fa-comment-dots"></i> Brief Symptoms or Concerns</h3>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <textarea id="symptomsDesc" class="form-textarea" placeholder="Describe primary symptoms, duration, or any questions for the doctor..."></textarea>
+            </div>
+        </section>
 
-    document.addEventListener('DOMContentLoaded', initCalendar);
-</script>
+        <!-- 4. SCHEDULE PICKER -->
+        <section class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa-regular fa-calendar-days"></i> Select Consultation Day &amp; Slot</h3>
+            </div>
+
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                <strong>Step A:</strong> Pick a day (Monday - Saturday)
+            </p>
+            <div class="calendar-days-grid" id="daysGrid"></div>
+
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 1.25rem 0 0.8rem;">
+                <strong>Step B:</strong> Morning Sessions (09:00 AM – 01:00 PM)
+            </p>
+            <div class="slots-grid" id="morningSlots"></div>
+
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 1.25rem 0 0.8rem;">
+                <strong>Step C:</strong> Evening Sessions (05:00 PM – 08:00 PM)
+            </p>
+            <div class="slots-grid" id="eveningSlots"></div>
+
+            <button type="submit" class="btn btn-peach btn-lg btn-block" style="margin-top: 1rem;">
+                <i class="fa-solid fa-check"></i> Confirm &amp; Schedule Appointment
+            </button>
+        </section>
+
+    </form>
+
+    <!-- 5. PATIENT APPOINTMENT HISTORY -->
+    <section class="card" id="patientHistorySection">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Your Booked Appointments &amp; Prescriptions</h3>
+        </div>
+        <div id="patientAppointmentsList"></div>
+    </section>
+
+</main>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/patient.js"></script>
 </body>
 </html>

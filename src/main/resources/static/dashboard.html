@@ -3,354 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cura - Admin Portal Router</title>
-    <!-- FontAwesome Icons -->
+    <meta name="theme-color" content="#4A7A57">
+    <title>Cura — Clinic Admin &amp; Router</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        /* BALANCED OLIVE GREEN & DEEP PURPLE PALETTE */
-        :root {
-            /* Exact Color Palette Extracted From Sign-In Screenshot */
-            --bg-dark: #2a1030;            /* Rich Deep Eggplant / Dark Plum Canvas */
-            --purple-surface: #1e0321;     /* Ultra-Dark Plum Surface (Left Panel Vibe) */
-            --purple-card: #2f1334;        /* Deep Purple Card Surface (Right Panel Vibe) */
-            --purple-border: #4a2152;      /* Soft Muted Plum Border */
-
-            --olive-primary: #687a38;      /* Warm Olive Green (Matches "Sign In" Button) */
-            --olive-hover: #55652d;        /* Darker Olive Hover */
-            --olive-bright: #849b45;       /* Bright Olive Highlight */
-            --olive-dark: #3a4720;         /* Slate Deep Olive Accent */
-
-            --lime-cream: #f1f58f;         /* Pale Yellowish-Lime ("C U R A" & "Sign In" Title) */
-            --light-gold: #deda98;         /* Light Cream Accent Text */
-            --text-main: #f5f2f7;          /* Soft Off-White Main Text */
-            --text-muted: #9f88a8;         /* Muted Purple Subtitle Text */
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* NAVBAR */
-        .navbar {
-            height: 70px;
-            background-color: var(--purple-surface);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 2rem;
-            border-bottom: 2px solid var(--olive-primary);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .nav-logo {
-            letter-spacing: 6px;
-            font-size: 1.3rem;
-            color: var(--lime-cream);
-            font-weight: 300;
-        }
-
-        .admin-badge {
-            background-color: var(--olive-dark);
-            color: var(--lime-cream);
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            border: 1px solid var(--olive-primary);
-            font-weight: 600;
-        }
-
-        .logout-btn {
-            background: transparent;
-            border: 1px solid var(--olive-bright);
-            color: var(--lime-cream);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 600;
-        }
-
-        .logout-btn:hover {
-            background: var(--olive-primary);
-            color: #ffffff;
-        }
-
-        /* MAIN CONTAINER */
-        .admin-container {
-            flex: 1;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-        }
-
-        /* WELCOME BANNER WITH HEAVY OLIVE ACCENT */
-        .welcome-card {
-            background: linear-gradient(135deg, var(--olive-dark) 0%, var(--purple-surface) 100%);
-            border-radius: 20px;
-            padding: 2.5rem;
-            border: 1px solid var(--olive-primary);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .welcome-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--olive-primary), var(--lime-cream), var(--olive-bright));
-        }
-
-        .welcome-card h2 {
-            font-size: 2rem;
-            color: var(--lime-cream);
-            margin-bottom: 8px;
-            font-weight: 400;
-        }
-
-        .welcome-card p {
-            color: var(--light-gold);
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            color: var(--lime-cream);
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* 3-PORTAL GRID */
-        .portal-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
-        .portal-card {
-            background-color: var(--purple-surface);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid rgba(101, 116, 58, 0.4);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            min-height: 330px;
-        }
-
-        .portal-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--olive-primary);
-            transition: background 0.3s;
-        }
-
-        .portal-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--olive-bright);
-            box-shadow: 0 15px 35px rgba(101, 116, 58, 0.25);
-        }
-
-        .portal-card:hover::before {
-            background: var(--lime-cream);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 1.2rem;
-        }
-
-        .icon-box {
-            width: 55px;
-            height: 55px;
-            background-color: var(--olive-primary);
-            color: var(--lime-cream);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .card-title h3 {
-            color: var(--lime-cream);
-            font-size: 1.25rem;
-            font-weight: 500;
-        }
-
-        .card-title span {
-            font-size: 0.75rem;
-            color: var(--light-gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .card-desc {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-
-        .btn-launch {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            background-color: var(--olive-primary);
-            color: #ffffff;
-            text-decoration: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-            border: 1px solid var(--olive-bright);
-            cursor: pointer;
-        }
-
-        .btn-launch:hover {
-            background-color: var(--olive-hover);
-            color: var(--lime-cream);
-            border-color: var(--lime-cream);
-        }
-
-        /* AUTOFILL PREVENT */
-        input:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0 30px var(--purple-surface) inset !important;
-            -webkit-text-fill-color: var(--text-main) !important;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- TOP NAVBAR -->
 <header class="navbar">
     <div class="nav-brand">
-        <h1 class="nav-logo">C U R A</h1>
-        <span class="admin-badge">Admin Router</span>
+        <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
+        <h1 class="nav-logo">CURA<span>.</span></h1>
+        <span class="nav-badge">Admin Dashboard</span>
     </div>
-    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    <div class="nav-actions">
+        <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="btn-logout" onclick="CuraAuth.logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+    </div>
 </header>
 
-<!-- MAIN CONTAINER -->
-<div class="admin-container">
+<!-- MAIN APP CONTAINER -->
+<main class="main-container">
 
-    <!-- WELCOME BANNER -->
-    <div class="welcome-card">
-        <h2>Portals</h2>
-        <p>Select a portal below to launch into the corresponding user environment.</p>
-    </div>
+    <!-- HERO BANNER -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h2>Practice Overview &amp; Portal Hub</h2>
+            <p>Monitor patient queues, doctor schedules, follow-up reminders, and navigate into clinical workstations.</p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="patient-dashboard.html" class="btn btn-peach">
+                <i class="fa-solid fa-plus"></i> New Appointment
+            </a>
+        </div>
+    </section>
 
-    <h3 class="section-title"><i class="fa-solid fa-compass"></i> Select Target Portal</h3>
-
-    <!-- 3-PORTAL GRID -->
-    <div class="portal-grid">
-
-        <!-- Patient Portal Card -->
-        <div class="portal-card">
-            <div>
-                <div class="card-header">
-                    <div class="icon-box"><i class="fa-solid fa-hospital-user"></i></div>
-                    <div class="card-title">
-                        <h3>Patient Portal</h3>
-                        <span>Client Access</span>
-                    </div>
-                </div>
-                <p class="card-desc">Direct access for patients to view medical records, request follow-up appointments, and manage prescriptions.</p>
-            </div>
-            <button class="btn-launch" onclick="navigateTo('patient-dashboard.html')">
-                Open Patient Portal <i class="fa-solid fa-arrow-right"></i>
-            </button>
+    <!-- LIVE CLINIC ANALYTICS -->
+    <section>
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-chart-pie"></i> Clinic Real-Time Analytics</h3>
+            <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fa-solid fa-rotate"></i> Auto-synced</span>
         </div>
 
-        <!-- Doctor Portal Card -->
-        <div class="portal-card">
-            <div>
-                <div class="card-header">
-                    <div class="icon-box"><i class="fa-solid fa-user-doctor"></i></div>
-                    <div class="card-title">
-                        <h3>Doctor Portal</h3>
-                        <span>Clinical Operations</span>
-                    </div>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-icon green"><i class="fa-solid fa-calendar-check"></i></div>
+                <div class="stat-info">
+                    <h3 id="statTotalAppointments">3</h3>
+                    <p>Total Appointments</p>
                 </div>
-                <p class="card-desc">Comprehensive dashboard for physicians to review appointment queues, update patient notes, and set follow-ups.</p>
             </div>
-            <button class="btn-launch" onclick="navigateTo('doctor-dashboard.html')">
-                Open Doctor Portal <i class="fa-solid fa-arrow-right"></i>
-            </button>
+
+            <div class="stat-box">
+                <div class="stat-icon peach"><i class="fa-solid fa-user-nurse"></i></div>
+                <div class="stat-info">
+                    <h3 id="statPendingTriage">1</h3>
+                    <p>Pending Triage</p>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-icon blue"><i class="fa-solid fa-stethoscope"></i></div>
+                <div class="stat-info">
+                    <h3 id="statInConsultation">1</h3>
+                    <p>In Consultation</p>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-icon yellow"><i class="fa-solid fa-bell"></i></div>
+                <div class="stat-info">
+                    <h3 id="statFollowUpsDue">1</h3>
+                    <p>Follow-Ups Due</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3-PORTAL WORKSTATION LAUNCHER -->
+    <section>
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-compass"></i> Select Workstation</h3>
         </div>
 
-        <!-- Assistant Portal Card -->
-        <div class="portal-card">
-            <div>
-                <div class="card-header">
-                    <div class="icon-box"><i class="fa-solid fa-user-nurse"></i></div>
-                    <div class="card-title">
-                        <h3>Assistant Portal</h3>
-                        <span>Clinical Support</span>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            
+            <!-- Patient Portal Card -->
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--accent-peach);">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+                        <div class="stat-icon peach"><i class="fa-solid fa-hospital-user"></i></div>
+                        <div>
+                            <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Patient Portal</h4>
+                            <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--accent-peach); font-weight: 700; letter-spacing: 0.5px;">Client Booking &amp; Quiz</span>
+                        </div>
                     </div>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
+                        Patients can solve the 3-question triage quiz, receive auto-allocated appointment durations (1 hr for 1st-time), and select doctor time slots.
+                    </p>
                 </div>
-                <p class="card-desc">Administrative tool for clinical assistants and nurses to check in patients, manage triage, and coordinate care schedules.</p>
+                <a href="patient-dashboard.html" class="btn btn-peach btn-block">
+                    Open Patient Portal <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
-            <button class="btn-launch" onclick="navigateTo('assistant-dashboard.html')">
-                Open Assistant Portal <i class="fa-solid fa-arrow-right"></i>
-            </button>
+
+            <!-- Doctor Portal Card -->
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--primary);">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+                        <div class="stat-icon green"><i class="fa-solid fa-user-doctor"></i></div>
+                        <div>
+                            <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Doctor Portal</h4>
+                            <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--primary); font-weight: 700; letter-spacing: 0.5px;">Clinical Consultations</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
+                        Physicians (Homoeopathy, Allopathy, Psychology) review patient triage vitals, write prescription notes, and schedule 15/30-day follow-ups.
+                    </p>
+                </div>
+                <a href="doctor-dashboard.html" class="btn btn-primary btn-block">
+                    Open Doctor Portal <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Assistant Portal Card -->
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--sage-400);">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+                        <div class="stat-icon blue"><i class="fa-solid fa-user-nurse"></i></div>
+                        <div>
+                            <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Assistant Portal</h4>
+                            <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--sage-500); font-weight: 700; letter-spacing: 0.5px;">Triage Station &amp; Vitals</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
+                        Clinical assistants record initial vitals (Blood Pressure, Temperature, Pulse, SpO2), check in walk-in patients, and route to doctor queues.
+                    </p>
+                </div>
+                <a href="assistant-dashboard.html" class="btn btn-secondary btn-block">
+                    Open Assistant Portal <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
         </div>
+    </section>
 
-    </div>
-</div>
+</main>
 
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
 <script>
-    // Direct Navigation Logic
-    function navigateTo(file) {
-        window.location.href = file;
+    function refreshStats() {
+        const apts = CuraData.getAppointments();
+        document.getElementById('statTotalAppointments').textContent = apts.length;
+        document.getElementById('statPendingTriage').textContent = apts.filter(a => !a.vitals && a.status === 'BOOKED').length;
+        document.getElementById('statInConsultation').textContent = apts.filter(a => a.status === 'ONGOING' || a.vitals).length;
+        document.getElementById('statFollowUpsDue').textContent = apts.filter(a => a.status === 'COMPLETED').length;
     }
-
-    // Logout Action
-    function logout() {
-        window.location.href = 'index.html';
-    }
+    document.addEventListener('DOMContentLoaded', refreshStats);
 </script>
 </body>
 </html>

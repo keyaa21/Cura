@@ -3,157 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cura - Doctor Dashboard</title>
+    <meta name="theme-color" content="#4A7A57">
+    <title>Cura — Doctor Clinical Dashboard</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            /* Exact Color Palette Extracted From Sign-In Screenshot */
-            --bg-dark: #2a1030;            /* Rich Deep Eggplant / Dark Plum Canvas */
-            --purple-surface: #1e0321;     /* Ultra-Dark Plum Surface (Left Panel Vibe) */
-            --purple-card: #2f1334;        /* Deep Purple Card Surface (Right Panel Vibe) */
-            --purple-border: #4a2152;      /* Soft Muted Plum Border */
-
-            --olive-primary: #687a38;      /* Warm Olive Green (Matches "Sign In" Button) */
-            --olive-hover: #55652d;        /* Darker Olive Hover */
-            --olive-bright: #849b45;       /* Bright Olive Highlight */
-            --olive-dark: #3a4720;         /* Slate Deep Olive Accent */
-
-            --lime-cream: #f1f58f;         /* Pale Yellowish-Lime ("C U R A" & "Sign In" Title) */
-            --light-gold: #deda98;         /* Light Cream Accent Text */
-            --text-main: #f5f2f7;          /* Soft Off-White Main Text */
-            --text-muted: #9f88a8;         /* Muted Purple Subtitle Text */
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-
-        /* NAVBAR */
-        .navbar {
-            height: 70px; background-color: var(--purple-surface); display: flex;
-            align-items: center; justify-content: space-between; padding: 0 2rem;
-            border-bottom: 2px solid var(--olive-primary); box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
-        .nav-brand { display: flex; align-items: center; gap: 15px; }
-        .nav-logo { letter-spacing: 6px; font-size: 1.3rem; color: var(--lime-cream); font-weight: 300; }
-        .badge { background-color: var(--olive-dark); color: var(--lime-cream); padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; border: 1px solid var(--olive-primary); font-weight: 600; }
-        .nav-actions { display: flex; gap: 10px; }
-        .btn-nav { background: transparent; border: 1px solid var(--olive-bright); color: var(--lime-cream); padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 600; text-decoration: none; }
-        .btn-nav:hover { background: var(--olive-primary); color: #fff; }
-
-        /* CONTAINER */
-        .container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 2.5rem 2rem; display: flex; flex-direction: column; gap: 2rem; }
-
-        /* HEADER BANNER */
-        .banner { background: linear-gradient(135deg, var(--olive-dark), var(--purple-surface)); padding: 2rem; border-radius: 20px; border: 1px solid var(--olive-primary); display: flex; justify-content: space-between; align-items: center; }
-        .banner h2 { color: var(--lime-cream); font-weight: 400; margin-bottom: 6px; }
-        .banner p { color: var(--light-gold); font-size: 0.95rem; }
-        .btn-reset { background: transparent; border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
-        .btn-reset:hover { background: #ff6b6b; color: #fff; }
-
-        /* APPOINTMENTS LIST */
-        .section-header { display: flex; justify-content: space-between; align-items: center; }
-        .section-title { font-size: 1.2rem; color: var(--lime-cream); font-weight: 400; }
-
-        .appointments-grid { display: flex; flex-direction: column; gap: 1rem; }
-        .apt-card { background-color: var(--purple-surface); border: 1px solid rgba(101, 116, 58, 0.4); border-radius: 16px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-        .apt-card:hover { border-color: var(--olive-bright); transform: translateY(-2px); }
-
-        .patient-details h4 { font-size: 1.1rem; color: var(--lime-cream); margin-bottom: 4px; }
-        .patient-details p { font-size: 0.88rem; color: var(--light-gold); opacity: 0.85; }
-
-        .schedule-meta { display: flex; align-items: center; gap: 15px; }
-        .time-badge { background-color: var(--olive-dark); color: var(--lime-cream); border: 1px solid var(--olive-primary); padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
-
-        .status-select { background-color: var(--bg-dark); border: 1px solid var(--olive-primary); color: var(--lime-cream); padding: 6px 12px; border-radius: 8px; outline: none; font-size: 0.85rem; }
-
-        .empty-state { text-align: center; padding: 3rem; background-color: var(--purple-surface); border-radius: 16px; border: 1px dashed var(--olive-primary); color: var(--text-muted); }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<!-- TOP NAVBAR -->
 <header class="navbar">
     <div class="nav-brand">
-        <h1 class="nav-logo">C U R A</h1>
-        <span class="badge">Doctor Portal</span>
+        <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
+        <h1 class="nav-logo">CURA<span>.</span></h1>
+        <span class="nav-badge">Doctor Workstation</span>
     </div>
     <div class="nav-actions">
-        <a href="patient-dashboard.html" class="btn-nav"><i class="fa-solid fa-plus"></i> Book New</a>
-        <a href="dashboard.html" class="btn-nav"><i class="fa-solid fa-house"></i> Admin Router</a>
-        <button class="btn-nav" onclick="location.href='index.html'"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        <a href="patient-dashboard.html" class="btn-nav-link"><i class="fa-solid fa-plus"></i> <span>Book Patient</span></a>
+        <a href="assistant-dashboard.html" class="btn-nav-link"><i class="fa-solid fa-user-nurse"></i> <span>Assistant View</span></a>
+        <a href="dashboard.html" class="btn-nav-link"><i class="fa-solid fa-house"></i> <span>Admin Hub</span></a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="btn-logout" onclick="CuraAuth.logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
     </div>
 </header>
 
-<div class="container">
-    <div class="banner">
-        <div>
-            <h2>Doctor Schedule & Patient Queue</h2>
-            <p>Real-time view of appointments booked through the Patient Portal.</p>
+<!-- MAIN APP CONTAINER -->
+<main class="main-container">
+
+    <!-- HERO HEADER -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h2>Doctor Consultations &amp; Patient Queue</h2>
+            <p>Review assistant-recorded triage vitals, conduct patient evaluations, write digital prescription notes, and track 15/30-day follow-ups.</p>
         </div>
-        <button class="btn-reset" onclick="resetDemoData()"><i class="fa-solid fa-rotate-right"></i> Reset Demo Data</button>
-    </div>
+        <button class="btn btn-secondary btn-sm" onclick="resetDemoData()">
+            <i class="fa-solid fa-rotate-right"></i> Reset Schedule
+        </button>
+    </section>
 
-    <div class="section-header">
-        <h3 class="section-title"><i class="fa-solid fa-clipboard-list"></i> Scheduled Appointments</h3>
-    </div>
+    <!-- FILTER CHIPS -->
+    <section style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-secondary btn-sm filter-chip active" data-filter="ALL" onclick="filterAppointments('ALL')">
+            All Appointments
+        </button>
+        <button class="btn btn-secondary btn-sm filter-chip" data-filter="READY" onclick="filterAppointments('READY')">
+            <i class="fa-solid fa-heart-pulse" style="color: var(--primary);"></i> Ready with Vitals
+        </button>
+        <button class="btn btn-secondary btn-sm filter-chip" data-filter="PENDING" onclick="filterAppointments('PENDING')">
+            Active / In Queue
+        </button>
+        <button class="btn btn-secondary btn-sm filter-chip" data-filter="COMPLETED" onclick="filterAppointments('COMPLETED')">
+            Completed &amp; Prescribed
+        </button>
+    </section>
 
-    <div class="appointments-grid" id="appointmentsContainer"></div>
+    <!-- APPOINTMENTS LIST CONTAINER -->
+    <section>
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-clipboard-user"></i> Consultation Queue</h3>
+        </div>
+        <div id="doctorAppointmentsContainer"></div>
+    </section>
+
+    <!-- 15 / 30-DAY FOLLOW-UP REMINDERS (REQUESTED BY USER) -->
+    <section class="card" style="border-top: 4px solid var(--accent-peach);">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-bell" style="color: var(--accent-peach);"></i> 15 &amp; 30-Day Follow-Up Reminders</h3>
+            <span class="followup-pill"><i class="fa-solid fa-clock"></i> Scheduled Follow-ups</span>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Patients whose prescribed follow-up interval is due for constitutional progress check or medication refill.
+        </p>
+        <div id="followUpsContainer"></div>
+    </section>
+
+</main>
+
+<!-- PRESCRIPTION WRITER MODAL (REQUESTED BY USER) -->
+<div class="modal-overlay" id="prescriptionModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fa-solid fa-file-prescription" style="color: var(--accent-peach);"></i> Clinical Prescription &amp; Notes</h3>
+            <button type="button" class="btn-close-modal" onclick="closePrescriptionModal()">&times;</button>
+        </div>
+
+        <div style="background: var(--bg-app); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 1.25rem; font-size: 0.9rem;">
+            <div><strong>Patient:</strong> <span id="rxPatientName" style="color: var(--primary); font-weight: 700;"></span></div>
+            <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 2px;">Condition: <span id="rxHealthIssue"></span></div>
+        </div>
+
+        <form id="rxForm" onsubmit="handlePrescriptionSubmit(event)">
+            <div class="form-group">
+                <label for="rxDiagnosis"><i class="fa-solid fa-stethoscope"></i> Clinical Diagnosis / Impression *</label>
+                <input type="text" id="rxDiagnosis" class="form-control" placeholder="e.g. Chronic Migraine / Acute Pharyngitis" required>
+            </div>
+
+            <div class="form-group">
+                <label for="rxRemedies"><i class="fa-solid fa-pills"></i> Remedies / Medicines &amp; Potency *</label>
+                <textarea id="rxRemedies" class="form-textarea" placeholder="e.g. 1. Arnica Montana 200CH (4 pills morning)&#10;2. Belladonna 30C (2 drops if throbbing headache)&#10;3. Paracetamol 500mg (as needed)" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="rxInstructions"><i class="fa-solid fa-clipboard-list"></i> Dosage &amp; Administration Instructions</label>
+                <input type="text" id="rxInstructions" class="form-control" placeholder="e.g. Take 15 mins before meals; dissolve under tongue.">
+            </div>
+
+            <div class="form-group">
+                <label for="rxDiet"><i class="fa-solid fa-apple-whole"></i> Dietary &amp; Lifestyle Guidance</label>
+                <input type="text" id="rxDiet" class="form-control" placeholder="e.g. Avoid strong coffee/mint; keep regular sleep schedule.">
+            </div>
+
+            <!-- Follow-up Interval Selector (15 or 30 days) -->
+            <div class="form-group">
+                <label for="rxFollowUpDays"><i class="fa-regular fa-calendar-check"></i> Next Follow-Up Schedule</label>
+                <select id="rxFollowUpDays" class="form-select">
+                    <option value="15">15 Days (Acute / Fast Response Check)</option>
+                    <option value="30" selected>30 Days (Standard Chronic / Constitutional Review)</option>
+                    <option value="45">45 Days (Long-term Maintenance)</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-peach" style="flex: 1.2;">
+                    <i class="fa-solid fa-floppy-disk"></i> Save &amp; Complete Visit
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closePrescriptionModal()" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
-<script>
-    // Default Mock Data if LocalStorage is empty
-    const defaultAppointments = [
-        { id: 101, patientName: "Keya Joshi", doctorName: "Dr. Ashwini Joshi (Homoeopathy)", day: "Monday", timeSlot: "09:00 AM", status: "Confirmed" },
-        { id: 102, patientName: "Ananya Kumar", doctorName: "Dr. Priya Gupta (Psychology)", day: "Wednesday", timeSlot: "11:00 AM", status: "Completed" },
-        { id: 103, patientName: "Kartik Swami", doctorName: "Dr. Aarav Sharma (Allopathy)", day: "Friday", timeSlot: "05:00 PM", status: "Pending" }
-    ];
-
-    function loadAppointments() {
-        let appointments = JSON.parse(localStorage.getItem('cura_appointments'));
-
-        // If empty, initialize with default list
-        if (!appointments || appointments.length === 0) {
-            appointments = defaultAppointments;
-            localStorage.setItem('cura_appointments', JSON.stringify(appointments));
-        }
-
-        const container = document.getElementById('appointmentsContainer');
-
-        if (appointments.length === 0) {
-            container.innerHTML = `<div class="empty-state">No appointments booked yet.</div>`;
-            return;
-        }
-
-        container.innerHTML = appointments.map(apt => `
-                <div class="apt-card">
-                    <div class="patient-details">
-                        <h4>${apt.patientName}</h4>
-                        <p><i class="fa-solid fa-user-doctor"></i> ${apt.doctorName}</p>
-                    </div>
-                    <div class="schedule-meta">
-                        <span class="time-badge"><i class="fa-regular fa-calendar"></i> ${apt.day} | ${apt.timeSlot}</span>
-                        <select class="status-select" onchange="updateStatus(${apt.id}, this.value)">
-                            <option value="Confirmed" ${apt.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
-                            <option value="Completed" ${apt.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                            <option value="Pending" ${apt.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                        </select>
-                    </div>
-                </div>
-            `).join('');
-    }
-
-    function updateStatus(id, newStatus) {
-        let appointments = JSON.parse(localStorage.getItem('cura_appointments')) || [];
-        appointments = appointments.map(a => a.id === id ? { ...a, status: newStatus } : a);
-        localStorage.setItem('cura_appointments', JSON.stringify(appointments));
-    }
-
-    function resetDemoData() {
-        localStorage.setItem('cura_appointments', JSON.stringify(defaultAppointments));
-        loadAppointments();
-        alert('Demo appointments reset!');
-    }
-
-    document.addEventListener('DOMContentLoaded', loadAppointments);
-</script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/doctor.js"></script>
 </body>
 </html>

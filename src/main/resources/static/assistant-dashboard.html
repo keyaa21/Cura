@@ -3,189 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cura - Assistant Portal</title>
+    <meta name="theme-color" content="#4A7A57">
+    <title>Cura — Assistant Triage Station</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            --bg-dark: #2a1030;
-            --purple-surface: #1e0321;
-            --purple-card: #2f1334;
-            --purple-border: #4a2152;
-
-            --olive-primary: #687a38;
-            --olive-hover: #55652d;
-            --olive-bright: #849b45;
-            --olive-dark: #3a4720;
-
-            --lime-cream: #f1f58f;
-            --light-gold: #deda98;
-            --text-main: #f5f2f7;
-            --text-muted: #9f88a8;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-
-        /* NAVBAR */
-        .navbar {
-            height: 70px; background-color: var(--purple-surface); display: flex;
-            align-items: center; justify-content: space-between; padding: 0 2rem;
-            border-bottom: 1px solid var(--purple-border); box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .nav-brand { display: flex; align-items: center; gap: 15px; }
-        .nav-logo { letter-spacing: 6px; font-size: 1.3rem; color: var(--lime-cream); font-weight: 300; }
-        .badge { background-color: var(--olive-dark); color: var(--lime-cream); padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; border: 1px solid var(--olive-primary); font-weight: 600; }
-        .nav-actions { display: flex; gap: 10px; }
-        .btn-nav { background: transparent; border: 1px solid var(--purple-border); color: var(--lime-cream); padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 600; text-decoration: none; }
-        .btn-nav:hover { background: var(--olive-primary); border-color: var(--olive-primary); color: #fff; }
-
-        /* CONTAINER */
-        .container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 2.5rem 2rem; display: flex; flex-direction: column; gap: 2rem; }
-
-        /* BANNER */
-        .banner { background: linear-gradient(135deg, var(--purple-surface), var(--purple-card)); padding: 2rem; border-radius: 20px; border: 1px solid var(--purple-border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
-        .banner h2 { color: var(--lime-cream); font-weight: 400; margin-bottom: 6px; }
-        .banner p { color: var(--text-muted); font-size: 0.95rem; }
-
-        /* LAYOUT GRID */
-        .grid-layout { display: grid; grid-template-columns: 360px 1fr; gap: 2rem; }
-
-        /* TRIAGE FORM */
-        .triage-card { background-color: var(--purple-card); padding: 1.8rem; border-radius: 16px; border: 1px solid var(--purple-border); height: fit-content; box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
-        .card-title { font-size: 1.1rem; color: var(--lime-cream); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 10px; font-weight: 400; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.2rem; }
-        .form-group label { font-size: 0.85rem; color: var(--light-gold); font-weight: 600; }
-        .form-group input, .form-group select { background-color: var(--purple-surface); border: 1px solid var(--purple-border); padding: 10px; border-radius: 8px; color: var(--lime-cream); outline: none; font-size: 0.9rem; }
-        .form-group input:focus, .form-group select:focus { border-color: var(--olive-primary); }
-
-        .btn-save { background-color: var(--olive-primary); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 600; width: 100%; cursor: pointer; transition: 0.2s; margin-top: 0.5rem; }
-        .btn-save:hover { background-color: var(--olive-hover); color: var(--lime-cream); }
-
-        /* PATIENT QUEUE TABLE */
-        .queue-card { background-color: var(--purple-card); padding: 1.8rem; border-radius: 16px; border: 1px solid var(--purple-border); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
-        .queue-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        .queue-table th { text-align: left; padding: 12px; font-size: 0.85rem; color: var(--light-gold); border-bottom: 1px solid var(--purple-border); text-transform: uppercase; letter-spacing: 0.5px; }
-        .queue-table td { padding: 14px 12px; font-size: 0.9rem; border-bottom: 1px solid rgba(74, 33, 82, 0.5); color: var(--text-main); }
-        .status-pill { background-color: var(--olive-dark); color: var(--lime-cream); border: 1px solid var(--olive-primary); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
-        .status-pill.ready { background-color: var(--olive-primary); color: #fff; }
-
-        .empty-msg { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<!-- TOP NAVBAR -->
 <header class="navbar">
     <div class="nav-brand">
-        <h1 class="nav-logo">C U R A</h1>
-        <span class="badge">Assistant Portal</span>
+        <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
+        <h1 class="nav-logo">CURA<span>.</span></h1>
+        <span class="nav-badge">Assistant Triage Station</span>
     </div>
     <div class="nav-actions">
-        <a href="patient-dashboard.html" class="btn-nav"><i class="fa-solid fa-hospital-user"></i> Patient View</a>
-        <a href="doctor-dashboard.html" class="btn-nav"><i class="fa-solid fa-user-doctor"></i> Doctor View</a>
-        <a href="dashboard.html" class="btn-nav"><i class="fa-solid fa-house"></i> Admin Router</a>
-        <button class="btn-nav" onclick="location.href='index.html'"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        <a href="patient-dashboard.html" class="btn-nav-link"><i class="fa-solid fa-hospital-user"></i> <span>Patient View</span></a>
+        <a href="doctor-dashboard.html" class="btn-nav-link"><i class="fa-solid fa-user-doctor"></i> <span>Doctor View</span></a>
+        <a href="dashboard.html" class="btn-nav-link"><i class="fa-solid fa-house"></i> <span>Admin Hub</span></a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="btn-logout" onclick="CuraAuth.logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
     </div>
 </header>
 
-<div class="container">
-    <div class="banner">
-        <div>
-            <h2>Clinical Assistant & Triage Station</h2>
-            <p>Record initial vitals, check in arriving patients, and route them to doctor queues.</p>
+<!-- MAIN APP CONTAINER -->
+<main class="main-container">
+
+    <!-- HERO HEADER -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h2>Clinical Assistant &amp; Patient Check-In</h2>
+            <p>Welcome arriving patients, capture preliminary vitals (Blood Pressure, Temperature, Pulse, SpO2), and route them to doctor consultation rooms.</p>
         </div>
+    </section>
+
+    <!-- GRID LAYOUT -->
+    <div style="display: grid; grid-template-columns: 380px 1fr; gap: 2rem; align-items: start;">
+
+        <!-- LEFT COLUMN: VITALS ENTRY & QUICK WALK-IN -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            
+            <!-- Vitals Form -->
+            <div class="card" style="border-top: 4px solid var(--primary);">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa-solid fa-notes-medical"></i> Record Patient Vitals</h3>
+                </div>
+
+                <form id="triageForm" onsubmit="handleTriageSubmit(event)">
+                    <div class="form-group">
+                        <label for="patientSelect"><i class="fa-solid fa-user-check"></i> Arrived Patient *</label>
+                        <select id="patientSelect" class="form-select" required></select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group">
+                            <label for="vitalsBP"><i class="fa-solid fa-gauge-high"></i> BP (mmHg)</label>
+                            <input type="text" id="vitalsBP" class="form-control" placeholder="120/80" required value="120/80">
+                        </div>
+                        <div class="form-group">
+                            <label for="vitalsTemp"><i class="fa-solid fa-temperature-half"></i> Temp (°F)</label>
+                            <input type="number" step="0.1" id="vitalsTemp" class="form-control" placeholder="98.6" required value="98.6">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group">
+                            <label for="vitalsPulse"><i class="fa-solid fa-heart-pulse"></i> Pulse (bpm)</label>
+                            <input type="number" id="vitalsPulse" class="form-control" placeholder="72" required value="72">
+                        </div>
+                        <div class="form-group">
+                            <label for="vitalsOxygen"><i class="fa-solid fa-lungs"></i> SpO2 (%)</label>
+                            <input type="number" step="0.1" id="vitalsOxygen" class="form-control" placeholder="99.0" value="99.0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vitalsNotes"><i class="fa-regular fa-clipboard"></i> Triage Observations</label>
+                        <input type="text" id="vitalsNotes" class="form-control" placeholder="e.g. Mild headache, patient comfortable">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top: 0.5rem;">
+                        <i class="fa-solid fa-paper-plane"></i> Check In &amp; Send to Doctor
+                    </button>
+                </form>
+            </div>
+
+            <!-- Walk-in Patient Quick Registration -->
+            <div class="card" style="border-top: 4px solid var(--accent-peach);">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa-solid fa-person-walking-arrow-right"></i> Quick Walk-In Registration</h3>
+                </div>
+
+                <form id="walkinForm" onsubmit="handleWalkInSubmit(event)">
+                    <div class="form-group">
+                        <label for="walkinName">Patient Name *</label>
+                        <input type="text" id="walkinName" class="form-control" placeholder="Full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="walkinPhone">Phone Number</label>
+                        <input type="tel" id="walkinPhone" class="form-control" placeholder="+91 98230 00000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="walkinDoctor">Assign Doctor</label>
+                        <select id="walkinDoctor" class="form-select">
+                            <option value="Dr. Ashwini Joshi">Dr. Ashwini Joshi (Homoeopathy)</option>
+                            <option value="Dr. Aarav Sharma">Dr. Aarav Sharma (Allopathy)</option>
+                            <option value="Dr. Priya Gupta">Dr. Priya Gupta (Psychology)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="walkinIssue">Issue Type</label>
+                        <select id="walkinIssue" class="form-select">
+                            <option value="ACUTE">Acute (Immediate fever/pain)</option>
+                            <option value="CHRONIC">Chronic Condition</option>
+                            <option value="PSYCHOLOGICAL">Psychological Counseling</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 8px; margin: 0.5rem 0 1rem;">
+                        <input type="checkbox" id="walkinFirstTime" checked style="accent-color: var(--accent-peach);">
+                        <label for="walkinFirstTime" style="font-size: 0.85rem; cursor: pointer;">First-time clinic visit (Allocate 1 hr)</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-peach btn-block">
+                        <i class="fa-solid fa-plus"></i> Add Walk-In to Queue
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: PATIENT TRIAGE QUEUE TABLE -->
+        <div class="card" style="border-top: 4px solid var(--sage-400);">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-users-line"></i> Today's Live Patient Queue</h3>
+                <span class="followup-pill"><i class="fa-solid fa-rotate"></i> Real-time</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="cura-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor &amp; Spec</th>
+                            <th>Schedule &amp; Slot</th>
+                            <th>Recorded Vitals</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queueTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-    <div class="grid-layout">
-        <!-- TRIAGE FORM -->
-        <div class="triage-card">
-            <h3 class="card-title"><i class="fa-solid fa-notes-medical"></i> Record Vitals & Triage</h3>
-            <form id="triageForm" onsubmit="handleTriageSubmit(event)">
-                <div class="form-group">
-                    <label>Select Scheduled Patient</label>
-                    <select id="patientSelect" required></select>
-                </div>
-                <div class="form-group">
-                    <label>Blood Pressure (e.g. 120/80)</label>
-                    <input type="text" id="vitalsBP" placeholder="120/80" required>
-                </div>
-                <div class="form-group">
-                    <label>Body Temperature (°F)</label>
-                    <input type="text" id="vitalsTemp" placeholder="98.6" required>
-                </div>
-                <div class="form-group">
-                    <label>Pulse Rate (bpm)</label>
-                    <input type="text" id="vitalsPulse" placeholder="72" required>
-                </div>
-                <button type="submit" class="btn-save">Check In & Send to Doctor</button>
-            </form>
-        </div>
+</main>
 
-        <!-- WAITING ROOM QUEUE -->
-        <div class="queue-card">
-            <h3 class="card-title"><i class="fa-solid fa-users"></i> Patient Triage Queue</h3>
-            <table class="queue-table">
-                <thead>
-                <tr>
-                    <th>Patient</th>
-                    <th>Physician</th>
-                    <th>Vitals</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody id="queueTableBody"></tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<script>
-    function loadTriageData() {
-        const appointments = JSON.parse(localStorage.getItem('cura_appointments')) || [];
-        const selectEl = document.getElementById('patientSelect');
-        const tableBody = document.getElementById('queueTableBody');
-
-        selectEl.innerHTML = appointments.map(apt => `
-                <option value="${apt.id}">${apt.patientName} (${apt.day} - ${apt.timeSlot})</option>
-            `).join('');
-
-        if (appointments.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="4" class="empty-msg">No patients in appointment schedule.</td></tr>`;
-            return;
-        }
-
-        tableBody.innerHTML = appointments.map(apt => `
-                <tr>
-                    <td><strong>${apt.patientName}</strong></td>
-                    <td>${apt.doctorName}</td>
-                    <td>${apt.vitals ? `${apt.vitals.bp} mmHg | ${apt.vitals.temp}°F` : '<span style="opacity: 0.5;">Pending</span>'}</td>
-                    <td><span class="status-pill ${apt.vitals ? 'ready' : ''}">${apt.vitals ? 'Ready for Doctor' : 'Waiting Triage'}</span></td>
-                </tr>
-            `).join('');
-    }
-
-    function handleTriageSubmit(e) {
-        e.preventDefault();
-        const selectedId = parseInt(document.getElementById('patientSelect').value);
-        const bp = document.getElementById('vitalsBP').value;
-        const temp = document.getElementById('vitalsTemp').value;
-        const pulse = document.getElementById('vitalsPulse').value;
-
-        let appointments = JSON.parse(localStorage.getItem('cura_appointments')) || [];
-        appointments = appointments.map(apt => {
-            if (apt.id === selectedId) {
-                return { ...apt, vitals: { bp, temp, pulse }, status: 'In Consultation' };
-            }
-            return apt;
-        });
-
-        localStorage.setItem('cura_appointments', JSON.stringify(appointments));
-        alert('Vitals recorded! Patient sent to Doctor queue.');
-        document.getElementById('triageForm').reset();
-        loadTriageData();
-    }
-
-    document.addEventListener('DOMContentLoaded', loadTriageData);
-</script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/assistant.js"></script>
 </body>
 </html>

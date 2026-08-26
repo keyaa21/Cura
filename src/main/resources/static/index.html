@@ -3,247 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cura - Sign In</title>
+    <meta name="theme-color" content="#4A7A57">
+    <meta name="description" content="Cura - Local Clinic Patient Appointment & Practice Management PWA">
+    <title>Cura — Clinical Care Portal</title>
+
+    <!-- PWA Manifest & Icons -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Peachy Sage Theme Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+
     <style>
-        /* COLOR PALETTE VARIABLES */
-        :root {
-            --lime-cream: #F4FDAF;
-            --light-gold: #EFDD8D;
-            --fern: #65743A;
-            --dark-slate-grey: #394F49;
-            --midnight-violet: #210124;
-            --bg-main: #37153d;
-            --card-surface: #2b032f;
-            --white: #ffffff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--lime-cream);
-            min-height: 100vh;
+        /* Specific Sign-in Page Container */
+        .auth-wrapper {
+            min-height: calc(100vh - 72px);
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* SPLIT CARD CONTAINER */
-        .auth-wrapper {
-            width: 100%;
-            max-width: 850px;
-            padding: 20px;
+            padding: 2rem 1.5rem;
         }
 
         .auth-card {
-            display: flex;
-            background-color: var(--card-surface);
-            border-radius: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(239, 221, 141, 0.15);
-            min-height: 440px;
-        }
-
-        /* LEFT BRANDING PANEL */
-        .brand-panel {
-            flex: 1;
-            background-color: var(--midnight-violet);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            position: relative;
-        }
-
-        .circle-base {
-            width: 160px;
-            height: 160px;
-            background-color: #3f0945;
-            border-radius: 50%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin-bottom: 25px;
-        }
-
-        .shape-wave {
-            position: absolute;
-            width: 120%;
-            height: 40px;
-            background: var(--dark-slate-grey);
-            border-radius: 20px;
-            opacity: 0.8;
-        }
-
-        .shape-wave.w1 { top: 25px; left: -10px; }
-        .shape-wave.w2 { bottom: 30px; right: -10px; background: var(--fern); }
-
-        .brand-icon {
-            font-size: 3rem;
-            color: var(--lime-cream);
-            z-index: 2;
-        }
-
-        .brand-logo {
-            letter-spacing: 12px;
-            font-size: 1.5rem;
-            color: var(--light-gold);
-            font-weight: 300;
-        }
-
-        /* RIGHT FORM PANEL */
-        .form-panel {
-            flex: 1.2;
-            padding: 45px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(57, 79, 73, 0.3), rgba(33, 1, 36, 0.9));
-        }
-
-        .form-header h2 {
-            color: var(--lime-cream);
-            font-weight: 400;
-        }
-
-        .form-header p {
-            color: var(--light-gold);
-            font-size: 0.85rem;
-            margin-bottom: 25px;
-            opacity: 0.8;
-        }
-
-        /* INPUT FIELDS */
-        .input-field {
-            margin-bottom: 18px;
-        }
-
-        .input-field input {
+            max-width: 920px;
             width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(244, 253, 175, 0.4);
-            padding: 10px 5px;
-            color: var(--lime-cream);
-            outline: none;
-            transition: border-color 0.3s;
         }
 
-        .input-field input:focus {
-            border-bottom-color: var(--lime-cream);
-        }
-
-        /* BUTTONS */
-        .action-row {
+        .brand-panel {
+            background: linear-gradient(145deg, var(--primary-light) 0%, var(--sage-200) 50%, var(--peach-100) 100%);
+            padding: 3.5rem 2.5rem;
             display: flex;
-            gap: 12px;
-            margin-top: 25px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
-            border: none;
-        }
-
-        .btn-primary {
-            background-color: var(--fern);
-            color: var(--white);
-            flex: 1;
-        }
-
-        .btn-primary:hover {
-            background-color: #4f5b2d;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid var(--lime-cream);
-            color: var(--lime-cream);
-            flex: 1;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(244, 253, 175, 0.1);
-        }
-
-        .form-footer {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            margin-top: 25px;
+            position: relative;
         }
 
-        .forgot-pass {
-            color: var(--light-gold);
-            text-decoration: none;
-            font-size: 0.8rem;
-            opacity: 0.7;
+        [data-theme="dark"] .brand-panel {
+            background: linear-gradient(145deg, #1C2B20 0%, #28372C 50%, #352A20 100%);
         }
 
-        .forgot-pass:hover {
-            opacity: 1;
+        .brand-logo-graphic {
+            width: 110px;
+            height: 110px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-peach));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-peach);
+            animation: pulseGlow 4s infinite ease-in-out;
         }
 
-        .hidden {
-            display: none !important;
+        .form-panel {
+            padding: 3.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .auth-card {
+                grid-template-columns: 1fr;
+            }
+            .brand-panel {
+                padding: 2rem 1.5rem;
+            }
+            .form-panel {
+                padding: 2.5rem 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
 
+<!-- TOP NAVBAR -->
+<header class="navbar">
+    <div class="nav-brand">
+        <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
+        <h1 class="nav-logo">CURA<span>.</span></h1>
+        <span class="nav-badge">Clinic PWA</span>
+    </div>
+    <div class="nav-actions">
+        <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </div>
+</header>
+
+<!-- SIGN IN / SIGN UP AUTH WRAPPER -->
 <div class="auth-wrapper">
     <div class="auth-card">
 
-        <!-- Left Branding Panel (Shapes & Logo) -->
+        <!-- Left Branding Panel -->
         <div class="brand-panel">
-            <div class="brand-graphic">
-                <div class="circle-base">
-                </div>
+            <div class="brand-logo-graphic">
+                <i class="fa-solid fa-notes-medical"></i>
             </div>
-            <h1 class="brand-logo">C U R A</h1>
+            <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; color: var(--text-primary); margin-bottom: 8px;">
+                C U R A
+            </h2>
+            <p style="font-size: 0.95rem; color: var(--text-secondary); max-width: 260px; line-height: 1.5;">
+                Holistic Patient Appointments &amp; Practice Management for Local Clinics
+            </p>
+            <div style="margin-top: 1.5rem; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;">
+                <span class="followup-pill"><i class="fa-solid fa-seedling"></i> Homoeopathy</span>
+                <span class="followup-pill"><i class="fa-solid fa-stethoscope"></i> Allopathy</span>
+                <span class="followup-pill"><i class="fa-solid fa-brain"></i> Psychology</span>
+            </div>
         </div>
 
         <!-- Right Form Panel -->
         <div class="form-panel">
-            <div class="form-header">
-                <h2 id="form-title">Sign In</h2>
-                <p id="form-subtitle">Enter your credentials to enter the portal</p>
+            <div style="margin-bottom: 2rem;">
+                <h2 id="form-title" style="font-size: 1.6rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+                    Sign In
+                </h2>
+                <p id="form-subtitle" style="font-size: 0.9rem; color: var(--text-muted);">
+                    Enter your credentials to access the clinic environment
+                </p>
             </div>
 
             <form id="auth-form">
-                <div class="input-field hidden" id="name-field">
-                    <input type="text" id="user-name" placeholder="Full Name">
+                <!-- Name Field (Hidden by default in Sign-in mode) -->
+                <div class="form-group" id="name-field" style="display: none;">
+                    <label for="user-name"><i class="fa-regular fa-user"></i> Full Name</label>
+                    <input type="text" id="user-name" class="form-control" placeholder="e.g. Keya Joshi">
                 </div>
 
-                <div class="input-field">
-                    <input type="email" id="user-email" placeholder="Email Address" required>
+                <!-- Role Selector (Hidden in Sign-in mode) -->
+                <div class="form-group" id="role-field" style="display: none;">
+                    <label for="user-role"><i class="fa-solid fa-user-tag"></i> Select Portal Role</label>
+                    <select id="user-role" class="form-select">
+                        <option value="PATIENT">Patient (Book Appointments)</option>
+                        <option value="DOCTOR">Doctor (Homoeopathy / Allopathy / Psychology)</option>
+                        <option value="ASSISTANT">Clinical Assistant (Triage &amp; Vitals)</option>
+                        <option value="ADMIN">Clinic Administrator</option>
+                    </select>
                 </div>
 
-                <div class="input-field">
-                    <input type="password" id="user-password" placeholder="Password" required>
+                <div class="form-group">
+                    <label for="user-email"><i class="fa-regular fa-envelope"></i> Email Address</label>
+                    <input type="email" id="user-email" class="form-control" placeholder="name@clinic.com" required value="keya@example.com">
                 </div>
 
-                <div class="action-row">
-                    <button type="submit" class="btn btn-primary" id="submit-btn">Sign In</button>
-                    <button type="button" class="btn btn-secondary" id="toggle-btn">Sign Up</button>
+                <div class="form-group">
+                    <label for="user-password"><i class="fa-solid fa-lock"></i> Password</label>
+                    <input type="password" id="user-password" class="form-control" placeholder="••••••••" required value="password123">
                 </div>
 
-                <div class="form-footer">
-                    <a href="#" class="forgot-pass">Forgot Password?</a>
+                <div style="display: flex; gap: 12px; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" id="submit-btn" style="flex: 1.2;">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="toggle-btn" style="flex: 1;">
+                        Sign Up
+                    </button>
+                </div>
+
+                <div style="margin-top: 1.8rem; text-align: center;">
+                    <p style="font-size: 0.82rem; color: var(--text-muted);">
+                        Demo Logins: <code>doctor@cura.clinic</code> &bull; <code>assistant@cura.clinic</code> &bull; <code>patient@cura.clinic</code>
+                    </p>
                 </div>
             </form>
         </div>
@@ -251,38 +186,8 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const authForm = document.getElementById('auth-form');
-        const toggleBtn = document.getElementById('toggle-btn');
-        const nameField = document.getElementById('name-field');
-        const formTitle = document.getElementById('form-title');
-        const formSubtitle = document.getElementById('form-subtitle');
-        const submitBtn = document.getElementById('submit-btn');
-
-        let isSignInMode = true;
-
-        // Toggle between Sign In and Sign Up modes
-        toggleBtn.addEventListener('click', () => {
-            isSignInMode = !isSignInMode;
-
-            nameField.classList.toggle('hidden', isSignInMode);
-            formTitle.textContent = isSignInMode ? 'Sign In' : 'Create Account';
-            formSubtitle.textContent = isSignInMode
-                ? 'Enter your credentials to enter the portal'
-                : 'Register as a new patient';
-            submitBtn.textContent = isSignInMode ? 'Sign In' : 'Register';
-            toggleBtn.textContent = isSignInMode ? 'Sign Up' : 'Sign In';
-        });
-
-        // Form Submission Logic
-        authForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            // Redirect directly to dashboard page
-            window.location.href = 'dashboard.html';
-        });
-    });
-</script>
+<!-- Firebase & Core Application Scripts -->
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
