@@ -1,3 +1,9 @@
+/**
+ * CURA - Core Application Logic & Database Adapter
+ * Handles Theme Management, Toast Notifications, Role Access Guards,
+ * and Firebase Cloud Firestore Data Synchronization with Dual Document Lookup.
+ */
+
 // --- THEME CONTROLLER ---
 (function initTheme() {
     const savedTheme = localStorage.getItem('cura_theme') || 
@@ -51,7 +57,7 @@ const CuraAuth = {
         localStorage.setItem('cura_user', JSON.stringify(user));
     },
     logout() {
-        if (CuraFirebase.isReady()) {
+        if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady()) {
             CuraFirebase.auth().signOut();
         }
         localStorage.removeItem('cura_user');
@@ -73,7 +79,7 @@ const CuraAuth = {
             window.location.href = 'index.html';
             return;
         }
-        if (user.role === 'ADMIN') return; // Admin has access to all pages
+        if (user.role === 'ADMIN') return; // Admin retains access to all portals
         if (!allowedRoles.includes(user.role)) {
             this.redirectBasedOnRole(user.role);
         }
@@ -82,21 +88,19 @@ const CuraAuth = {
 
 // --- DATA SERVICE (FIRESTORE DATABASE ADAPTER) ---
 let localAppointmentsCache = [];
+let localPrescriptionsCache = [];
 
 const CuraData = {
-    // 1. FETCH CODE GOES HERE (Inside fetchAppointments)
     async fetchAppointments() {
-        if (CuraFirebase.isReady()) {
+        if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady()) {
             try {
-                // <--- FETCH / READ FROM FIRESTORE --->
-                const snapshot = await db.collection('appointments').orderBy('createdAt', 'desc').get();
+                const snapshot = await CuraFirebase.db().collection('appointments').orderBy('createdAt', 'desc').get();
                 localAppointmentsCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 return localAppointmentsCache;
             } catch (e) {
                 console.error("Firestore fetch error:", e);
             }
         }
-        // Fallback to localStorage if offline
         const stored = localStorage.getItem('cura_appointments');
         localAppointmentsCache = stored ? JSON.parse(stored) : [];
         return localAppointmentsCache;
@@ -106,37 +110,65 @@ const CuraData = {
         return localAppointmentsCache;
     },
 
-    // 2. SAVE CODE GOES HERE (Inside addAppointment)
     async addAppointment(apt) {
-        if (CuraFirebase.isReady()) {
+        if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady()) {
             try {
-                // <--- SAVE / WRITE TO FIRESTORE --->
-                await db.collection('appointments').doc(apt.id).set(apt);
+                await CuraFirebase.db().collection('appointments').doc(apt.id).set(apt);
             } catch (e) {
-                console.error("Firestore save error:", e);
+                console.error("Firestore save appointment error:", e);
             }
         }
-        // Save to local cache as well
         localAppointmentsCache.unshift(apt);
         localStorage.setItem('cura_appointments', JSON.stringify(localAppointmentsCache));
         return apt;
     },
 
-    // 3. UPDATE CODE (For vitals or prescriptions)
     async updateAppointment(id, updates) {
-        if (CuraFirebase.isReady()) {
-            await db.collection('appointments').doc(id).update(updates);
+        if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady()) {
+            try {
+                await CuraFirebase.db().collection('appointments').doc(id).update(updates);
+            } catch (e) {
+                console.error("Firestore update appointment error:", e);
+            }
         }
         localAppointmentsCache = localAppointmentsCache.map(a => a.id === id ? { ...a, ...updates } : a);
         localStorage.setItem('cura_appointments', JSON.stringify(localAppointmentsCache));
+    },
+
+    async addPrescription(rx) {
+        if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady()) {
+            try {
+                await CuraFirebase.db().collection('prescriptions').doc(rx.id).set(rx);
+            } catch (e) {
+                console.error("Firestore save prescription error:", e);
+            }
+        }
+        localPrescriptionsCache.unshift(rx);
+        localStorage.setItem('cura_prescriptions', JSON.stringify(localPrescriptionsCache));
+        return rx;
     }
 };
 
-// --- AUTH FORM SUBMIT HANDLER ---
+// Helper to infer role from email address if missing in Firestore
+function inferRoleFromEmail(email, defaultRole = 'PATIENT') {
+    const e = email.toLowerCase();
+    if (e.includes('doctor') || e.includes('ashwini') || e.includes('aarav') || e.includes('priya')) {
+        return 'DOCTOR';
+    }
+    if (e.includes('assistant') || e.includes('maya')) {
+        return 'ASSISTANT';
+    }
+    if (e.includes('admin')) {
+        return 'ADMIN';
+    }
+    return defaultRole;
+}
+
+// --- DOM INITIALIZATION & AUTH HANDLER ---
 document.addEventListener('DOMContentLoaded', () => {
     updateThemeIcons(document.documentElement.getAttribute('data-theme'));
     
-    // Auto-fetch data on page load
+    // Auto-fetch appointment records on page load
     CuraData.fetchAppointments();
 
     const authForm = document.getElementById('auth-form');
@@ -145,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nameField = document.getElementById('name-field');
         const roleField = document.getElementById('role-field');
         const formTitle = document.getElementById('form-title');
+        const formSubtitle = document.getElementById('form-subtitle');
         const submitBtn = document.getElementById('submit-btn');
         let isSignInMode = true;
 
@@ -154,6 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (nameField) nameField.style.display = isSignInMode ? 'none' : 'block';
                 if (roleField) roleField.style.display = isSignInMode ? 'none' : 'block';
                 if (formTitle) formTitle.textContent = isSignInMode ? 'Sign In' : 'Create Account';
+                if (formSubtitle) formSubtitle.textContent = isSignInMode 
+                    ? 'Enter your credentials to access the clinic environment' 
+                    : 'Register a new account for clinic portal access';
                 if (submitBtn) submitBtn.textContent = isSignInMode ? 'Sign In' : 'Register';
                 toggleBtn.textContent = isSignInMode ? 'Sign Up' : 'Sign In';
             });
@@ -164,22 +200,51 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('user-email').value.trim();
             const password = document.getElementById('user-password').value;
             const fullName = document.getElementById('user-name') ? document.getElementById('user-name').value.trim() : '';
-            const role = document.getElementById('user-role') ? document.getElementById('user-role').value : 'PATIENT';
+            const selectedRole = document.getElementById('user-role') ? document.getElementById('user-role').value : 'PATIENT';
 
-            if (CuraFirebase.isReady()) {
+            const assignedRole = inferRoleFromEmail(email, selectedRole);
+
+            if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady()) {
                 try {
                     let userObj = null;
                     if (isSignInMode) {
                         const cred = await CuraFirebase.auth().signInWithEmailAndPassword(email, password);
-                        const doc = await CuraFirebase.db().collection('users').doc(cred.user.uid).get();
-                        userObj = doc.exists ? doc.data() : { uid: cred.user.uid, email, fullName: email.split('@')[0], role: 'PATIENT' };
+                        
+                        // 1. Try finding user document by Firebase UID
+                        let userDoc = await CuraFirebase.db().collection('users').doc(cred.user.uid).get();
+                        
+                        // 2. Fallback to document ID equal to the email address
+                        if (!userDoc.exists) {
+                            userDoc = await CuraFirebase.db().collection('users').doc(email).get();
+                        }
+
+                        if (userDoc.exists && userDoc.data().role) {
+                            userObj = userDoc.data();
+                        } else {
+                            // Create/Update user doc with inferred role if missing
+                            userObj = {
+                                uid: cred.user.uid,
+                                email: email,
+                                fullName: fullName || email.split('@')[0],
+                                role: assignedRole,
+                                createdAt: new Date().toISOString()
+                            };
+                            await CuraFirebase.db().collection('users').doc(cred.user.uid).set(userObj, { merge: true });
+                        }
                     } else {
                         const cred = await CuraFirebase.auth().createUserWithEmailAndPassword(email, password);
-                        userObj = { uid: cred.user.uid, email, fullName: fullName || email.split('@')[0], role, createdAt: new Date().toISOString() };
+                        userObj = {
+                            uid: cred.user.uid,
+                            email: email,
+                            fullName: fullName || email.split('@')[0],
+                            role: assignedRole,
+                            createdAt: new Date().toISOString()
+                        };
                         await CuraFirebase.db().collection('users').doc(cred.user.uid).set(userObj);
                     }
+
                     CuraAuth.setUser(userObj);
-                    showToast(`Welcome, ${userObj.fullName}!`);
+                    showToast(`Welcome, ${userObj.fullName}!`, 'success');
                     setTimeout(() => CuraAuth.redirectBasedOnRole(userObj.role), 500);
                     return;
                 } catch (err) {
@@ -188,10 +253,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Fallback for local testing
-            let userObj = { id: "u-" + Date.now(), fullName: fullName || email.split('@')[0], email, role };
+            // Local Fallback
+            let userObj = { 
+                id: "u-" + Date.now(), 
+                fullName: fullName || email.split('@')[0], 
+                email: email, 
+                role: assignedRole 
+            };
             CuraAuth.setUser(userObj);
-            showToast(`Welcome, ${userObj.fullName}!`);
+            showToast(`Welcome, ${userObj.fullName}!`, 'success');
             setTimeout(() => CuraAuth.redirectBasedOnRole(userObj.role), 500);
         });
     }

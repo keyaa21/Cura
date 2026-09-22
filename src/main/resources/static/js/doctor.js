@@ -6,7 +6,7 @@
 
 let activeAppointmentForRx = null;
 let currentFilter = 'ALL';
-
+CuraAuth.guard(['DOCTOR', 'ADMIN']);
 async function loadDoctorAppointments() {
     // 1. FETCH APPOINTMENTS (ASYNC FIRESTORE / LOCAL CACHE)
     let list = await CuraData.fetchAppointments();

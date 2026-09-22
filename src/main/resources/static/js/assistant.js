@@ -3,7 +3,7 @@
  * Records patient vitals (BP, Temperature, Pulse, Oxygen), handles triage queue,
  * and enables quick walk-in patient check-in with Firebase Firestore integration.
  */
-
+CuraAuth.guard(['ASSISTANT', 'ADMIN']);
 async function loadAssistantTriageData() {
     // 1. FETCH APPOINTMENTS (ASYNC FIRESTORE / LOCAL CACHE)
     let appointments = await CuraData.fetchAppointments();

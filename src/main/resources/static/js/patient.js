@@ -3,7 +3,7 @@
  * Implements the 3-Question Triage Quiz, dynamic time duration calculation,
  * slot selection, and patient appointment history.
  */
-
+CuraAuth.guard(['PATIENT', 'ADMIN']);
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const morningTimes = ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM'];
 const eveningTimes = ['05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM'];
