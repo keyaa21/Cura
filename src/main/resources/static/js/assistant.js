@@ -1,27 +1,41 @@
 /**
  * CURA - Assistant Triage Station Logic
  * Records patient vitals (BP, Temperature, Pulse, Oxygen), handles triage queue,
- * and enables quick walk-in patient check-in.
+ * and enables quick walk-in patient check-in with Firebase Firestore integration.
  */
 
-function loadAssistantTriageData() {
-    const appointments = CuraData.getAppointments();
+async function loadAssistantTriageData() {
+    // 1. FETCH APPOINTMENTS (ASYNC FIRESTORE / LOCAL CACHE)
+    let appointments = await CuraData.fetchAppointments();
     const selectEl = document.getElementById('patientSelect');
     const tableBody = document.getElementById('queueTableBody');
-
-    // Populate patient select dropdown
+    
+    // 2. ROLE-BASED FILTERING
+    const currentUser = CuraAuth.getCurrentUser();
+    if (currentUser && currentUser.role === 'ASSISTANT') {
+        // Filter by assistant's assigned clinic specialization if specified
+        if (currentUser.specialization && currentUser.specialization !== 'Clinical Triage') {
+            appointments = appointments.filter(apt => 
+                apt.specialization && 
+                apt.specialization.toLowerCase() === currentUser.specialization.toLowerCase()
+            );
+        }
+    }
+    // Note: If currentUser.role === 'ADMIN', no role filter is applied and admin sees all queues.
+    
+    // 3. POPULATE PATIENT SELECT DROPDOWN
     if (selectEl) {
         selectEl.innerHTML = `
             <option value="">-- Select Arrived Patient --</option>
             ${appointments.map(apt => `
                 <option value="${apt.id}">
-                    ${apt.patientName} (${apt.dayOfWeek} &bull; ${apt.timeSlot}) - ${apt.healthIssue || 'General'}
+                    ${apt.patientName} (${apt.dayOfWeek} &bull; ${apt.timeSlot}) -${apt.healthIssue || 'General'}
                 </option>
             `).join('')}
         `;
     }
 
-    // Populate queue table
+    // 4. POPULATE QUEUE TABLE
     if (tableBody) {
         if (appointments.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 2rem; color: var(--text-muted);">No patients in queue today.</td></tr>`;
@@ -71,7 +85,7 @@ function loadAssistantTriageData() {
     }
 }
 
-function handleTriageSubmit(e) {
+async function handleTriageSubmit(e) {
     e.preventDefault();
 
     const selectedId = document.getElementById('patientSelect').value;
@@ -96,17 +110,18 @@ function handleTriageSubmit(e) {
         recordedAt: new Date().toISOString()
     };
 
-    CuraData.updateAppointment(selectedId, {
+    // Save vitals and route patient to Doctor consultation in Firestore
+    await CuraData.updateAppointment(selectedId, {
         vitals: vitals,
-        status: 'ONGOING' // Route to doctor consultation
+        status: 'ONGOING' // Route to doctor consultation queue
     });
 
     showToast('Vitals recorded! Patient routed to Doctor queue.', 'success');
     document.getElementById('triageForm').reset();
-    loadAssistantTriageData();
+    await loadAssistantTriageData();
 }
 
-function handleWalkInSubmit(e) {
+async function handleWalkInSubmit(e) {
     e.preventDefault();
 
     const name = document.getElementById('walkinName').value.trim();
@@ -141,10 +156,11 @@ function handleWalkInSubmit(e) {
         createdAt: new Date().toISOString()
     };
 
-    CuraData.addAppointment(walkInApt);
+    // Save new walk-in appointment to Firebase Cloud Firestore
+    await CuraData.addAppointment(walkInApt);
     showToast(`Walk-in patient ${name} registered into triage queue!`, 'success');
     document.getElementById('walkinForm').reset();
-    loadAssistantTriageData();
+    await loadAssistantTriageData();
 }
 
 document.addEventListener('DOMContentLoaded', loadAssistantTriageData);

@@ -17,13 +17,10 @@
 <header class="navbar">
     <div class="nav-brand">
         <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
-        <h1 class="nav-logo">CURA<span>.</span></h1>
+        <h1 class="nav-logo">CURA</h1>
         <span class="nav-badge">Assistant Triage Station</span>
     </div>
     <div class="nav-actions">
-        <a href="patient-dashboard.html" class="btn-nav-link"><i class="fa-solid fa-hospital-user"></i> <span>Patient View</span></a>
-        <a href="doctor-dashboard.html" class="btn-nav-link"><i class="fa-solid fa-user-doctor"></i> <span>Doctor View</span></a>
-        <a href="dashboard.html" class="btn-nav-link"><i class="fa-solid fa-house"></i> <span>Admin Hub</span></a>
         <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
             <i class="fa-solid fa-moon"></i>
         </button>
@@ -171,7 +168,16 @@
 </main>
 
 <script src="js/firebase-config.js"></script>
+<!-- Firebase Web SDK Compat Libraries -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<!-- Your Application Scripts -->
+<script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
+<script src="js/app.js"></script>
+<script>CuraAuth.guard(['ASSISTANT']);</script>
 <script src="js/assistant.js"></script>
 </body>
 </html>

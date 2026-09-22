@@ -10,12 +10,12 @@
  */
 
 const firebaseConfig = {
-    apiKey: "AIzaSy_YOUR_FIREBASE_API_KEY_HERE",
-    authDomain: "cura-clinic-app.firebaseapp.com",
-    projectId: "cura-clinic-app",
-    storageBucket: "cura-clinic-app.appspot.com",
-    messagingSenderId: "123456789012",
-    appId: "1:123456789012:web:abcdef1234567890"
+  apiKey: "AIzaSyB6wrdZ2Ua-qO296FyXjMwLk21ypVtafMA",
+  authDomain: "cura-clinic-db.firebaseapp.com",
+  projectId: "cura-clinic-db",
+  storageBucket: "cura-clinic-db.firebasestorage.app",
+  messagingSenderId: "125501944441",
+  appId: "1:125501944441:web:df664ab629908a68041aa8"
 };
 
 let firebaseInitialized = false;

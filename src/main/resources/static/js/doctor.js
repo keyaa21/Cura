@@ -1,19 +1,33 @@
 /**
  * CURA - Doctor Clinical Dashboard Logic
  * Handles appointment queue, prescription notes modal, vitals review,
- * and 15/30-day follow-up reminder tracker.
+ * and 15/30-day follow-up reminder tracker with Firebase Firestore integration.
  */
 
 let activeAppointmentForRx = null;
 let currentFilter = 'ALL';
 
-function loadDoctorAppointments() {
-    let list = CuraData.getAppointments();
+async function loadDoctorAppointments() {
+    // 1. FETCH APPOINTMENTS (ASYNC FIRESTORE / LOCAL CACHE)
+    let list = await CuraData.fetchAppointments();
     const container = document.getElementById('doctorAppointmentsContainer');
     const followUpsContainer = document.getElementById('followUpsContainer');
     if (!container) return;
 
-    // Filter appointments
+    // 2. ROLE-BASED FILTERING
+    const currentUser = CuraAuth.getCurrentUser();
+    if (currentUser && currentUser.role === 'DOCTOR') {
+        // Doctor only sees appointments assigned to them
+        list = list.filter(apt => {
+            if (!apt.doctorName || !currentUser.fullName) return false;
+            const docName = apt.doctorName.toLowerCase();
+            const userFullName = currentUser.fullName.toLowerCase();
+            return docName.includes(userFullName) || userFullName.includes(docName);
+        });
+    }
+    // Note: If currentUser.role === 'ADMIN', no role filter is applied and admin sees everything.
+
+    // 3. STATUS FILTER CHIPS
     if (currentFilter === 'READY') {
         list = list.filter(a => a.vitals && a.status !== 'COMPLETED');
     } else if (currentFilter === 'COMPLETED') {
@@ -22,11 +36,12 @@ function loadDoctorAppointments() {
         list = list.filter(a => a.status !== 'COMPLETED');
     }
 
+    // 4. RENDER APPOINTMENT QUEUE
     if (list.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 3rem; color: var(--text-muted); background: var(--surface-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
-                <i class="fa-solid fa-user-clock" style="font-size: 2.5rem; color: var(--sage-300); margin-bottom: 12px;"></i>
-                <p>No appointments found under this filter.</p>
+                <i class="fa-solid fa-user-clock" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 12px;"></i>
+                <p>No appointments found for your schedule under this filter.</p>
             </div>
         `;
     } else {
@@ -102,8 +117,7 @@ function loadDoctorAppointments() {
                     ${apt.prescriptionSummary ? `
                         <div style="margin-top: 14px; padding: 12px 16px; background: var(--primary-light); border-radius: var(--radius-md); font-size: 0.88rem; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <strong><i class="fa-solid fa-file-medical"></i> Prescription Notes:</strong> ${apt.prescriptionSummary}
-                                ${apt.followUpIntervalDays ? `<span style="margin-left: 10px; font-weight: 700; color: var(--accent-peach);">&bull; Follow-up in ${apt.followUpIntervalDays} days</span>` : ''}
+                                <strong><i class="fa-solid fa-file-medical"></i> Prescription Notes:</strong> ${apt.prescriptionSummary}${apt.followUpIntervalDays ? `<span style="margin-left: 10px; font-weight: 700; color: var(--accent-peach);">&bull; Follow-up in ${apt.followUpIntervalDays} days</span>` : ''}
                             </div>
                         </div>
                     ` : ''}
@@ -112,9 +126,9 @@ function loadDoctorAppointments() {
         }).join('');
     }
 
-    // Load Follow-Ups Due Tracker
+    // 5. LOAD FOLLOW-UPS DUE TRACKER
     if (followUpsContainer) {
-        const completedApts = CuraData.getAppointments().filter(a => a.status === 'COMPLETED');
+        const completedApts = list.filter(a => a.status === 'COMPLETED');
         if (completedApts.length === 0) {
             followUpsContainer.innerHTML = `<p style="font-size: 0.9rem; color: var(--text-muted); padding: 1rem 0;">No patient follow-ups scheduled yet.</p>`;
         } else {
@@ -143,8 +157,8 @@ function filterAppointments(type) {
     loadDoctorAppointments();
 }
 
-function updateAppointmentStatus(id, newStatus) {
-    CuraData.updateAppointment(id, { 
+async function updateAppointmentStatus(id, newStatus) {
+    await CuraData.updateAppointment(id, { 
         status: newStatus,
         completedAt: newStatus === 'COMPLETED' ? new Date().toISOString() : null
     });
@@ -177,7 +191,7 @@ function closePrescriptionModal() {
     activeAppointmentForRx = null;
 }
 
-function handlePrescriptionSubmit(e) {
+async function handlePrescriptionSubmit(e) {
     e.preventDefault();
     if (!activeAppointmentForRx) return;
 
@@ -202,10 +216,12 @@ function handlePrescriptionSubmit(e) {
         createdAt: new Date().toISOString()
     };
 
-    CuraData.addPrescription(rx);
+    if (typeof CuraData.addPrescription === 'function') {
+        await CuraData.addPrescription(rx);
+    }
 
-    // Update appointment to COMPLETED with summary
-    CuraData.updateAppointment(activeAppointmentForRx.id, {
+    // Update appointment status to COMPLETED in Firebase Cloud Firestore
+    await CuraData.updateAppointment(activeAppointmentForRx.id, {
         status: 'COMPLETED',
         prescriptionSummary: `${diagnosis} &bull; ${remedies}`,
         followUpIntervalDays: followUpDays,
@@ -221,11 +237,11 @@ function sendFollowUpReminder(patientName) {
     showToast(`Follow-up notification queued for ${patientName}!`, 'peach');
 }
 
-function resetDemoData() {
+async function resetDemoData() {
     localStorage.removeItem('cura_appointments');
     localStorage.removeItem('cura_prescriptions');
     showToast('Demo data refreshed to default schedule', 'peach');
-    loadDoctorAppointments();
+    await loadDoctorAppointments();
 }
 
 document.addEventListener('DOMContentLoaded', loadDoctorAppointments);

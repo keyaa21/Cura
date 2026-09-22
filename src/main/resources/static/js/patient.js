@@ -166,53 +166,63 @@ function handleBookingSubmit(e) {
     }
 }
 
-function loadPatientHistory() {
-    const list = CuraData.getAppointments();
+async function loadPatientHistory() {
+    const list = await CuraData.fetchAppointments();
     const container = document.getElementById('patientAppointmentsList');
     if (!container) return;
 
     if (list.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
-                <i class="fa-regular fa-calendar-xmark" style="font-size: 2.5rem; color: var(--sage-300); margin-bottom: 10px;"></i>
-                <p>No appointments booked yet.</p>
-            </div>
-        `;
+        container.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--text-muted);">No appointments booked yet.</div>`;
         return;
     }
 
-    container.innerHTML = list.map(apt => {
-        let statusClass = 'status-booked';
-        if (apt.status === 'ONGOING') statusClass = 'status-ongoing';
-        else if (apt.status === 'COMPLETED') statusClass = 'status-completed';
-        else if (apt.status === 'CANCELLED') statusClass = 'status-cancelled';
-
-        return `
-            <div class="card" style="padding: 1.25rem; margin-bottom: 1rem; border-left: 4px solid var(--primary);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary);">${apt.doctorName} <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">(${apt.specialization})</span></h4>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
-                            <i class="fa-regular fa-calendar" style="color: var(--primary);"></i> ${apt.dayOfWeek} &bull; <i class="fa-regular fa-clock" style="color: var(--accent-peach);"></i> ${apt.timeSlot} &bull; ⏱️ <strong>${apt.allocatedDurationMinutes || 30} mins</strong>
-                        </p>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
-                            <span class="followup-pill"><i class="fa-solid fa-stethoscope"></i> ${apt.healthIssue || 'General'}</span>
-                            ${apt.firstTimePatient ? '<span class="nav-badge" style="margin-left: 6px;">1st Visit</span>' : ''}
-                        </p>
-                    </div>
-                    <div style="text-align: right;">
-                        <span class="status-badge ${statusClass}">${apt.status}</span>
-                        ${apt.vitals ? '<div style="margin-top: 6px; font-size: 0.78rem; color: var(--primary); font-weight: 600;"><i class="fa-solid fa-heart-pulse"></i> Vitals Recorded</div>' : ''}
-                    </div>
+    container.innerHTML = list.map(apt => `
+        <div class="card" style="padding: 1.25rem; margin-bottom: 1rem; border-left: 4px solid var(--primary);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h4 style="font-size: 1.05rem; font-weight: 700;">${apt.doctorName} <span style="font-size: 0.8rem; font-weight: normal;">(${apt.specialization})</span></h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+                        ${apt.dayOfWeek} &bull; ${apt.timeSlot} &bull; <strong>${apt.allocatedDurationMinutes || 30} mins</strong>
+                    </p>
                 </div>
-                ${apt.prescriptionSummary ? `
-                    <div style="margin-top: 10px; padding: 10px 14px; background: var(--bg-app); border-radius: var(--radius-md); font-size: 0.85rem; border-left: 3px solid var(--accent-peach);">
-                        <strong><i class="fa-solid fa-prescription"></i> Doctor's Notes:</strong> ${apt.prescriptionSummary}
-                    </div>
-                ` : ''}
+                <span class="status-badge status-${(apt.status || 'booked').toLowerCase()}">${apt.status}</span>
             </div>
-        `;
-    }).join('');
+        </div>
+    `).join('');
+}
+
+async function handleBookingSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('patientName').value.trim();
+    const phone = document.getElementById('patientPhone').value.trim();
+    const doctorSelect = document.getElementById('doctorSelect');
+    const doctorName = doctorSelect.value;
+    const specialization = doctorSelect.selectedOptions[0].dataset.spec || 'General';
+    const symptoms = document.getElementById('symptomsDesc').value.trim();
+
+    const duration = calculateAllocatedMinutes();
+    const newAppointment = {
+        id: String(Date.now()),
+        patientName: name,
+        patientPhone: phone || '+91 9823000000',
+        doctorName: doctorName,
+        specialization: specialization,
+        dayOfWeek: selectedDay,
+        timeSlot: selectedTime,
+        allocatedDurationMinutes: duration,
+        healthIssue: quizState.healthIssue,
+        firstTimePatient: quizState.isFirstTime,
+        groupSize: quizState.groupSize,
+        symptomsDescription: symptoms || 'Standard consultation',
+        status: 'BOOKED',
+        vitals: null,
+        createdAt: new Date().toISOString()
+    };
+
+    await CuraData.addAppointment(newAppointment);
+    showToast(`Appointment booked successfully! (${duration} mins)`);
+    document.getElementById('symptomsDesc').value = '';
+    loadPatientHistory();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
