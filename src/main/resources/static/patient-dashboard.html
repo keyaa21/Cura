@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#4A7A57">
-    <title>Cura — Patient Booking &amp; Triage Quiz</title>
+    <meta name="theme-color" content="#2563EB">
+    <title>Cura — Patient Consultation Booking</title>
 
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -16,9 +16,9 @@
 <!-- TOP NAVBAR -->
 <header class="navbar">
     <div class="nav-brand">
-        <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
-        <h1 class="nav-logo">CURA</h1>
-        <span class="nav-badge">Patient Portal</span>
+        <div class="brand-icon-wrap"><i class="fa-solid fa-heart-pulse"></i></div>
+        <h1 class="nav-logo">CURA <span>PATIENT</span></h1>
+        <span class="nav-badge" id="patientBadge">Patient Portal</span>
     </div>
     <div class="nav-actions">
         <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
@@ -37,7 +37,10 @@
     <section class="hero-banner">
         <div class="hero-content">
             <h2>Book Your Clinical Consultation</h2>
-            <p>Complete the 3-question intake quiz so our clinic can allocate sufficient consultation time with your doctor.</p>
+            <p>Answer our 3 brief intake questions so our clinic dynamically allocates sufficient time with your physician.</p>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-subtle); padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <i class="fa-solid fa-lock" style="color: var(--primary);"></i> Strictly your personal appointments &amp; records
         </div>
     </section>
 
@@ -45,14 +48,14 @@
     <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
 
         <!-- 1. PATIENT BASIC DETAILS -->
-        <section class="card" style="margin-bottom: 1.5rem;">
+        <section class="card" style="margin-bottom: 1.25rem;">
             <div class="card-header">
-                <h3 class="card-title"><i class="fa-solid fa-user"></i> Patient Contact Information</h3>
+                <h3 class="card-title"><i class="fa-solid fa-user"></i> Patient Information</h3>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
                 <div class="form-group">
                     <label for="patientName"><i class="fa-regular fa-user"></i> Full Name *</label>
-                    <input type="text" id="patientName" class="form-control" placeholder="e.g. Keya Joshi" value="Keya Joshi" required>
+                    <input type="text" id="patientName" class="form-control" placeholder="e.g. Keya Joshi" required>
                 </div>
                 <div class="form-group">
                     <label for="patientPhone"><i class="fa-solid fa-phone"></i> Mobile Phone</label>
@@ -61,21 +64,71 @@
                 <div class="form-group">
                     <label for="doctorSelect"><i class="fa-solid fa-user-doctor"></i> Select Physician *</label>
                     <select id="doctorSelect" class="form-select" required>
-                        <option value="Dr. Ashwini Joshi" data-spec="Homoeopathy">Dr. Ashwini Joshi (Homoeopathy Specialist)</option>
-                        <option value="Dr. Aarav Sharma" data-spec="Allopathy">Dr. Aarav Sharma (Allopathy &amp; General Medicine)</option>
-                        <option value="Dr. Priya Gupta" data-spec="Psychology">Dr. Priya Gupta (Psychology &amp; Mental Wellness)</option>
+                        <option value="Dr. Ashwini Joshi" data-email="ashwini.joshi@cura.clinic" data-spec="Homoeopathy">Dr. Ashwini Joshi (Homoeopathy Specialist)</option>
+                        <option value="Dr. Aarav Sharma" data-email="aarav.sharma@cura.clinic" data-spec="Allopathy">Dr. Aarav Sharma (Allopathy &amp; General Medicine)</option>
+                        <option value="Dr. Priya Gupta" data-email="priya.gupta@cura.clinic" data-spec="Psychology">Dr. Priya Gupta (Psychology &amp; Mental Wellness)</option>
                     </select>
                 </div>
             </div>
+
+            <!-- Extended Clinical & Demographic Data -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 0.5rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color);">
+                <div class="form-group">
+                    <label for="patientAge"><i class="fa-solid fa-cake-candles"></i> Age (Years)</label>
+                    <input type="number" id="patientAge" class="form-control" placeholder="e.g. 28" min="1" max="120" value="28">
+                </div>
+                <div class="form-group">
+                    <label for="patientGender"><i class="fa-solid fa-venus-mars"></i> Gender</label>
+                    <select id="patientGender" class="form-select">
+                        <option value="Female" selected>Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Other">Other / Non-binary</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="patientBloodGroup"><i class="fa-solid fa-droplet" style="color: var(--danger);"></i> Blood Group</label>
+                    <select id="patientBloodGroup" class="form-select">
+                        <option value="O+" selected>O Positive (O+)</option>
+                        <option value="O-">O Negative (O-)</option>
+                        <option value="A+">A Positive (A+)</option>
+                        <option value="A-">A Negative (A-)</option>
+                        <option value="B+">B Positive (B+)</option>
+                        <option value="B-">B Negative (B-)</option>
+                        <option value="AB+">AB Positive (AB+)</option>
+                        <option value="AB-">AB Negative (AB-)</option>
+                        <option value="Unknown">Unknown</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Medical Sensitivities & Allergies -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
+                <div class="form-group">
+                    <label for="patientAllergies"><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Known Allergies &amp; Drug Reactions</label>
+                    <input type="text" id="patientAllergies" class="form-control" placeholder="e.g. Penicillin, Sulfa, Dust, Pollen, NSAIDs (or None)" value="Penicillin (mild hives), Dust">
+                    <small style="font-size: 0.74rem; color: var(--text-muted);">Crucial for the physician before prescribing medications or remedies.</small>
+                </div>
+                <div class="form-group">
+                    <label for="patientChronic"><i class="fa-solid fa-heart-pulse" style="color: var(--warning);"></i> Chronic Medical Conditions</label>
+                    <input type="text" id="patientChronic" class="form-control" placeholder="e.g. Hypertension, Diabetes, Asthma, Migraine, Thyroid (or None)" value="Migraine">
+                    <small style="font-size: 0.74rem; color: var(--text-muted);">Existing medical conditions you are currently managing.</small>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 0.2rem; margin-bottom: 0;">
+                <label for="patientMedications"><i class="fa-solid fa-pills" style="color: var(--accent);"></i> Current Regular Medications</label>
+                <input type="text" id="patientMedications" class="form-control" placeholder="e.g. Metformin 500mg (OD), Thyroxine 50mcg, Multivitamin (or None)">
+            </div>
         </section>
 
-        <!-- 2. THE 3-QUESTION TRIAGE QUIZ (REQUESTED BY USER) -->
+        <!-- 2. THE 3-QUESTION TRIAGE QUIZ -->
         <section class="quiz-section">
             <div class="quiz-header">
                 <div class="quiz-step-badge">1</div>
                 <div>
-                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Intake &amp; Duration Quiz</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">Your responses determine your consultation time slot length.</p>
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">Intake &amp; Duration Calculation</h3>
+                    <p style="font-size: 0.82rem; color: var(--text-muted);">Your responses determine your consultation time slot length.</p>
                 </div>
             </div>
 
@@ -83,27 +136,27 @@
             <div class="quiz-question-box">
                 <div class="quiz-question-title">
                     <i class="fa-solid fa-stethoscope" style="color: var(--primary);"></i>
-                    <span>Question 1: What type of health issue are you experiencing?</span>
+                    <span>Question 1: What type of health concern brings you in?</span>
                 </div>
                 <div class="quiz-options-grid">
                     <div class="quiz-option-card health-issue-option selected" data-value="ACUTE" onclick="setHealthIssue('ACUTE')">
                         <div class="quiz-option-info">
-                            <h4><i class="fa-solid fa-bolt" style="color: var(--status-ongoing);"></i> Acute Issue</h4>
-                            <p>Recent/sudden onset (e.g. fever, cold, acute throat infection, headache)</p>
+                            <h4><i class="fa-solid fa-bolt" style="color: var(--warning);"></i> Acute Concern</h4>
+                            <p>Sudden/recent symptoms (fever, seasonal infection, headache)</p>
                         </div>
                     </div>
 
                     <div class="quiz-option-card health-issue-option" data-value="CHRONIC" onclick="setHealthIssue('CHRONIC')">
                         <div class="quiz-option-info">
                             <h4><i class="fa-solid fa-heart-pulse" style="color: var(--primary);"></i> Chronic Condition</h4>
-                            <p>Long-standing illness (e.g. migraine, allergies, skin, joint pain, asthma)</p>
+                            <p>Long-standing health condition (allergies, migraine, asthma, joints)</p>
                         </div>
                     </div>
 
                     <div class="quiz-option-card health-issue-option" data-value="PSYCHOLOGICAL" onclick="setHealthIssue('PSYCHOLOGICAL')">
                         <div class="quiz-option-info">
-                            <h4><i class="fa-solid fa-brain" style="color: var(--accent-peach);"></i> Psychological / Wellness</h4>
-                            <p>Mental wellness, stress, anxiety, counseling, emotional patterns</p>
+                            <h4><i class="fa-solid fa-brain" style="color: var(--accent);"></i> Psychological / Wellness</h4>
+                            <p>Mental wellness, stress, anxiety, counseling, emotional support</p>
                         </div>
                     </div>
                 </div>
@@ -112,21 +165,21 @@
             <!-- Quiz Question 2: First-Time Appointment -->
             <div class="quiz-question-box">
                 <div class="quiz-question-title">
-                    <i class="fa-solid fa-clipboard-question" style="color: var(--accent-peach);"></i>
-                    <span>Question 2: Is this your first time visiting Cura Clinic?</span>
+                    <i class="fa-solid fa-clipboard-question" style="color: var(--accent);"></i>
+                    <span>Question 2: Is this your first visit to Cura Clinic?</span>
                 </div>
                 <div class="quiz-options-grid">
                     <div class="quiz-option-card first-time-option selected" data-value="true" onclick="setFirstTime(true)">
                         <div class="quiz-option-info">
                             <h4><i class="fa-solid fa-circle-check" style="color: var(--primary);"></i> Yes — First Time Patient</h4>
-                            <p>Requires in-depth constitutional case taking &amp; medical history (Allocates <strong>1 Full Hour</strong>)</p>
+                            <p>Comprehensive constitutional intake &amp; medical history (Allocates <strong>1 Full Hour</strong>)</p>
                         </div>
                     </div>
 
                     <div class="quiz-option-card first-time-option" data-value="false" onclick="setFirstTime(false)">
                         <div class="quiz-option-info">
-                            <h4><i class="fa-solid fa-rotate" style="color: var(--sage-500);"></i> No — Returning Patient</h4>
-                            <p>Follow-up visit or routine medicine check (Allocates <strong>30-50 mins</strong>)</p>
+                            <h4><i class="fa-solid fa-rotate" style="color: var(--accent);"></i> No — Returning Patient</h4>
+                            <p>Follow-up visit or medicine adjustment (Allocates <strong>30–50 mins</strong>)</p>
                         </div>
                     </div>
                 </div>
@@ -136,7 +189,7 @@
             <div class="quiz-question-box" style="border-bottom: none; margin-bottom: 0.5rem; padding-bottom: 0;">
                 <div class="quiz-question-title">
                     <i class="fa-solid fa-people-group" style="color: var(--primary);"></i>
-                    <span>Question 3: How many people will be attending this appointment?</span>
+                    <span>Question 3: How many individuals are attending this consultation?</span>
                 </div>
                 <div class="quiz-options-grid">
                     <div class="quiz-option-card group-size-option selected" data-value="1" onclick="setGroupSize(1)">
@@ -148,7 +201,7 @@
 
                     <div class="quiz-option-card group-size-option" data-value="2" onclick="setGroupSize(2)">
                         <div class="quiz-option-info">
-                            <h4>2 People (Family / Couple)</h4>
+                            <h4>2 People (Couple / Family)</h4>
                             <p>+15 minutes added to slot</p>
                         </div>
                     </div>
@@ -163,7 +216,7 @@
             </div>
 
             <!-- Dynamic Duration Result Badge -->
-            <div style="margin-top: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div style="margin-top: 1.25rem;">
                 <div id="allocatedDurationBadge" class="duration-summary-pill">
                     <i class="fa-solid fa-stopwatch"></i>
                     <span><strong>60 mins</strong> allocated (Comprehensive 1st-Time Intake)</span>
@@ -172,12 +225,12 @@
         </section>
 
         <!-- 3. SYMPTOMS & NOTES -->
-        <section class="card" style="margin-bottom: 1.5rem;">
+        <section class="card" style="margin-bottom: 1.25rem;">
             <div class="card-header">
-                <h3 class="card-title"><i class="fa-regular fa-comment-dots"></i> Brief Symptoms or Concerns</h3>
+                <h3 class="card-title"><i class="fa-regular fa-comment-dots"></i> Describe Your Concerns</h3>
             </div>
             <div class="form-group" style="margin-bottom: 0;">
-                <textarea id="symptomsDesc" class="form-textarea" placeholder="Describe primary symptoms, duration, or any questions for the doctor..."></textarea>
+                <textarea id="symptomsDesc" class="form-textarea" placeholder="Describe primary symptoms, duration, current treatments, or notes for the doctor..."></textarea>
             </div>
         </section>
 
@@ -187,22 +240,22 @@
                 <h3 class="card-title"><i class="fa-regular fa-calendar-days"></i> Select Consultation Day &amp; Slot</h3>
             </div>
 
-            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                <strong>Step A:</strong> Pick a day (Monday - Saturday)
+            <p style="font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 0.8rem;">
+                <strong>Step A:</strong> Pick a day (Monday – Saturday)
             </p>
             <div class="calendar-days-grid" id="daysGrid"></div>
 
-            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 1.25rem 0 0.8rem;">
+            <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 1.2rem 0 0.6rem;">
                 <strong>Step B:</strong> Morning Sessions (09:00 AM – 01:00 PM)
             </p>
             <div class="slots-grid" id="morningSlots"></div>
 
-            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 1.25rem 0 0.8rem;">
+            <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 1.2rem 0 0.6rem;">
                 <strong>Step C:</strong> Evening Sessions (05:00 PM – 08:00 PM)
             </p>
             <div class="slots-grid" id="eveningSlots"></div>
 
-            <button type="submit" class="btn btn-peach btn-lg btn-block" style="margin-top: 1rem;">
+            <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top: 1rem;">
                 <i class="fa-solid fa-check"></i> Confirm &amp; Schedule Appointment
             </button>
         </section>
@@ -213,23 +266,85 @@
     <section class="card" id="patientHistorySection">
         <div class="card-header">
             <h3 class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Your Booked Appointments &amp; Prescriptions</h3>
+            <span style="font-size: 0.78rem; color: var(--text-muted);"><i class="fa-solid fa-shield-halved"></i> Strictly your records</span>
         </div>
         <div id="patientAppointmentsList"></div>
     </section>
 
+    <!-- 6. PRESCRIBED DIAGNOSTIC TESTS & X-RAY REPORTS -->
+    <section class="card" id="patientTestsSection" style="margin-top: 1.25rem; border-top: 3px solid var(--accent);">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title"><i class="fa-solid fa-x-ray" style="color: var(--accent);"></i> Prescribed Tests, Scans &amp; Lab Reports</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+                    Laboratory tests, X-Rays, and investigations ordered by your physician. You can upload results directly.
+                </p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="loadPatientTestOrders()">
+                <i class="fa-solid fa-rotate"></i> Refresh Tests
+            </button>
+        </div>
+        <div id="patientTestOrdersList">
+            <div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading diagnostic orders...</div>
+        </div>
+    </section>
+
 </main>
 
-<script src="js/firebase-config.js"></script>
-<!-- Firebase Web SDK Compat Libraries -->
+<!-- UPLOAD DIAGNOSTIC REPORT MODAL -->
+<div class="modal-overlay" id="uploadReportModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fa-solid fa-file-arrow-up" style="color: var(--primary);"></i> Upload Lab / X-Ray Report</h3>
+            <button type="button" class="btn-close-modal" onclick="closeUploadReportModal()">&times;</button>
+        </div>
+
+        <form id="uploadReportForm" onsubmit="handleReportUploadSubmit(event)">
+            <input type="hidden" id="uploadReportOrderId">
+
+            <div style="background: var(--bg-app); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1rem;">
+                <div style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary);" id="uploadReportTestName">Test Name</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;" id="uploadReportDoctorInfo">Prescribed by Physician</div>
+            </div>
+
+            <div class="form-group">
+                <label for="reportFileInput"><i class="fa-regular fa-file-lines"></i> Select Report File (Image / Scan / PDF) *</label>
+                <div class="file-upload-zone" onclick="document.getElementById('reportFileInput').click()">
+                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--primary); margin-bottom: 6px; display: block;"></i>
+                    <span style="font-size: 0.85rem; font-weight: 500;">Click to select file or scan</span>
+                    <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">Supported: JPG, PNG, WebP, PDF (Max 5MB)</div>
+                </div>
+                <input type="file" id="reportFileInput" accept="image/*,.pdf" style="display: none;" onchange="handleFileSelected(event)" required>
+                <div id="selectedFileNameDisplay" style="display: none; margin-top: 6px;">
+                    <span class="report-preview-chip"><i class="fa-solid fa-paperclip"></i> <span id="selectedFileNameText"></span></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="reportNotes"><i class="fa-regular fa-comment-dots"></i> Patient / Lab Notes (Optional)</label>
+                <input type="text" id="reportNotes" class="form-control" placeholder="e.g. Test performed at City Diagnostics on Monday">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1.4rem;">
+                <button type="submit" class="btn btn-primary" id="btnUploadSubmit" style="flex: 1.2;">
+                    <i class="fa-solid fa-check"></i> Submit Report to Physician
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeUploadReportModal()" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Firebase SDK Compat Libraries -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-<!-- Your Application Scripts -->
+<!-- Core App Configuration & Scripts -->
 <script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
-<script src="js/app.js"></script>
-<script>CuraAuth.guard(['PATIENT']);</script>
 <script src="js/patient.js"></script>
 </body>
 </html>

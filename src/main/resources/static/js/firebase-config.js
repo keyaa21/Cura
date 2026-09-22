@@ -1,12 +1,6 @@
 /**
  * CURA - Firebase Configuration & Bridge
- * 
- * Instructions to connect your real Firebase project for FREE:
- * 1. Go to https://console.firebase.google.com/
- * 2. Create a free project named 'Cura' (Spark plan is 100% free)
- * 3. Add a Web App and enable "Firebase Authentication" (Email/Password)
- * 4. Enable "Cloud Firestore" (Start in test mode)
- * 5. Replace the placeholder values below with your credentials.
+ * Provides connection to Firebase Authentication and Cloud Firestore.
  */
 
 const firebaseConfig = {
@@ -20,24 +14,27 @@ const firebaseConfig = {
 
 let firebaseInitialized = false;
 
-// Check if actual keys are supplied or if running in local mode
 function isFirebaseConfigured() {
-    return firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("YOUR_FIREBASE_API_KEY");
+    return !!(firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("YOUR_FIREBASE_API_KEY"));
 }
 
 if (typeof firebase !== 'undefined' && isFirebaseConfigured()) {
     try {
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         firebaseInitialized = true;
-        console.log("🌿 Cura: Firebase initialized successfully.");
+        console.log("Cura: Firebase initialized successfully.");
     } catch (e) {
-        console.warn("🌿 Cura: Firebase initialization skipped/failed. Using local store.", e);
+        console.warn("Cura: Firebase initialization skipped/failed. Using local store fallback.", e);
     }
 } else {
-    console.log("🌿 Cura: Running in local Spring Boot / LocalStorage mode (Add Firebase keys in js/firebase-config.js whenever ready).");
+    console.log("Cura: Running with local fallback storage.");
 }
 
 window.CuraFirebase = {
-    isReady: () => firebaseInitialized,
-    config: firebaseConfig
+    isReady: () => firebaseInitialized && typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0,
+    config: firebaseConfig,
+    auth: () => (typeof firebase !== 'undefined' ? firebase.auth() : null),
+    db: () => (typeof firebase !== 'undefined' ? firebase.firestore() : null)
 };

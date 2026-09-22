@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#4A7A57">
+    <meta name="theme-color" content="#2563EB">
     <title>Cura — Assistant Triage Station</title>
 
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -16,9 +16,9 @@
 <!-- TOP NAVBAR -->
 <header class="navbar">
     <div class="nav-brand">
-        <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
-        <h1 class="nav-logo">CURA</h1>
-        <span class="nav-badge">Assistant Triage Station</span>
+        <div class="brand-icon-wrap"><i class="fa-solid fa-heart-pulse"></i></div>
+        <h1 class="nav-logo">CURA <span>TRIAGE</span></h1>
+        <span class="nav-badge">Assistant Station</span>
     </div>
     <div class="nav-actions">
         <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
@@ -39,69 +39,121 @@
             <h2>Clinical Assistant &amp; Patient Check-In</h2>
             <p>Welcome arriving patients, capture preliminary vitals (Blood Pressure, Temperature, Pulse, SpO2), and route them to doctor consultation rooms.</p>
         </div>
+        <div id="doctorScopeBadge" style="font-size: 0.82rem; color: var(--text-secondary); background: var(--bg-subtle); padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <i class="fa-solid fa-user-doctor" style="color: var(--primary);"></i> Loading assigned physician...
+        </div>
     </section>
 
     <!-- GRID LAYOUT -->
-    <div style="display: grid; grid-template-columns: 380px 1fr; gap: 2rem; align-items: start;">
+    <div style="display: grid; grid-template-columns: 360px 1fr; gap: 1.5rem; align-items: start;">
 
         <!-- LEFT COLUMN: VITALS ENTRY & QUICK WALK-IN -->
         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
             
             <!-- Vitals Form -->
-            <div class="card" style="border-top: 4px solid var(--primary);">
+            <div class="card" style="border-top: 3px solid var(--accent);">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fa-solid fa-notes-medical"></i> Record Patient Vitals</h3>
+                    <h3 class="card-title"><i class="fa-solid fa-heart-pulse" style="color: var(--accent);"></i> Record Triage Vitals</h3>
                 </div>
 
                 <form id="triageForm" onsubmit="handleTriageSubmit(event)">
                     <div class="form-group">
-                        <label for="patientSelect"><i class="fa-solid fa-user-check"></i> Arrived Patient *</label>
-                        <select id="patientSelect" class="form-select" required></select>
+                        <label for="patientSelect"><i class="fa-regular fa-user"></i> Arrived Patient *</label>
+                        <select id="patientSelect" class="form-select" required>
+                            <option value="">Loading schedule...</option>
+                        </select>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <div class="form-group">
-                            <label for="vitalsBP"><i class="fa-solid fa-gauge-high"></i> BP (mmHg)</label>
-                            <input type="text" id="vitalsBP" class="form-control" placeholder="120/80" required value="120/80">
+                            <label for="vitalsBP"><i class="fa-solid fa-gauge"></i> Blood Pressure</label>
+                            <input type="text" id="vitalsBP" class="form-control" placeholder="120/80" value="120/80">
                         </div>
                         <div class="form-group">
                             <label for="vitalsTemp"><i class="fa-solid fa-temperature-half"></i> Temp (°F)</label>
-                            <input type="number" step="0.1" id="vitalsTemp" class="form-control" placeholder="98.6" required value="98.6">
+                            <input type="number" step="0.1" id="vitalsTemp" class="form-control" placeholder="98.6" value="98.6">
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <div class="form-group">
-                            <label for="vitalsPulse"><i class="fa-solid fa-heart-pulse"></i> Pulse (bpm)</label>
-                            <input type="number" id="vitalsPulse" class="form-control" placeholder="72" required value="72">
+                            <label for="vitalsPulse"><i class="fa-solid fa-heart"></i> Pulse (bpm)</label>
+                            <input type="number" id="vitalsPulse" class="form-control" placeholder="72" value="72">
                         </div>
                         <div class="form-group">
                             <label for="vitalsOxygen"><i class="fa-solid fa-lungs"></i> SpO2 (%)</label>
-                            <input type="number" step="0.1" id="vitalsOxygen" class="form-control" placeholder="99.0" value="99.0">
+                            <input type="number" id="vitalsOxygen" class="form-control" placeholder="99" value="99">
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="vitalsNotes"><i class="fa-regular fa-clipboard"></i> Triage Observations</label>
-                        <input type="text" id="vitalsNotes" class="form-control" placeholder="e.g. Mild headache, patient comfortable">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div class="form-group">
+                            <label for="vitalsRespRate"><i class="fa-solid fa-wind"></i> Resp Rate (/min)</label>
+                            <input type="number" id="vitalsRespRate" class="form-control" placeholder="16" value="16">
+                        </div>
+                        <div class="form-group">
+                            <label for="vitalsGlucose"><i class="fa-solid fa-droplet" style="color: var(--danger);"></i> Blood Sugar (mg/dL)</label>
+                            <input type="number" id="vitalsGlucose" class="form-control" placeholder="e.g. 95" value="95">
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block" style="margin-top: 0.5rem;">
-                        <i class="fa-solid fa-paper-plane"></i> Check In &amp; Send to Doctor
+                    <!-- Height, Weight & Auto BMI -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div class="form-group">
+                            <label for="vitalsHeight"><i class="fa-solid fa-ruler-vertical"></i> Height (cm)</label>
+                            <input type="number" id="vitalsHeight" class="form-control" placeholder="165" value="165" oninput="calculateTriageBMI()">
+                        </div>
+                        <div class="form-group">
+                            <label for="vitalsWeight"><i class="fa-solid fa-weight-scale"></i> Weight (kg)</label>
+                            <input type="number" id="vitalsWeight" class="form-control" placeholder="60" value="60" oninput="calculateTriageBMI()">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 0.6rem; padding: 6px 10px; background: var(--bg-app); border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600;">CALCULATED BMI:</span>
+                        <span id="triageBmiBadge" style="font-size: 0.85rem; font-weight: 600; color: var(--primary);">22.0 kg/m² (Normal)</span>
+                    </div>
+
+                    <!-- Pain Scale (1-10) -->
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-face-frown"></i> Pain Severity (0 to 10 Scale)</label>
+                        <div class="pain-score-picker" id="painPicker">
+                            <button type="button" class="pain-btn" data-val="0" onclick="selectPainScore(0)">0</button>
+                            <button type="button" class="pain-btn active" data-val="1" onclick="selectPainScore(1)">1</button>
+                            <button type="button" class="pain-btn" data-val="2" onclick="selectPainScore(2)">2</button>
+                            <button type="button" class="pain-btn" data-val="3" onclick="selectPainScore(3)">3</button>
+                            <button type="button" class="pain-btn" data-val="4" onclick="selectPainScore(4)">4</button>
+                            <button type="button" class="pain-btn" data-val="5" onclick="selectPainScore(5)">5</button>
+                            <button type="button" class="pain-btn" data-val="6" onclick="selectPainScore(6)">6</button>
+                            <button type="button" class="pain-btn high" data-val="7" onclick="selectPainScore(7)">7</button>
+                            <button type="button" class="pain-btn high" data-val="8" onclick="selectPainScore(8)">8</button>
+                            <button type="button" class="pain-btn high" data-val="9" onclick="selectPainScore(9)">9</button>
+                            <button type="button" class="pain-btn high" data-val="10" onclick="selectPainScore(10)">10</button>
+                        </div>
+                        <input type="hidden" id="vitalsPainScore" value="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vitalsNotes"><i class="fa-regular fa-comment"></i> Clinical Observations &amp; Complaints</label>
+                        <input type="text" id="vitalsNotes" class="form-control" placeholder="e.g. Alert, mild throat pain, no acute distress">
+                    </div>
+
+                    <button type="submit" class="btn btn-accent btn-block" style="margin-top: 0.6rem;">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i> Route Vitals to Doctor Queue
                     </button>
                 </form>
             </div>
 
-            <!-- Walk-in Patient Quick Registration -->
-            <div class="card" style="border-top: 4px solid var(--accent-peach);">
+            <!-- Quick Walk-In Registration -->
+            <div class="card" style="border-top: 3px solid var(--primary);">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fa-solid fa-person-walking-arrow-right"></i> Quick Walk-In Registration</h3>
+                    <h3 class="card-title"><i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i> Walk-In Intake</h3>
                 </div>
 
                 <form id="walkinForm" onsubmit="handleWalkInSubmit(event)">
                     <div class="form-group">
                         <label for="walkinName">Patient Name *</label>
-                        <input type="text" id="walkinName" class="form-control" placeholder="Full name" required>
+                        <input type="text" id="walkinName" class="form-control" placeholder="e.g. Rajesh Patil" required>
                     </div>
 
                     <div class="form-group">
@@ -110,41 +162,36 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="walkinDoctor">Assign Doctor</label>
-                        <select id="walkinDoctor" class="form-select">
-                            <option value="Dr. Ashwini Joshi">Dr. Ashwini Joshi (Homoeopathy)</option>
-                            <option value="Dr. Aarav Sharma">Dr. Aarav Sharma (Allopathy)</option>
-                            <option value="Dr. Priya Gupta">Dr. Priya Gupta (Psychology)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="walkinIssue">Issue Type</label>
+                        <label for="walkinIssue">Health Concern</label>
                         <select id="walkinIssue" class="form-select">
-                            <option value="ACUTE">Acute (Immediate fever/pain)</option>
-                            <option value="CHRONIC">Chronic Condition</option>
-                            <option value="PSYCHOLOGICAL">Psychological Counseling</option>
+                            <option value="ACUTE">Acute (Sudden onset/fever/pain)</option>
+                            <option value="CHRONIC">Chronic (Long-term condition)</option>
+                            <option value="PSYCHOLOGICAL">Psychological / Emotional Wellness</option>
                         </select>
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 8px; margin: 0.5rem 0 1rem;">
-                        <input type="checkbox" id="walkinFirstTime" checked style="accent-color: var(--accent-peach);">
-                        <label for="walkinFirstTime" style="font-size: 0.85rem; cursor: pointer;">First-time clinic visit (Allocate 1 hr)</label>
+                    <div style="margin-bottom: 0.8rem; font-size: 0.82rem; display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="walkinFirstTime" checked style="cursor: pointer;">
+                        <label for="walkinFirstTime" style="cursor: pointer; font-weight: normal; margin: 0;">
+                            First Time Patient (Allocates 1 Full Hour)
+                        </label>
                     </div>
 
-                    <button type="submit" class="btn btn-peach btn-block">
-                        <i class="fa-solid fa-plus"></i> Add Walk-In to Queue
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fa-solid fa-user-plus"></i> Check In Walk-In
                     </button>
                 </form>
             </div>
 
         </div>
 
-        <!-- RIGHT COLUMN: PATIENT TRIAGE QUEUE TABLE -->
-        <div class="card" style="border-top: 4px solid var(--sage-400);">
+        <!-- RIGHT COLUMN: TRIAGE STATUS QUEUE -->
+        <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><i class="fa-solid fa-users-line"></i> Today's Live Patient Queue</h3>
-                <span class="followup-pill"><i class="fa-solid fa-rotate"></i> Real-time</span>
+                <h3 class="card-title"><i class="fa-solid fa-hospital-user"></i> Arrived Patients Queue</h3>
+                <button class="btn btn-secondary btn-sm" onclick="loadAssistantTriageData()">
+                    <i class="fa-solid fa-rotate"></i> Refresh
+                </button>
             </div>
 
             <div class="table-responsive">
@@ -152,32 +199,107 @@
                     <thead>
                         <tr>
                             <th>Patient</th>
-                            <th>Doctor &amp; Spec</th>
-                            <th>Schedule &amp; Slot</th>
-                            <th>Recorded Vitals</th>
+                            <th>Physician</th>
+                            <th>Schedule &amp; Issue</th>
+                            <th>Triage Vitals</th>
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody id="queueTableBody"></tbody>
+                    <tbody id="queueTableBody">
+                        <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading queue...</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
 
-    </div>
+    <!-- DIAGNOSTIC ORDERS & LAB WORKSTATION -->
+    <section class="card" style="margin-top: 1.5rem; border-top: 3px solid var(--primary);">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title"><i class="fa-solid fa-flask-vial" style="color: var(--primary);"></i> Diagnostic Orders &amp; Lab Workstation</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+                    Lab investigations and X-Rays ordered by your assigned physician. Track sample collection and attach laboratory findings.
+                </p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="loadAssistantTestOrders()">
+                <i class="fa-solid fa-rotate"></i> Refresh Lab Queue
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="cura-table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Prescribed Investigation</th>
+                        <th>Urgency &amp; Details</th>
+                        <th>Doctor Notes</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="assistantTestOrdersBody">
+                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading lab &amp; diagnostic orders...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 
 </main>
 
-<script src="js/firebase-config.js"></script>
-<!-- Firebase Web SDK Compat Libraries -->
+<!-- ATTACH LAB REPORT / FINDINGS MODAL -->
+<div class="modal-overlay" id="attachLabModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fa-solid fa-file-waveform" style="color: var(--primary);"></i> Record Lab Result / Attach Report</h3>
+            <button type="button" class="btn-close-modal" onclick="closeAttachLabModal()">&times;</button>
+        </div>
+
+        <form id="attachLabForm" onsubmit="handleAssistantReportSubmit(event)">
+            <input type="hidden" id="labOrderId">
+
+            <div style="background: var(--bg-app); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1rem;">
+                <div style="font-weight: 600; font-size: 0.88rem;" id="labModalTestName">Investigation</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;" id="labModalPatientInfo">Patient Details</div>
+            </div>
+
+            <div class="form-group">
+                <label for="labFindings"><i class="fa-solid fa-square-poll-vertical"></i> Clinical Findings / Values Summary</label>
+                <textarea id="labFindings" class="form-textarea" placeholder="e.g. Hb: 13.8 g/dL, WBC: 7,200 /mcL, Platelets: 240,000 /mcL (Normal limits)&#10;or X-Ray: Clear lung fields, no consolidation."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="labFileInput"><i class="fa-regular fa-file"></i> Attach Scanned Report / Imaging (Optional)</label>
+                <div class="file-upload-zone" onclick="document.getElementById('labFileInput').click()">
+                    <i class="fa-solid fa-file-arrow-up" style="font-size: 1.8rem; color: var(--primary); margin-bottom: 4px; display: block;"></i>
+                    <span style="font-size: 0.82rem; font-weight: 500;">Click to select file or scan</span>
+                </div>
+                <input type="file" id="labFileInput" accept="image/*,.pdf" style="display: none;" onchange="handleAssistantFileSelected(event)">
+                <div id="labFileNameDisplay" style="display: none; margin-top: 6px;">
+                    <span class="report-preview-chip"><i class="fa-solid fa-paperclip"></i> <span id="labFileNameText"></span></span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1.4rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1.2;">
+                    <i class="fa-solid fa-check"></i> Save &amp; Mark Ready for Doctor
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeAttachLabModal()" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Firebase SDK Compat Libraries -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-<!-- Your Application Scripts -->
+<!-- Core App Configuration & Scripts -->
 <script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
-<script src="js/app.js"></script>
-<script>CuraAuth.guard(['ASSISTANT']);</script>
 <script src="js/assistant.js"></script>
 </body>
 </html>

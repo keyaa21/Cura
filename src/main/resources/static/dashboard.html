@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#4A7A57">
-    <title>Cura — Clinic Admin &amp; Router</title>
+    <meta name="theme-color" content="#2563EB">
+    <title>Cura — Clinic Administration &amp; Staff Directory</title>
 
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -16,9 +16,9 @@
 <!-- TOP NAVBAR -->
 <header class="navbar">
     <div class="nav-brand">
-        <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
-        <h1 class="nav-logo">CURA</h1>
-        <span class="nav-badge">Admin Dashboard</span>
+        <div class="brand-icon-wrap"><i class="fa-solid fa-heart-pulse"></i></div>
+        <h1 class="nav-logo">CURA <span>ADMIN</span></h1>
+        <span class="nav-badge">Global Oversight</span>
     </div>
     <div class="nav-actions">
         <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
@@ -36,36 +36,36 @@
     <!-- HERO BANNER -->
     <section class="hero-banner">
         <div class="hero-content">
-            <h2>Practice Overview &amp; Portal Hub</h2>
-            <p>Monitor patient queues, doctor schedules, follow-up reminders, and navigate into clinical workstations.</p>
+            <h2>Clinic Administration &amp; Portal Hub</h2>
+            <p>Admin has full oversight across all appointments, triage queues, staff accounts, doctor-assistant relationships, and patient records.</p>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="patient-dashboard.html" class="btn btn-peach">
-                <i class="fa-solid fa-plus"></i> New Appointment
-            </a>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-sm" onclick="openCreateUserModal()">
+                <i class="fa-solid fa-user-plus"></i> Add Staff Account
+            </button>
         </div>
     </section>
 
     <!-- LIVE CLINIC ANALYTICS -->
     <section>
         <div class="card-header">
-            <h3 class="card-title"><i class="fa-solid fa-chart-pie"></i> Clinic Real-Time Analytics</h3>
-            <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fa-solid fa-rotate"></i> Auto-synced</span>
+            <h3 class="card-title"><i class="fa-solid fa-chart-pie"></i> Real-Time Clinic Metrics</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-rotate"></i> Live Data</span>
         </div>
 
         <div class="stats-grid">
             <div class="stat-box">
                 <div class="stat-icon green"><i class="fa-solid fa-calendar-check"></i></div>
                 <div class="stat-info">
-                    <h3 id="statTotalAppointments">3</h3>
-                    <p>Total Appointments</p>
+                    <h3 id="statTotalAppointments">0</h3>
+                    <p>Total Bookings</p>
                 </div>
             </div>
 
             <div class="stat-box">
                 <div class="stat-icon peach"><i class="fa-solid fa-user-nurse"></i></div>
                 <div class="stat-info">
-                    <h3 id="statPendingTriage">1</h3>
+                    <h3 id="statPendingTriage">0</h3>
                     <p>Pending Triage</p>
                 </div>
             </div>
@@ -73,16 +73,16 @@
             <div class="stat-box">
                 <div class="stat-icon blue"><i class="fa-solid fa-stethoscope"></i></div>
                 <div class="stat-info">
-                    <h3 id="statInConsultation">1</h3>
+                    <h3 id="statInConsultation">0</h3>
                     <p>In Consultation</p>
                 </div>
             </div>
 
             <div class="stat-box">
-                <div class="stat-icon yellow"><i class="fa-solid fa-bell"></i></div>
+                <div class="stat-icon yellow"><i class="fa-solid fa-circle-check"></i></div>
                 <div class="stat-info">
-                    <h3 id="statFollowUpsDue">1</h3>
-                    <p>Follow-Ups Due</p>
+                    <h3 id="statCompleted">0</h3>
+                    <p>Completed Visits</p>
                 </div>
             </div>
         </div>
@@ -91,93 +91,859 @@
     <!-- 3-PORTAL WORKSTATION LAUNCHER -->
     <section>
         <div class="card-header">
-            <h3 class="card-title"><i class="fa-solid fa-compass"></i> Select Workstation</h3>
+            <h3 class="card-title"><i class="fa-solid fa-compass"></i> Clinical Workstations</h3>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem;">
             
-            <!-- Patient Portal Card -->
-            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--accent-peach);">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
-                        <div class="stat-icon peach"><i class="fa-solid fa-hospital-user"></i></div>
-                        <div>
-                            <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Patient Portal</h4>
-                            <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--accent-peach); font-weight: 700; letter-spacing: 0.5px;">Client Booking &amp; Quiz</span>
-                        </div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
-                        Patients can solve the 3-question triage quiz, receive auto-allocated appointment durations (1 hr for 1st-time), and select doctor time slots.
-                    </p>
-                </div>
-                <a href="patient-dashboard.html" class="btn btn-peach btn-block">
-                    Open Patient Portal <i class="fa-solid fa-arrow-right"></i>
-                </a>
-            </div>
-
             <!-- Doctor Portal Card -->
-            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--primary);">
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid var(--primary);">
                 <div>
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem;">
                         <div class="stat-icon green"><i class="fa-solid fa-user-doctor"></i></div>
                         <div>
-                            <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Doctor Portal</h4>
-                            <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--primary); font-weight: 700; letter-spacing: 0.5px;">Clinical Consultations</span>
+                            <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">Doctor Portal</h4>
+                            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary); font-weight: 600;">Consultations &amp; Rx</span>
                         </div>
                     </div>
-                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
-                        Physicians (Homoeopathy, Allopathy, Psychology) review patient triage vitals, write prescription notes, and schedule 15/30-day follow-ups.
+                    <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.2rem;">
+                        Doctors view their assigned patient consultation queues, review vitals, author digital prescriptions, and schedule 15/30-day reviews.
                     </p>
                 </div>
                 <a href="doctor-dashboard.html" class="btn btn-primary btn-block">
-                    Open Doctor Portal <i class="fa-solid fa-arrow-right"></i>
+                    Enter Doctor Workstation <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
 
             <!-- Assistant Portal Card -->
-            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--sage-400);">
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid var(--accent);">
                 <div>
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
-                        <div class="stat-icon blue"><i class="fa-solid fa-user-nurse"></i></div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem;">
+                        <div class="stat-icon peach"><i class="fa-solid fa-user-nurse"></i></div>
                         <div>
-                            <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Assistant Portal</h4>
-                            <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--sage-500); font-weight: 700; letter-spacing: 0.5px;">Triage Station &amp; Vitals</span>
+                            <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">Assistant Portal</h4>
+                            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 600;">Triage &amp; Vitals Intake</span>
                         </div>
                     </div>
-                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
-                        Clinical assistants record initial vitals (Blood Pressure, Temperature, Pulse, SpO2), check in walk-in patients, and route to doctor queues.
+                    <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.2rem;">
+                        Clinical assistants take initial vitals (BP, Temp, Pulse, SpO2) and manage arrived patients strictly for their designated doctor.
                     </p>
                 </div>
-                <a href="assistant-dashboard.html" class="btn btn-secondary btn-block">
-                    Open Assistant Portal <i class="fa-solid fa-arrow-right"></i>
+                <a href="assistant-dashboard.html" class="btn btn-accent btn-block">
+                    Enter Assistant Workstation <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Patient Portal Card -->
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid var(--warning);">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem;">
+                        <div class="stat-icon yellow"><i class="fa-solid fa-hospital-user"></i></div>
+                        <div>
+                            <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">Patient Portal</h4>
+                            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--warning); font-weight: 600;">Booking &amp; History</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.2rem;">
+                        Patients complete the 3-question intake quiz, receive dynamic appointment durations (1 hr for 1st-visit), and track their appointments.
+                    </p>
+                </div>
+                <a href="patient-dashboard.html" class="btn btn-secondary btn-block">
+                    Enter Patient Portal <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
 
         </div>
     </section>
 
+    <!-- REGISTERED PATIENTS DIRECTORY & CONTACT MANAGEMENT -->
+    <section class="card" style="border-top: 3px solid var(--warning);">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title"><i class="fa-solid fa-hospital-user" style="color: var(--warning);"></i> Patients Directory &amp; Contact Records</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+                    View registered patients, edit contact details (Name, Email, Phone), or permanently delete patient profiles.
+                </p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="loadPatientsDirectory()">
+                <i class="fa-solid fa-rotate"></i> Refresh
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="cura-table">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Email Address</th>
+                        <th>Phone Number</th>
+                        <th>Record ID</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="patientsDirectoryBody">
+                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading patients directory...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- STAFF & RELATIONSHIPS DIRECTORY -->
+    <section class="card" style="border-top: 3px solid var(--primary);">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title"><i class="fa-solid fa-users-gear"></i> Staff Directory &amp; Doctor-Assistant Relations</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+                    Admins provision staff credentials and link each assistant to their designated physician's email.
+                </p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openCreateUserModal()">
+                <i class="fa-solid fa-plus"></i> New Staff Account
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="cura-table">
+                <thead>
+                    <tr>
+                        <th>Staff Member</th>
+                        <th>Role</th>
+                        <th>Email Address</th>
+                        <th>Specialization</th>
+                        <th>Assigned Doctor</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="staffDirectoryBody">
+                    <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading staff accounts...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ALL APPOINTMENTS MASTER QUEUE -->
+    <section class="card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-list-check"></i> Master Clinical Appointments List</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">All Physicians &amp; Patients</span>
+        </div>
+        <div class="table-responsive">
+            <table class="cura-table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Physician</th>
+                        <th>Schedule</th>
+                        <th>Issue</th>
+                        <th>Vitals</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="masterAppointmentsBody">
+                    <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading appointments...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    <!-- CLINIC DIAGNOSTIC & LAB INVESTIGATIONS OVERSIGHT -->
+    <section class="card" style="border-top: 3px solid var(--accent); margin-top: 1.5rem;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title"><i class="fa-solid fa-flask-vial" style="color: var(--accent);"></i> Clinic-Wide Diagnostic &amp; Lab Orders</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+                    Central oversight of all physician-ordered lab tests, X-Rays, specimen collections, and attached diagnostic reports.
+                </p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="loadAdminTestOrders()">
+                <i class="fa-solid fa-rotate"></i> Refresh
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="cura-table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Ordering Physician</th>
+                        <th>Prescribed Test</th>
+                        <th>Urgency</th>
+                        <th>Doctor Instructions</th>
+                        <th>Findings &amp; Report</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTestOrdersBody">
+                    <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading diagnostic orders...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
 </main>
 
-<script src="js/firebase-config.js"></script>
-<!-- Firebase Web SDK Compat Libraries -->
+<!-- EDIT PATIENT CONTACT INFO MODAL -->
+<div class="modal-overlay" id="editPatientModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fa-solid fa-user-pen" style="color: var(--primary);"></i> Edit Patient Contact Info</h3>
+            <button type="button" class="btn-close-modal" onclick="closeEditPatientModal()">&times;</button>
+        </div>
+
+        <form id="editPatientForm" onsubmit="handlePatientUpdate(event)">
+            <input type="hidden" id="editPatientUid">
+            <input type="hidden" id="editPatientOrigEmail">
+            <input type="hidden" id="editPatientOrigName">
+
+            <div class="form-group">
+                <label for="editPatientName"><i class="fa-regular fa-user"></i> Full Name *</label>
+                <input type="text" id="editPatientName" class="form-control" placeholder="Patient's Full Name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editPatientEmail"><i class="fa-regular fa-envelope"></i> Email Address *</label>
+                <input type="email" id="editPatientEmail" class="form-control" placeholder="patient@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editPatientPhone"><i class="fa-solid fa-phone"></i> Contact Phone Number</label>
+                <input type="tel" id="editPatientPhone" class="form-control" placeholder="+91 98230 00000">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1.4rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1.2;">
+                    <i class="fa-solid fa-check"></i> Save Changes
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditPatientModal()" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- CREATE STAFF ACCOUNT MODAL -->
+<div class="modal-overlay" id="createUserModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fa-solid fa-user-plus" style="color: var(--primary);"></i> Provision Staff Member</h3>
+            <button type="button" class="btn-close-modal" onclick="closeCreateUserModal()">&times;</button>
+        </div>
+
+        <form id="createStaffForm" onsubmit="handleStaffCreation(event)">
+            <div class="form-group">
+                <label for="staffFullName"><i class="fa-regular fa-user"></i> Full Name *</label>
+                <input type="text" id="staffFullName" class="form-control" placeholder="e.g. Dr. Priya Gupta / Maya Patel" required>
+            </div>
+
+            <div class="form-group">
+                <label for="staffEmail"><i class="fa-regular fa-envelope"></i> Email Address *</label>
+                <input type="email" id="staffEmail" class="form-control" placeholder="staff@cura.clinic" required>
+            </div>
+
+            <div class="form-group">
+                <label for="staffPassword"><i class="fa-solid fa-lock"></i> Temporary Password *</label>
+                <input type="password" id="staffPassword" class="form-control" placeholder="Minimum 6 characters" required minlength="6" value="password123">
+            </div>
+
+            <div class="form-group">
+                <label for="staffRole"><i class="fa-solid fa-id-badge"></i> Account Role *</label>
+                <select id="staffRole" class="form-select" onchange="handleRoleChange()" required>
+                    <option value="DOCTOR">Doctor (Physician)</option>
+                    <option value="ASSISTANT">Assistant (Clinical Triage)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="doctorRelationGroup" style="display: none;">
+                <label for="assignedDoctorEmail"><i class="fa-solid fa-link"></i> Assigned Doctor Email *</label>
+                <input type="email" id="assignedDoctorEmail" class="form-control" placeholder="e.g. ashwini.joshi@cura.clinic">
+                <small style="font-size: 0.75rem; color: var(--text-muted);">The assistant will ONLY see patients and appointments for this physician.</small>
+            </div>
+
+            <div class="form-group" id="specializationGroup">
+                <label for="staffSpecialization"><i class="fa-solid fa-stethoscope"></i> Clinical Specialization</label>
+                <input type="text" id="staffSpecialization" class="form-control" placeholder="e.g. Homoeopathy / Allopathy / Psychology">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1.2;">
+                    <i class="fa-solid fa-check"></i> Create Staff Member
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeCreateUserModal()" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- EDIT STAFF MEMBER MODAL -->
+<div class="modal-overlay" id="editStaffModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fa-solid fa-user-pen" style="color: var(--primary);"></i> Edit Staff Profile</h3>
+            <button type="button" class="btn-close-modal" onclick="closeEditStaffModal()">&times;</button>
+        </div>
+
+        <form id="editStaffForm" onsubmit="handleStaffUpdate(event)">
+            <input type="hidden" id="editStaffUid">
+            <input type="hidden" id="editStaffOrigEmail">
+            <input type="hidden" id="editStaffRole">
+
+            <div class="form-group">
+                <label for="editStaffRoleDisplay"><i class="fa-solid fa-id-badge"></i> Account Role</label>
+                <input type="text" id="editStaffRoleDisplay" class="form-control" readonly style="opacity: 0.85; background: var(--bg-subtle); cursor: not-allowed;">
+            </div>
+
+            <div class="form-group">
+                <label for="editStaffFullName"><i class="fa-regular fa-user"></i> Full Name *</label>
+                <input type="text" id="editStaffFullName" class="form-control" placeholder="e.g. Dr. Priya Gupta" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editStaffEmail"><i class="fa-regular fa-envelope"></i> Email Address *</label>
+                <input type="email" id="editStaffEmail" class="form-control" placeholder="staff@cura.clinic" required>
+            </div>
+
+            <div class="form-group" id="editStaffDoctorRelationGroup" style="display: none;">
+                <label for="editStaffAssignedDoctor"><i class="fa-solid fa-link"></i> Assigned Doctor Email *</label>
+                <input type="email" id="editStaffAssignedDoctor" class="form-control" placeholder="e.g. ashwini.joshi@cura.clinic">
+                <small style="font-size: 0.75rem; color: var(--text-muted);">The assistant will strictly see patients and appointments for this physician.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="editStaffSpecialization"><i class="fa-solid fa-stethoscope"></i> Clinical Specialization</label>
+                <input type="text" id="editStaffSpecialization" class="form-control" placeholder="e.g. Homoeopathy / Allopathy / Psychology / Clinical Triage">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1.2;">
+                    <i class="fa-solid fa-check"></i> Save Staff Profile
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditStaffModal()" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Firebase SDK Compat Libraries -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-<!-- Your Application Scripts -->
+<!-- Core App Configuration & Scripts -->
 <script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
-<script src="js/app.js"></script>
-<script>CuraAuth.guard(['ADMIN']);</script>
 <script>
-    function refreshStats() {
-        const apts = CuraData.getAppointments();
+    CuraAuth.guard(['ADMIN']);
+
+    function openCreateUserModal() {
+        document.getElementById('createUserModal').classList.add('active');
+        handleRoleChange();
+    }
+
+    function closeCreateUserModal() {
+        document.getElementById('createUserModal').classList.remove('active');
+    }
+
+    function handleRoleChange() {
+        const role = document.getElementById('staffRole').value;
+        const relationGroup = document.getElementById('doctorRelationGroup');
+        const specInput = document.getElementById('staffSpecialization');
+        if (role === 'ASSISTANT') {
+            relationGroup.style.display = 'block';
+            specInput.placeholder = 'e.g. Clinical Triage';
+        } else {
+            relationGroup.style.display = 'none';
+            specInput.placeholder = 'e.g. Homoeopathy / Allopathy / Psychology';
+        }
+    }
+
+    async function handleStaffCreation(e) {
+        e.preventDefault();
+        const fullName = document.getElementById('staffFullName').value.trim();
+        const email = document.getElementById('staffEmail').value.trim().toLowerCase();
+        const password = document.getElementById('staffPassword').value;
+        const role = document.getElementById('staffRole').value;
+        const assignedDoctor = document.getElementById('assignedDoctorEmail').value.trim().toLowerCase();
+        const specialization = document.getElementById('staffSpecialization').value.trim();
+
+        if (role === 'ASSISTANT' && !assignedDoctor) {
+            showToast('Please specify the assigned doctor email for this assistant', 'error');
+            return;
+        }
+
+        const newStaff = {
+            fullName: fullName,
+            email: email,
+            role: role,
+            doctorEmail: role === 'ASSISTANT' ? assignedDoctor : null,
+            specialization: specialization || (role === 'DOCTOR' ? 'General' : 'Clinical Triage'),
+            createdAt: new Date().toISOString()
+        };
+
+        if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady() && CuraFirebase.auth() && CuraFirebase.db()) {
+            try {
+                // Provision account in Firebase Auth
+                const cred = await CuraFirebase.auth().createUserWithEmailAndPassword(email, password);
+                newStaff.uid = cred.user.uid;
+                await CuraFirebase.db().collection('users').doc(cred.user.uid).set(newStaff);
+                await CuraFirebase.db().collection('users').doc(email).set(newStaff);
+                showToast(`Staff account for ${fullName} (${role}) created successfully!`, 'success');
+                closeCreateUserModal();
+                document.getElementById('createStaffForm').reset();
+                loadStaffDirectory();
+                return;
+            } catch (err) {
+                console.error("Firebase staff creation error:", err);
+                // If account exists in Firebase Auth, still update Firestore record
+                if (err.code === 'auth/email-already-in-use') {
+                    try {
+                        await CuraFirebase.db().collection('users').doc(email).set(newStaff, { merge: true });
+                        showToast(`Updated staff record for ${fullName} (${role})!`, 'success');
+                        closeCreateUserModal();
+                        document.getElementById('createStaffForm').reset();
+                        loadStaffDirectory();
+                        return;
+                    } catch (dbErr) {
+                        console.error(dbErr);
+                    }
+                }
+                showToast(err.message, 'error');
+                return;
+            }
+        }
+
+        // Local fallback storage
+        let localStaff = JSON.parse(localStorage.getItem('cura_staff_accounts') || '[]');
+        newStaff.uid = 'staff-' + Date.now();
+        localStaff.push(newStaff);
+        localStorage.setItem('cura_staff_accounts', JSON.stringify(localStaff));
+        showToast(`Staff account for ${fullName} (${role}) added to directory!`, 'success');
+        closeCreateUserModal();
+        document.getElementById('createStaffForm').reset();
+        loadStaffDirectory();
+    }
+
+    async function loadStaffDirectory() {
+        const tbody = document.getElementById('staffDirectoryBody');
+        let staffList = [];
+
+        if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady() && CuraFirebase.db()) {
+            try {
+                const snapshot = await CuraFirebase.db().collection('users').get();
+                staffList = snapshot.docs.map(doc => doc.data()).filter(u => u.role === 'DOCTOR' || u.role === 'ASSISTANT');
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+
+        // Merge with default seed staff
+        const defaults = [
+            { fullName: "Dr. Ashwini Joshi", role: "DOCTOR", email: "ashwini.joshi@cura.clinic", specialization: "Homoeopathy", doctorEmail: null },
+            { fullName: "Dr. Aarav Sharma", role: "DOCTOR", email: "aarav.sharma@cura.clinic", specialization: "Allopathy", doctorEmail: null },
+            { fullName: "Dr. Priya Gupta", role: "DOCTOR", email: "priya.gupta@cura.clinic", specialization: "Psychology", doctorEmail: null },
+            { fullName: "Sister Maya Patel", role: "ASSISTANT", email: "assistant@cura.clinic", specialization: "Clinical Triage", doctorEmail: "ashwini.joshi@cura.clinic" }
+        ];
+        const localStaff = JSON.parse(localStorage.getItem('cura_staff_accounts') || '[]');
+        staffList = staffList.concat(defaults).concat(localStaff);
+
+        const seen = new Set();
+        staffList = staffList.filter(s => {
+            if (!s.email || seen.has(s.email.toLowerCase())) return false;
+            seen.add(s.email.toLowerCase());
+            return true;
+        });
+
+        const deletedStaff = JSON.parse(localStorage.getItem('cura_deleted_staff') || '[]');
+        staffList = staffList.filter(s => !deletedStaff.includes((s.email || '').toLowerCase()));
+
+        tbody.innerHTML = staffList.map(s => {
+            const safeName = (s.fullName || 'Staff Member').replace(/'/g, "\\'");
+            const safeEmail = (s.email || '').replace(/'/g, "\\'");
+            const safeRole = (s.role || 'DOCTOR').replace(/'/g, "\\'");
+            const safeSpec = (s.specialization || '').replace(/'/g, "\\'");
+            const safeDocEmail = (s.doctorEmail || '').replace(/'/g, "\\'");
+            const safeUid = (s.uid || '').replace(/'/g, "\\'");
+
+            return `
+            <tr>
+                <td><strong>${s.fullName || 'Staff Member'}</strong></td>
+                <td>
+                    <span class="status-badge ${s.role === 'DOCTOR' ? 'status-booked' : 'status-ongoing'}">
+                        ${s.role}
+                    </span>
+                </td>
+                <td><code>${s.email}</code></td>
+                <td>${s.specialization || '—'}</td>
+                <td>
+                    ${s.role === 'ASSISTANT' && s.doctorEmail 
+                        ? `<span class="followup-pill"><i class="fa-solid fa-link"></i> ${s.doctorEmail}</span>` 
+                        : '<span style="color: var(--text-muted); font-size: 0.8rem;">Independent Physician</span>'}
+                </td>
+                <td><span class="status-badge status-completed"><i class="fa-solid fa-check"></i> Active</span></td>
+                <td style="text-align: right; white-space: nowrap;">
+                    <button class="btn btn-secondary btn-sm" onclick="openEditStaffModal('${safeUid}', '${safeEmail}', '${safeName}', '${safeRole}', '${safeSpec}', '${safeDocEmail}')" title="Edit Staff Member">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </button>
+                    <button class="btn btn-sm" style="background-color: var(--danger-light); color: var(--danger); border: 1px solid var(--danger-border); margin-left: 4px;" onclick="confirmDeleteStaff('${safeUid}', '${safeEmail}', '${safeName}', '${safeRole}')" title="Delete Staff Account">
+                        <i class="fa-solid fa-trash-can"></i> Delete
+                    </button>
+                </td>
+            </tr>
+            `;
+        }).join('');
+    }
+
+    function openEditStaffModal(uid, email, name, role, spec, doctorEmail) {
+        document.getElementById('editStaffUid').value = uid || '';
+        document.getElementById('editStaffOrigEmail').value = email || '';
+        document.getElementById('editStaffRoleDisplay').value = (role || 'DOCTOR') + ' (' + (role === 'DOCTOR' ? 'Physician' : 'Triage Assistant') + ')';
+        document.getElementById('editStaffRole').value = role || 'DOCTOR';
+        document.getElementById('editStaffFullName').value = name || '';
+        document.getElementById('editStaffEmail').value = email || '';
+        document.getElementById('editStaffSpecialization').value = spec || '';
+
+        const relationGroup = document.getElementById('editStaffDoctorRelationGroup');
+        const doctorInput = document.getElementById('editStaffAssignedDoctor');
+        if (role === 'ASSISTANT') {
+            relationGroup.style.display = 'block';
+            doctorInput.value = doctorEmail || '';
+            doctorInput.required = true;
+        } else {
+            relationGroup.style.display = 'none';
+            doctorInput.value = '';
+            doctorInput.required = false;
+        }
+
+        document.getElementById('editStaffModal').classList.add('active');
+    }
+
+    function closeEditStaffModal() {
+        document.getElementById('editStaffModal').classList.remove('active');
+    }
+
+    async function handleStaffUpdate(e) {
+        e.preventDefault();
+        const uid = document.getElementById('editStaffUid').value.trim();
+        const origEmail = document.getElementById('editStaffOrigEmail').value.trim();
+        const role = document.getElementById('editStaffRole').value.trim();
+        const newName = document.getElementById('editStaffFullName').value.trim();
+        const newEmail = document.getElementById('editStaffEmail').value.trim().toLowerCase();
+        const newSpec = document.getElementById('editStaffSpecialization').value.trim();
+        const assignedDoctor = document.getElementById('editStaffAssignedDoctor').value.trim().toLowerCase();
+
+        if (!newName || !newEmail) {
+            showToast('Please provide both full name and email', 'error');
+            return;
+        }
+
+        if (role === 'ASSISTANT' && !assignedDoctor) {
+            showToast('Please specify the assigned doctor email for this assistant', 'error');
+            return;
+        }
+
+        const updates = {
+            fullName: newName,
+            name: newName,
+            email: newEmail,
+            role: role,
+            specialization: newSpec || (role === 'DOCTOR' ? 'General' : 'Clinical Triage'),
+            doctorEmail: role === 'ASSISTANT' ? assignedDoctor : null
+        };
+
+        try {
+            await CuraData.updateStaffMember(uid, origEmail, updates);
+            showToast(`Staff profile for "${newName}" updated successfully!`, 'success');
+            closeEditStaffModal();
+            await loadStaffDirectory();
+        } catch (err) {
+            console.error("Error updating staff member:", err);
+            showToast("Failed to update staff member: " + err.message, 'error');
+        }
+    }
+
+    async function confirmDeleteStaff(uid, email, name, role) {
+        if (!confirm(`Are you sure you want to remove staff member "${name}" (${role} - ${email})?\n\nThis will remove their staff directory profile and login authorization.`)) {
+            return;
+        }
+
+        try {
+            await CuraData.deleteStaffMember(uid, email);
+            showToast(`Staff account for "${name}" removed successfully`, 'success');
+            await loadStaffDirectory();
+        } catch (err) {
+            console.error("Error deleting staff member:", err);
+            showToast("Failed to delete staff member: " + err.message, 'error');
+        }
+    }
+
+    // --- PATIENTS DIRECTORY & CONTACT MANAGEMENT ---
+
+    async function loadPatientsDirectory() {
+        const tbody = document.getElementById('patientsDirectoryBody');
+        if (!tbody) return;
+
+        try {
+            const patients = await CuraData.fetchPatients();
+
+            if (patients.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No registered patients found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = patients.map(p => {
+                const safeName = (p.fullName || '').replace(/'/g, "\\'");
+                const safeEmail = (p.email || '').replace(/'/g, "\\'");
+                const safePhone = (p.phone || '').replace(/'/g, "\\'");
+                const safeUid = (p.uid || '').replace(/'/g, "\\'");
+
+                return `
+                    <tr>
+                        <td>
+                            <strong><i class="fa-regular fa-user" style="color: var(--primary); margin-right: 6px;"></i>${p.fullName}</strong>
+                        </td>
+                        <td><code>${p.email}</code></td>
+                        <td>${p.phone !== 'N/A' ? `<i class="fa-solid fa-phone" style="font-size: 0.75rem; color: var(--accent);"></i> ${p.phone}` : '<span style="color: var(--text-muted);">—</span>'}</td>
+                        <td><span style="font-size: 0.75rem; color: var(--text-muted);">${(p.uid || '').substring(0, 10)}...</span></td>
+                        <td style="text-align: right; white-space: nowrap;">
+                            <button class="btn btn-secondary btn-sm" onclick="openEditPatientModal('${safeUid}', '${safeEmail}', '${safeName}', '${safePhone}')" title="Edit Contact Information">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            <button class="btn btn-sm" style="background-color: var(--danger-light); color: var(--danger); border: 1px solid var(--danger-border); margin-left: 4px;" onclick="confirmDeletePatient('${safeUid}', '${safeEmail}', '${safeName}')" title="Delete Patient Record">
+                                <i class="fa-solid fa-trash-can"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        } catch (err) {
+            console.error("Error loading patients directory:", err);
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 1rem;">Failed to load patients list.</td></tr>`;
+        }
+    }
+
+    function openEditPatientModal(uid, email, name, phone) {
+        document.getElementById('editPatientUid').value = uid || '';
+        document.getElementById('editPatientOrigEmail').value = email || '';
+        document.getElementById('editPatientOrigName').value = name || '';
+        document.getElementById('editPatientName').value = name || '';
+        document.getElementById('editPatientEmail').value = email || '';
+        document.getElementById('editPatientPhone').value = (phone && phone !== 'N/A') ? phone : '';
+        document.getElementById('editPatientModal').classList.add('active');
+    }
+
+    function closeEditPatientModal() {
+        document.getElementById('editPatientModal').classList.remove('active');
+    }
+
+    async function handlePatientUpdate(e) {
+        e.preventDefault();
+        const uid = document.getElementById('editPatientUid').value.trim();
+        const origEmail = document.getElementById('editPatientOrigEmail').value.trim();
+        const origName = document.getElementById('editPatientOrigName').value.trim();
+        const newName = document.getElementById('editPatientName').value.trim();
+        const newEmail = document.getElementById('editPatientEmail').value.trim().toLowerCase();
+        const newPhone = document.getElementById('editPatientPhone').value.trim();
+
+        if (!newName || !newEmail) {
+            showToast('Please provide both name and email', 'error');
+            return;
+        }
+
+        const updates = {
+            fullName: newName,
+            name: newName,
+            email: newEmail,
+            phone: newPhone || 'N/A',
+            previousName: origName
+        };
+
+        try {
+            await CuraData.updatePatientContact(uid, origEmail, updates);
+            showToast(`Contact info for "${newName}" updated successfully!`, 'success');
+            closeEditPatientModal();
+            await loadPatientsDirectory();
+            await loadMasterAppointments();
+        } catch (err) {
+            console.error("Error updating patient contact:", err);
+            showToast("Failed to update patient: " + err.message, 'error');
+        }
+    }
+
+    async function confirmDeletePatient(patientId, email, patientName) {
+        const confirmMsg = `Are you sure you want to permanently delete patient "${patientName}" (${email})?\n\nThis will remove their account record and all associated clinic appointments.`;
+        if (!confirm(confirmMsg)) {
+            return;
+        }
+
+        try {
+            await CuraData.deletePatient(patientId, email, patientName);
+            showToast(`Patient "${patientName}" deleted successfully`, 'success');
+            await loadPatientsDirectory();
+            await loadMasterAppointments();
+        } catch (err) {
+            console.error("Error deleting patient:", err);
+            showToast("Error deleting patient: " + err.message, 'error');
+        }
+    }
+
+    async function confirmDeleteAppointment(aptId, patientName) {
+        if (!confirm(`Cancel and delete appointment for "${patientName}"?`)) {
+            return;
+        }
+
+        try {
+            await CuraData.deleteAppointment(aptId);
+            showToast(`Appointment for "${patientName}" removed`, 'success');
+            await loadMasterAppointments();
+            await loadPatientsDirectory();
+        } catch (err) {
+            console.error("Error deleting appointment:", err);
+            showToast("Failed to delete appointment", 'error');
+        }
+    }
+
+    // --- MASTER APPOINTMENTS LIST ---
+
+    async function loadMasterAppointments() {
+        const apts = await CuraData.fetchAppointments();
+        
+        // Refresh metrics
         document.getElementById('statTotalAppointments').textContent = apts.length;
         document.getElementById('statPendingTriage').textContent = apts.filter(a => !a.vitals && a.status === 'BOOKED').length;
-        document.getElementById('statInConsultation').textContent = apts.filter(a => a.status === 'ONGOING' || a.vitals).length;
-        document.getElementById('statFollowUpsDue').textContent = apts.filter(a => a.status === 'COMPLETED').length;
+        document.getElementById('statInConsultation').textContent = apts.filter(a => a.status === 'ONGOING' || (a.vitals && a.status !== 'COMPLETED')).length;
+        document.getElementById('statCompleted').textContent = apts.filter(a => a.status === 'COMPLETED').length;
+
+        const tbody = document.getElementById('masterAppointmentsBody');
+        if (apts.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No appointments found in the system.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = apts.map(apt => {
+            const safeName = (apt.patientName || 'Patient').replace(/'/g, "\\'");
+            return `
+                <tr>
+                    <td>
+                        <strong>${apt.patientName}</strong>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${apt.patientPhone || apt.patientEmail || ''}</div>
+                    </td>
+                    <td>
+                        ${apt.doctorName}
+                        <div style="font-size: 0.75rem; color: var(--primary);">${apt.specialization || ''}</div>
+                    </td>
+                    <td>
+                        ${apt.dayOfWeek || 'Today'} &bull; ${apt.timeSlot}
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${apt.allocatedDurationMinutes || 30} mins</div>
+                    </td>
+                    <td><span class="followup-pill">${apt.healthIssue || 'General'}</span></td>
+                    <td>
+                        ${apt.vitals ? `<span style="font-size: 0.8rem; color: var(--status-completed); font-weight: 500;">Recorded</span>` : `<span style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">Pending</span>`}
+                    </td>
+                    <td>
+                        <span class="status-badge status-${(apt.status || 'booked').toLowerCase()}">${apt.status || 'BOOKED'}</span>
+                    </td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-sm" style="background-color: var(--danger-light); color: var(--danger); border: 1px solid var(--danger-border); padding: 3px 8px; font-size: 0.75rem;" onclick="confirmDeleteAppointment('${apt.id}', '${safeName}')" title="Delete this appointment">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
     }
-    document.addEventListener('DOMContentLoaded', refreshStats);
+
+    // --- CLINIC DIAGNOSTIC & LAB ORDERS OVERSIGHT ---
+
+    async function loadAdminTestOrders() {
+        const tbody = document.getElementById('adminTestOrdersBody');
+        if (!tbody) return;
+
+        try {
+            const orders = await CuraData.fetchTestOrders();
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No diagnostic orders found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = orders.map(ord => {
+                let statusBadge = '<span class="status-badge status-ordered"><i class="fa-regular fa-clock"></i> Prescribed</span>';
+                if (ord.status === 'SAMPLE_COLLECTED') statusBadge = '<span class="status-badge status-sample-collected"><i class="fa-solid fa-vial"></i> Sample Collected</span>';
+                else if (ord.status === 'REPORT_ATTACHED') statusBadge = '<span class="status-badge status-report-attached"><i class="fa-solid fa-file-circle-check"></i> Report Attached</span>';
+                else if (ord.status === 'COMPLETED') statusBadge = '<span class="status-badge status-completed"><i class="fa-solid fa-circle-check"></i> Doctor Reviewed</span>';
+
+                const safeId = (ord.id || '').replace(/'/g, "\\'");
+                const safeName = (ord.testName || 'Test').replace(/'/g, "\\'");
+
+                return `
+                    <tr>
+                        <td>
+                            <strong>${ord.patientName}</strong>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">${ord.patientEmail || ''}</div>
+                        </td>
+                        <td>
+                            ${ord.doctorName || 'Doctor'}
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">${ord.doctorEmail || ''}</div>
+                        </td>
+                        <td>
+                            <strong style="color: var(--text-primary);"><i class="fa-solid fa-vial-virus" style="color: var(--accent);"></i> ${ord.testName}</strong>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">${ord.category || 'General'}</div>
+                        </td>
+                        <td>
+                            <span class="status-badge ${ord.urgency === 'URGENT' || ord.urgency === 'STAT' ? 'status-cancelled' : 'status-booked'}">
+                                ${ord.urgency || 'ROUTINE'}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); max-width: 200px;">
+                                ${ord.instructions ? `"${ord.instructions}"` : '<span style="color: var(--text-muted);">None</span>'}
+                            </div>
+                        </td>
+                        <td>
+                            ${ord.labFindings ? `<div style="font-size: 0.78rem; color: var(--status-completed); font-weight: 500;">${ord.labFindings}</div>` : ''}
+                            ${ord.reportDataUrl ? `
+                                <a href="${ord.reportDataUrl}" target="_blank" class="report-preview-chip" style="font-size: 0.75rem; padding: 2px 8px;">
+                                    <i class="fa-solid fa-paperclip"></i> View Report
+                                </a>
+                            ` : (!ord.labFindings ? '<span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">Pending</span>' : '')}
+                        </td>
+                        <td>${statusBadge}</td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-sm" style="background-color: var(--danger-light); color: var(--danger); border: 1px solid var(--danger-border); padding: 3px 8px; font-size: 0.75rem;" onclick="confirmDeleteTestOrder('${safeId}', '${safeName}')" title="Delete diagnostic order">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        } catch (err) {
+            console.error(err);
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--danger); padding: 1.5rem;">Failed to load diagnostic orders.</td></tr>`;
+        }
+    }
+
+    async function confirmDeleteTestOrder(orderId, testName) {
+        if (!confirm(`Delete diagnostic order for "${testName}"?`)) return;
+        try {
+            await CuraData.deleteTestOrder(orderId);
+            showToast(`Order for "${testName}" removed`, 'success');
+            await loadAdminTestOrders();
+        } catch (err) {
+            console.error(err);
+            showToast("Failed to delete order", 'error');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadStaffDirectory();
+        loadPatientsDirectory();
+        loadMasterAppointments();
+        loadAdminTestOrders();
+    });
 </script>
 </body>
 </html>

@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#4A7A57">
-    <title>Cura — Doctor Clinical Dashboard</title>
+    <meta name="theme-color" content="#2563EB">
+    <title>Cura — Doctor Consultation Portal</title>
 
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -16,9 +16,9 @@
 <!-- TOP NAVBAR -->
 <header class="navbar">
     <div class="nav-brand">
-        <div class="brand-icon-wrap"><i class="fa-solid fa-leaf"></i></div>
-        <h1 class="nav-logo">CURA</h1>
-        <span class="nav-badge">Doctor Workstation</span>
+        <div class="brand-icon-wrap"><i class="fa-solid fa-heart-pulse"></i></div>
+        <h1 class="nav-logo">CURA <span>DOCTOR</span></h1>
+        <span class="nav-badge" id="doctorGreeting">Physician Workstation</span>
     </div>
     <div class="nav-actions">
         <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
@@ -36,18 +36,18 @@
     <!-- HERO HEADER -->
     <section class="hero-banner">
         <div class="hero-content">
-            <h2>Doctor Consultations &amp; Patient Queue</h2>
+            <h2>Assigned Patient Queue &amp; Consultations</h2>
             <p>Review assistant-recorded triage vitals, conduct patient evaluations, write digital prescription notes, and track 15/30-day follow-ups.</p>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="resetDemoData()">
-            <i class="fa-solid fa-rotate-right"></i> Reset Schedule
-        </button>
+        <div style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-subtle); padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Strictly scoped to your assigned patients
+        </div>
     </section>
 
     <!-- FILTER CHIPS -->
     <section style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button class="btn btn-secondary btn-sm filter-chip active" data-filter="ALL" onclick="filterAppointments('ALL')">
-            All Appointments
+            All Assigned Visits
         </button>
         <button class="btn btn-secondary btn-sm filter-chip" data-filter="READY" onclick="filterAppointments('READY')">
             <i class="fa-solid fa-heart-pulse" style="color: var(--primary);"></i> Ready with Vitals
@@ -68,31 +68,31 @@
         <div id="doctorAppointmentsContainer"></div>
     </section>
 
-    <!-- 15 / 30-DAY FOLLOW-UP REMINDERS (REQUESTED BY USER) -->
-    <section class="card" style="border-top: 4px solid var(--accent-peach);">
+    <!-- 15 / 30-DAY FOLLOW-UP REMINDERS -->
+    <section class="card" style="border-top: 3px solid var(--accent);">
         <div class="card-header">
-            <h3 class="card-title"><i class="fa-solid fa-bell" style="color: var(--accent-peach);"></i> 15 &amp; 30-Day Follow-Up Reminders</h3>
-            <span class="followup-pill"><i class="fa-solid fa-clock"></i> Scheduled Follow-ups</span>
+            <h3 class="card-title"><i class="fa-solid fa-bell" style="color: var(--accent);"></i> 15 &amp; 30-Day Follow-Up Reminders</h3>
+            <span class="followup-pill"><i class="fa-solid fa-clock"></i> Active Follow-Ups</span>
         </div>
-        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
-            Patients whose prescribed follow-up interval is due for constitutional progress check or medication refill.
+        <p style="font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Patients under your care whose prescribed follow-up interval is due for constitutional review or treatment adjustments.
         </p>
         <div id="followUpsContainer"></div>
     </section>
 
 </main>
 
-<!-- PRESCRIPTION WRITER MODAL (REQUESTED BY USER) -->
+<!-- PRESCRIPTION WRITER MODAL -->
 <div class="modal-overlay" id="prescriptionModal">
     <div class="modal-card">
         <div class="modal-header">
-            <h3 class="modal-title"><i class="fa-solid fa-file-prescription" style="color: var(--accent-peach);"></i> Clinical Prescription &amp; Notes</h3>
+            <h3 class="modal-title"><i class="fa-solid fa-file-prescription" style="color: var(--accent);"></i> Clinical Prescription &amp; Notes</h3>
             <button type="button" class="btn-close-modal" onclick="closePrescriptionModal()">&times;</button>
         </div>
 
-        <div style="background: var(--bg-app); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 1.25rem; font-size: 0.9rem;">
-            <div><strong>Patient:</strong> <span id="rxPatientName" style="color: var(--primary); font-weight: 700;"></span></div>
-            <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 2px;">Condition: <span id="rxHealthIssue"></span></div>
+        <div style="background: var(--bg-app); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.2rem; font-size: 0.86rem;">
+            <div><strong>Patient:</strong> <span id="rxPatientName" style="color: var(--primary); font-weight: 600;"></span></div>
+            <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">Condition: <span id="rxHealthIssue"></span></div>
         </div>
 
         <form id="rxForm" onsubmit="handlePrescriptionSubmit(event)">
@@ -103,7 +103,7 @@
 
             <div class="form-group">
                 <label for="rxRemedies"><i class="fa-solid fa-pills"></i> Remedies / Medicines &amp; Potency *</label>
-                <textarea id="rxRemedies" class="form-textarea" placeholder="e.g. 1. Arnica Montana 200CH (4 pills morning)&#10;2. Belladonna 30C (2 drops if throbbing headache)&#10;3. Paracetamol 500mg (as needed)" required></textarea>
+                <textarea id="rxRemedies" class="form-textarea" placeholder="e.g. 1. Arnica Montana 200CH (4 pills morning)&#10;2. Belladonna 30C (2 drops if acute headache)&#10;3. Paracetamol 500mg (SOS)" required></textarea>
             </div>
 
             <div class="form-group">
@@ -113,21 +113,21 @@
 
             <div class="form-group">
                 <label for="rxDiet"><i class="fa-solid fa-apple-whole"></i> Dietary &amp; Lifestyle Guidance</label>
-                <input type="text" id="rxDiet" class="form-control" placeholder="e.g. Avoid strong coffee/mint; keep regular sleep schedule.">
+                <input type="text" id="rxDiet" class="form-control" placeholder="e.g. Maintain hydration; avoid late caffeine; keep sleep routine.">
             </div>
 
             <!-- Follow-up Interval Selector (15 or 30 days) -->
             <div class="form-group">
-                <label for="rxFollowUpDays"><i class="fa-regular fa-calendar-check"></i> Next Follow-Up Schedule</label>
+                <label for="rxFollowUpDays"><i class="fa-regular fa-calendar-check"></i> Follow-Up Scheduling</label>
                 <select id="rxFollowUpDays" class="form-select">
-                    <option value="15">15 Days (Acute / Fast Response Check)</option>
-                    <option value="30" selected>30 Days (Standard Chronic / Constitutional Review)</option>
-                    <option value="45">45 Days (Long-term Maintenance)</option>
+                    <option value="15">15 Days (Acute / Rapid Response Check)</option>
+                    <option value="30" selected>30 Days (Standard Constitutional Review)</option>
+                    <option value="45">45 Days (Maintenance / Chronic Care)</option>
                 </select>
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
-                <button type="submit" class="btn btn-peach" style="flex: 1.2;">
+            <div style="display: flex; gap: 10px; margin-top: 1.4rem;">
+                <button type="submit" class="btn btn-accent" style="flex: 1.2;">
                     <i class="fa-solid fa-floppy-disk"></i> Save &amp; Complete Visit
                 </button>
                 <button type="button" class="btn btn-secondary" onclick="closePrescriptionModal()" style="flex: 1;">
@@ -138,17 +138,94 @@
     </div>
 </div>
 
-<script src="js/firebase-config.js"></script>
-<!-- Firebase Web SDK Compat Libraries -->
+<!-- ORDER DIAGNOSTIC / LAB / X-RAY MODAL -->
+<div class="modal-overlay" id="orderTestModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fa-solid fa-flask-vial" style="color: var(--primary);"></i> Order Diagnostic Investigation / Scan</h3>
+            <button type="button" class="btn-close-modal" onclick="closeOrderTestModal()">&times;</button>
+        </div>
+
+        <div style="background: var(--bg-app); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.2rem; font-size: 0.86rem;">
+            <div><strong>Patient:</strong> <span id="orderModalPatientName" style="color: var(--primary); font-weight: 600;"></span></div>
+            <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;" id="orderModalPatientSub"></div>
+        </div>
+
+        <form id="orderTestForm" onsubmit="handleTestOrderSubmit(event)">
+            <input type="hidden" id="orderAptId">
+            <input type="hidden" id="orderPatientId">
+            <input type="hidden" id="orderPatientEmail">
+            <input type="hidden" id="orderPatientNameVal">
+
+            <div class="form-group">
+                <label for="orderCategory"><i class="fa-solid fa-layer-group"></i> Investigation Category *</label>
+                <select id="orderCategory" class="form-select" required>
+                    <option value="RADIOLOGY_XRAY">Radiology &amp; Imaging (X-Ray, CT, Ultrasound, MRI)</option>
+                    <option value="BLOOD_LAB">Blood &amp; Biochemistry (CBC, LFT, KFT, Lipid, HbA1c)</option>
+                    <option value="CARDIOLOGY">Cardiology Diagnostics (ECG, Echo, Holter)</option>
+                    <option value="PATHOLOGY">Pathology &amp; Swabs (Urine, Culture, Throat Swab)</option>
+                    <option value="OTHER">Other Clinical Test</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="orderTestName"><i class="fa-solid fa-vial-virus"></i> Prescribed Test Name *</label>
+                <input type="text" id="orderTestName" class="form-control" list="commonTestsList" placeholder="e.g. Chest X-Ray PA View" required>
+                <datalist id="commonTestsList">
+                    <option value="Chest X-Ray PA View">
+                    <option value="Chest X-Ray Lateral View">
+                    <option value="X-Ray Knee Joint (AP &amp; Lat)">
+                    <option value="X-Ray Cervical Spine">
+                    <option value="Ultrasound Whole Abdomen &amp; Pelvis">
+                    <option value="CT Scan Head (Plain)">
+                    <option value="CT Scan Chest (HRCT)">
+                    <option value="Complete Blood Count (CBC) with ESR">
+                    <option value="Fasting &amp; Post-Prandial Blood Sugar (FBS/PPBS)">
+                    <option value="HbA1c (Glycated Hemoglobin)">
+                    <option value="Liver Function Test (LFT)">
+                    <option value="Kidney Function Test (KFT / Creatinine &amp; Urea)">
+                    <option value="Lipid Profile (Cholesterol, HDL, LDL, Triglycerides)">
+                    <option value="Thyroid Profile (Free T3, Free T4, TSH)">
+                    <option value="Serum Vitamin D3 &amp; Vitamin B12">
+                    <option value="12-Lead Electrocardiogram (ECG)">
+                    <option value="Urine Routine &amp; Microscopic Examination">
+                </datalist>
+            </div>
+
+            <div class="form-group">
+                <label for="orderUrgency"><i class="fa-solid fa-stopwatch"></i> Urgency / Priority</label>
+                <select id="orderUrgency" class="form-select">
+                    <option value="ROUTINE" selected>Routine (Standard Schedule)</option>
+                    <option value="PRIORITY">Priority (Next 24 Hours)</option>
+                    <option value="STAT">STAT / Urgent (Immediate Clinical Decision)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="orderInstructions"><i class="fa-solid fa-clipboard-list"></i> Clinical Indications &amp; Instructions</label>
+                <textarea id="orderInstructions" class="form-textarea" placeholder="e.g. Rule out pneumonia. Fasting 8 hrs for blood test. Patient may upload digital copy or bring printout to assistant."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1.4rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1.2;">
+                    <i class="fa-solid fa-paper-plane"></i> Dispatch Investigation Order
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeOrderTestModal()" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Firebase SDK Compat Libraries -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-<!-- Your Application Scripts -->
+<!-- Core App Configuration & Scripts -->
 <script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
-<script src="js/app.js"></script>
-<script>CuraAuth.guard(['DOCTOR']);</script>
 <script src="js/doctor.js"></script>
 </body>
 </html>
