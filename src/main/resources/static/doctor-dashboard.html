@@ -1,231 +1,204 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2563EB">
-    <title>Cura — Doctor Consultation Portal</title>
+    <title>Cura - Patient Care Portal</title>
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Master Stylesheet -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-<!-- TOP NAVBAR -->
-<header class="navbar">
-    <div class="nav-brand">
-        <div class="brand-icon-wrap"><i class="fa-solid fa-heart-pulse"></i></div>
-        <h1 class="nav-logo">CURA <span>DOCTOR</span></h1>
-        <span class="nav-badge" id="doctorGreeting">Physician Workstation</span>
-    </div>
-    <div class="nav-actions">
-        <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
-            <i class="fa-solid fa-moon"></i>
-        </button>
-        <button class="btn-logout" onclick="CuraAuth.logout()">
-            <i class="fa-solid fa-right-from-bracket"></i> Logout
-        </button>
-    </div>
-</header>
-
-<!-- MAIN APP CONTAINER -->
-<main class="main-container">
-
-    <!-- HERO HEADER -->
-    <section class="hero-banner">
-        <div class="hero-content">
-            <h2>Assigned Patient Queue &amp; Consultations</h2>
-            <p>Review assistant-recorded triage vitals, conduct patient evaluations, write digital prescription notes, and track 15/30-day follow-ups.</p>
-        </div>
-        <div style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-subtle); padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-            <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Strictly scoped to your assigned patients
-        </div>
-    </section>
-
-    <!-- FILTER CHIPS -->
-    <section style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <button class="btn btn-secondary btn-sm filter-chip active" data-filter="ALL" onclick="filterAppointments('ALL')">
-            All Assigned Visits
-        </button>
-        <button class="btn btn-secondary btn-sm filter-chip" data-filter="READY" onclick="filterAppointments('READY')">
-            <i class="fa-solid fa-heart-pulse" style="color: var(--primary);"></i> Ready with Vitals
-        </button>
-        <button class="btn btn-secondary btn-sm filter-chip" data-filter="PENDING" onclick="filterAppointments('PENDING')">
-            Active / In Queue
-        </button>
-        <button class="btn btn-secondary btn-sm filter-chip" data-filter="COMPLETED" onclick="filterAppointments('COMPLETED')">
-            Completed &amp; Prescribed
-        </button>
-    </section>
-
-    <!-- APPOINTMENTS LIST CONTAINER -->
-    <section>
-        <div class="card-header">
-            <h3 class="card-title"><i class="fa-solid fa-clipboard-user"></i> Consultation Queue</h3>
-        </div>
-        <div id="doctorAppointmentsContainer"></div>
-    </section>
-
-    <!-- 15 / 30-DAY FOLLOW-UP REMINDERS -->
-    <section class="card" style="border-top: 3px solid var(--accent);">
-        <div class="card-header">
-            <h3 class="card-title"><i class="fa-solid fa-bell" style="color: var(--accent);"></i> 15 &amp; 30-Day Follow-Up Reminders</h3>
-            <span class="followup-pill"><i class="fa-solid fa-clock"></i> Active Follow-Ups</span>
-        </div>
-        <p style="font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 1rem;">
-            Patients under your care whose prescribed follow-up interval is due for constitutional review or treatment adjustments.
-        </p>
-        <div id="followUpsContainer"></div>
-    </section>
-
-</main>
-
-<!-- PRESCRIPTION WRITER MODAL -->
-<div class="modal-overlay" id="prescriptionModal">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3 class="modal-title"><i class="fa-solid fa-file-prescription" style="color: var(--accent);"></i> Clinical Prescription &amp; Notes</h3>
-            <button type="button" class="btn-close-modal" onclick="closePrescriptionModal()">&times;</button>
-        </div>
-
-        <div style="background: var(--bg-app); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.2rem; font-size: 0.86rem;">
-            <div><strong>Patient:</strong> <span id="rxPatientName" style="color: var(--primary); font-weight: 600;"></span></div>
-            <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">Condition: <span id="rxHealthIssue"></span></div>
-        </div>
-
-        <form id="rxForm" onsubmit="handlePrescriptionSubmit(event)">
-            <div class="form-group">
-                <label for="rxDiagnosis"><i class="fa-solid fa-stethoscope"></i> Clinical Diagnosis / Impression *</label>
-                <input type="text" id="rxDiagnosis" class="form-control" placeholder="e.g. Chronic Migraine / Acute Pharyngitis" required>
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+        <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: var(--surface-card); border-bottom: 1px solid var(--border-color);">
+            <div class="brand-area" style="display: flex; align-items: center; gap: 12px;">
+                <div class="brand-logo" style="width: 40px; height: 40px; border-radius: 10px; background: var(--palette-peach); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+                <div>
+                    <h1 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; margin: 0; color: var(--text-primary);">Cura</h1>
+                    <span style="font-size: 0.75rem; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase;">Patient Care Portal</span>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="rxRemedies"><i class="fa-solid fa-pills"></i> Remedies / Medicines &amp; Potency *</label>
-                <textarea id="rxRemedies" class="form-textarea" placeholder="e.g. 1. Arnica Montana 200CH (4 pills morning)&#10;2. Belladonna 30C (2 drops if acute headache)&#10;3. Paracetamol 500mg (SOS)" required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="rxInstructions"><i class="fa-solid fa-clipboard-list"></i> Dosage &amp; Administration Instructions</label>
-                <input type="text" id="rxInstructions" class="form-control" placeholder="e.g. Take 15 mins before meals; dissolve under tongue.">
-            </div>
-
-            <div class="form-group">
-                <label for="rxDiet"><i class="fa-solid fa-apple-whole"></i> Dietary &amp; Lifestyle Guidance</label>
-                <input type="text" id="rxDiet" class="form-control" placeholder="e.g. Maintain hydration; avoid late caffeine; keep sleep routine.">
-            </div>
-
-            <!-- Follow-up Interval Selector (15 or 30 days) -->
-            <div class="form-group">
-                <label for="rxFollowUpDays"><i class="fa-regular fa-calendar-check"></i> Follow-Up Scheduling</label>
-                <select id="rxFollowUpDays" class="form-select">
-                    <option value="15">15 Days (Acute / Rapid Response Check)</option>
-                    <option value="30" selected>30 Days (Standard Constitutional Review)</option>
-                    <option value="45">45 Days (Maintenance / Chronic Care)</option>
-                </select>
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 1.4rem;">
-                <button type="submit" class="btn btn-accent" style="flex: 1.2;">
-                    <i class="fa-solid fa-floppy-disk"></i> Save &amp; Complete Visit
+            <!-- Header Action Controls -->
+            <div class="header-actions" style="display: flex; align-items: center; gap: 14px;">
+                <!-- Notification Enable Button -->
+                <button type="button" class="btn btn-outline-peach btn-sm" onclick="enableNotifications()">
+                    <i class="fa-solid fa-bell"></i> Enable Screen Notifications
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="closePrescriptionModal()" style="flex: 1;">
-                    Cancel
+
+                <!-- Dark / Light Theme Toggle -->
+                <button type="button" class="theme-toggle-btn btn-icon" onclick="toggleTheme()" aria-label="Toggle display theme" style="background: none; border: 1px solid var(--border-color); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-primary);">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
+                <!-- Patient Profile Badge & Logout -->
+                <div class="user-badge" style="display: flex; align-items: center; gap: 8px; padding: 4px 10px; background: var(--bg-app); border-radius: 20px; border: 1px solid var(--border-color);">
+                    <i class="fa-regular fa-circle-user" style="color: var(--palette-peach-dark);"></i>
+                    <span id="patientNameHeader" style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">Welcome</span>
+                </div>
+
+                <button type="button" class="btn btn-outline btn-sm" onclick="CuraAuth.logout()" style="border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; background: transparent; color: var(--text-primary);">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
                 </button>
             </div>
-        </form>
-    </div>
-</div>
-
-<!-- ORDER DIAGNOSTIC / LAB / X-RAY MODAL -->
-<div class="modal-overlay" id="orderTestModal">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3 class="modal-title"><i class="fa-solid fa-flask-vial" style="color: var(--primary);"></i> Order Diagnostic Investigation / Scan</h3>
-            <button type="button" class="btn-close-modal" onclick="closeOrderTestModal()">&times;</button>
         </div>
+    </header>
 
-        <div style="background: var(--bg-app); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.2rem; font-size: 0.86rem;">
-            <div><strong>Patient:</strong> <span id="orderModalPatientName" style="color: var(--primary); font-weight: 600;"></span></div>
-            <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;" id="orderModalPatientSub"></div>
+    <main class="main-layout" style="max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem;">
+        <!-- Welcome Hero Banner -->
+        <section class="patient-hero" style="background: linear-gradient(135deg, var(--palette-peach-light) 0%, var(--surface-card) 100%); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem; border: 1px solid var(--border-color);">
+            <div style="max-width: 650px;">
+                <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--palette-peach-dark); letter-spacing: 1px;">Smart Triage Scheduling</span>
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin: 8px 0; color: var(--text-primary);">Book Your Care Consultation</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Complete the quick 3-step intake assessment so we can assign the ideal physician and allocate sufficient consultation time for your visit.</p>
+            </div>
+        </section>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <!-- Left Column: Interactive Intake & Scheduling Card -->
+            <section class="card" style="background: var(--surface-card); border-radius: var(--radius-md); padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+                        <i class="fa-solid fa-clipboard-question" style="color: var(--palette-peach); margin-right: 6px;"></i> Intake Assessment
+                    </h3>
+                    <span id="durationBadge" class="nav-badge" style="background: var(--palette-yellow); color: #7a5800; font-weight: 700; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem;">
+                        Allocated: 30 Mins
+                    </span>
+                </div>
+
+                <form id="patientBookingForm">
+                    <!-- Step 1: Chief Complaint / Category -->
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="intakeHealthIssue" style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: var(--text-primary);">
+                            1. What primary health concern are you experiencing?
+                        </label>
+                        <select id="intakeHealthIssue" class="form-select" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-app); color: var(--text-primary);" required>
+                            <option value="General Consultation" data-duration="30">General Health Check / Fever / Fatigue (30 mins)</option>
+                            <option value="Cardiology & Chest Care" data-duration="45">Cardiology & Hypertension Evaluation (45 mins)</option>
+                            <option value="Dermatology & Skin" data-duration="30">Dermatology & Skin Concerns (30 mins)</option>
+                            <option value="Pediatrics" data-duration="30">Pediatric Care (30 mins)</option>
+                            <option value="Chronic Illness Review" data-duration="60">Comprehensive Chronic Illness / Diabetes Follow-up (60 mins)</option>
+                        </select>
+                    </div>
+
+                    <!-- Step 2: Patient Group Size -->
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="intakeGroupSize" style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: var(--text-primary);">
+                            2. Number of patients attending this appointment:
+                        </label>
+                        <select id="intakeGroupSize" class="form-select" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-app); color: var(--text-primary);">
+                            <option value="1">1 Person (Individual)</option>
+                            <option value="2">2 Persons (+15 mins allocated)</option>
+                            <option value="3">3+ Family Members (+30 mins allocated)</option>
+                        </select>
+                    </div>
+
+                    <!-- Step 3: First Visit Indicator -->
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.88rem; color: var(--text-primary);">
+                            <input type="checkbox" id="intakeFirstTime" style="accent-color: var(--palette-peach); width: 17px; height: 17px;">
+                            <span>This is my first visit to Cura Clinic (+15 mins triage intake)</span>
+                        </label>
+                    </div>
+
+                    <!-- Symptoms Description -->
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="patientSymptoms" style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: var(--text-primary);">
+                            Additional notes or specific symptoms:
+                        </label>
+                        <textarea id="patientSymptoms" rows="2" placeholder="Briefly describe your symptoms..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-app); color: var(--text-primary);"></textarea>
+                    </div>
+
+                    <!-- Doctor & Day Selection -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem;">
+                        <div class="form-group">
+                            <label for="bookingDoctor" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-primary);">Attending Physician</label>
+                            <select id="bookingDoctor" class="form-select" style="width: 100%; padding: 9px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-app); color: var(--text-primary);" required>
+                                <option value="Dr. Ashwini Joshi">Dr. Ashwini Joshi (Physician)</option>
+                                <option value="Dr. Aarav Mehta">Dr. Aarav Mehta (Cardiology)</option>
+                                <option value="Dr. Priya Nair">Dr. Priya Nair (Pediatrics)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookingDay" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-primary);">Consultation Day</label>
+                            <select id="bookingDay" class="form-select" style="width: 100%; padding: 9px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-app); color: var(--text-primary);" required>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Available Time Slots Picker -->
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">Select Appointment Slot</label>
+                        <div id="slotButtonsContainer" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <!-- Time slot buttons dynamically rendered by patient.js -->
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-peach" style="width: 100%; padding: 12px; font-weight: 600; border-radius: 8px; border: none; background: var(--palette-peach); color: white; cursor: pointer; font-size: 1rem;">
+                        <i class="fa-regular fa-calendar-check"></i> Confirm & Book Appointment
+                    </button>
+                </form>
+            </section>
+
+            <!-- Right Column: Personal Appointments & Prescriptions History -->
+            <section class="card" style="background: var(--surface-card); border-radius: var(--radius-md); padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+                        <i class="fa-solid fa-clock-rotate-left" style="color: var(--palette-sage); margin-right: 6px;"></i> My Bookings & Prescriptions
+                    </h3>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="loadPatientDashboardData()" style="background: none; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; cursor: pointer; color: var(--text-primary);">
+                        <i class="fa-solid fa-rotate-right"></i> Refresh
+                    </button>
+                </div>
+
+                <div id="patientAppointmentsList">
+                    <!-- Populated dynamically via patient.js -->
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 8px;"></i>
+                        <p>Loading your appointments...</p>
+                    </div>
+                </div>
+            </section>
         </div>
+    </main>
 
-        <form id="orderTestForm" onsubmit="handleTestOrderSubmit(event)">
-            <input type="hidden" id="orderAptId">
-            <input type="hidden" id="orderPatientId">
-            <input type="hidden" id="orderPatientEmail">
-            <input type="hidden" id="orderPatientNameVal">
+    <!-- Core Scripts (Ordered for Dependency Flow) -->
+    <!-- Firebase SDK (Compat Version) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-            <div class="form-group">
-                <label for="orderCategory"><i class="fa-solid fa-layer-group"></i> Investigation Category *</label>
-                <select id="orderCategory" class="form-select" required>
-                    <option value="RADIOLOGY_XRAY">Radiology &amp; Imaging (X-Ray, CT, Ultrasound, MRI)</option>
-                    <option value="BLOOD_LAB">Blood &amp; Biochemistry (CBC, LFT, KFT, Lipid, HbA1c)</option>
-                    <option value="CARDIOLOGY">Cardiology Diagnostics (ECG, Echo, Holter)</option>
-                    <option value="PATHOLOGY">Pathology &amp; Swabs (Urine, Culture, Throat Swab)</option>
-                    <option value="OTHER">Other Clinical Test</option>
-                </select>
-            </div>
+    <!-- Clinic Logic Adapters -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/patient.js"></script>
 
-            <div class="form-group">
-                <label for="orderTestName"><i class="fa-solid fa-vial-virus"></i> Prescribed Test Name *</label>
-                <input type="text" id="orderTestName" class="form-control" list="commonTestsList" placeholder="e.g. Chest X-Ray PA View" required>
-                <datalist id="commonTestsList">
-                    <option value="Chest X-Ray PA View">
-                    <option value="Chest X-Ray Lateral View">
-                    <option value="X-Ray Knee Joint (AP &amp; Lat)">
-                    <option value="X-Ray Cervical Spine">
-                    <option value="Ultrasound Whole Abdomen &amp; Pelvis">
-                    <option value="CT Scan Head (Plain)">
-                    <option value="CT Scan Chest (HRCT)">
-                    <option value="Complete Blood Count (CBC) with ESR">
-                    <option value="Fasting &amp; Post-Prandial Blood Sugar (FBS/PPBS)">
-                    <option value="HbA1c (Glycated Hemoglobin)">
-                    <option value="Liver Function Test (LFT)">
-                    <option value="Kidney Function Test (KFT / Creatinine &amp; Urea)">
-                    <option value="Lipid Profile (Cholesterol, HDL, LDL, Triglycerides)">
-                    <option value="Thyroid Profile (Free T3, Free T4, TSH)">
-                    <option value="Serum Vitamin D3 &amp; Vitamin B12">
-                    <option value="12-Lead Electrocardiogram (ECG)">
-                    <option value="Urine Routine &amp; Microscopic Examination">
-                </datalist>
-            </div>
-
-            <div class="form-group">
-                <label for="orderUrgency"><i class="fa-solid fa-stopwatch"></i> Urgency / Priority</label>
-                <select id="orderUrgency" class="form-select">
-                    <option value="ROUTINE" selected>Routine (Standard Schedule)</option>
-                    <option value="PRIORITY">Priority (Next 24 Hours)</option>
-                    <option value="STAT">STAT / Urgent (Immediate Clinical Decision)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="orderInstructions"><i class="fa-solid fa-clipboard-list"></i> Clinical Indications &amp; Instructions</label>
-                <textarea id="orderInstructions" class="form-textarea" placeholder="e.g. Rule out pneumonia. Fasting 8 hrs for blood test. Patient may upload digital copy or bring printout to assistant."></textarea>
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 1.4rem;">
-                <button type="submit" class="btn btn-primary" style="flex: 1.2;">
-                    <i class="fa-solid fa-paper-plane"></i> Dispatch Investigation Order
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="closeOrderTestModal()" style="flex: 1;">
-                    Cancel
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Firebase SDK Compat Libraries -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-<!-- Core App Configuration & Scripts -->
-<script src="js/firebase-config.js"></script>
-<script src="js/app.js"></script>
-<script src="js/doctor.js"></script>
+    <script>
+        // Update patient's display name on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = CuraAuth.getCurrentUser();
+            if (user) {
+                const headerName = document.getElementById('patientNameHeader');
+                if (headerName) headerName.textContent = user.fullName || user.email.split('@')[0];
+            }
+        });
+    </script>
 </body>
 </html>
