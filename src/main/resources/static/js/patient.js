@@ -117,6 +117,27 @@ function selectTime(time) {
     renderSlots();
 }
 
+async function loadAvailableDoctors() {
+    const doctorSelect = document.getElementById('doctorSelect');
+    if (!doctorSelect) return;
+
+    try {
+        const doctors = await CuraData.fetchDoctors();
+        if (doctors && doctors.length > 0) {
+            doctorSelect.innerHTML = doctors.map(doc => {
+                const displayName = (doc.fullName || 'Doctor').startsWith('Dr.') ? doc.fullName : `Dr. ${doc.fullName}`;
+                const spec = doc.specialization || 'General Practice';
+                return `<option value="${doc.fullName}" data-email="${doc.email}" data-spec="${spec}">${displayName} (${spec})</option>`;
+            }).join('');
+        } else {
+            doctorSelect.innerHTML = `<option value="" disabled selected>-- No physicians currently registered in clinic --</option>`;
+        }
+    } catch (e) {
+        console.warn("Could not load dynamic doctors from Firebase:", e);
+        doctorSelect.innerHTML = `<option value="" disabled selected>-- Unable to load physicians --</option>`;
+    }
+}
+
 async function handleBookingSubmit(e) {
     e.preventDefault();
     const currentUser = CuraAuth.getCurrentUser();
@@ -124,9 +145,15 @@ async function handleBookingSubmit(e) {
     const name = document.getElementById('patientName').value.trim();
     const phone = document.getElementById('patientPhone').value.trim();
     const doctorSelect = document.getElementById('doctorSelect');
-    const selectedOption = doctorSelect.selectedOptions[0];
+    const selectedOption = doctorSelect ? doctorSelect.selectedOptions[0] : null;
+
+    if (!selectedOption || !doctorSelect.value) {
+        showToast('Please select a physician from the list. (Admin must provision a doctor account first)', 'error');
+        return;
+    }
+
     const doctorName = doctorSelect.value;
-    const doctorEmail = selectedOption.dataset.email || 'ashwini.joshi@cura.clinic';
+    const doctorEmail = selectedOption.dataset.email || '';
     const specialization = selectedOption.dataset.spec || 'General';
     const symptoms = document.getElementById('symptomsDesc').value.trim();
 
@@ -149,7 +176,7 @@ async function handleBookingSubmit(e) {
         patientId: currentUser ? currentUser.uid : null,
         patientEmail: currentUser ? currentUser.email : null,
         patientName: name,
-        patientPhone: phone || '+91 9823000000',
+        patientPhone: phone || (currentUser ? (currentUser.phone || currentUser.phoneNumber || '') : ''),
         doctorName: doctorName,
         doctorEmail: doctorEmail,
         specialization: specialization,
@@ -230,26 +257,39 @@ async function loadPatientHistory() {
                 <div style="margin-top: 10px; padding: 10px 12px; background: var(--primary-light); border-radius: var(--radius-sm); font-size: 0.82rem; border-left: 3px solid var(--primary);">
                     <strong><i class="fa-solid fa-file-medical"></i> Doctor's Prescription Notes:</strong>
                     <div style="margin-top: 2px;">${apt.prescriptionSummary}</div>
+                    ${apt.followUpDate ? `
+                        <div style="margin-top: 6px; font-weight: 600; color: var(--accent);">
+                            <i class="fa-regular fa-calendar-check"></i> Recommended Follow-Up: <strong>${apt.followUpDate}</strong> (${apt.followUpIntervalDays || 30} days after consultation)
+                        </div>
+                    ` : ''}
                 </div>
             ` : ''}
         </div>
     `).join('');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    if (typeof CuraFirebase !== 'undefined' && typeof CuraFirebase.waitForAuth === 'function') {
+        await CuraFirebase.waitForAuth();
+    }
     const currentUser = CuraAuth.getCurrentUser();
     if (currentUser) {
         const nameInput = document.getElementById('patientName');
+        const phoneInput = document.getElementById('patientPhone');
         const badge = document.getElementById('patientBadge');
         if (nameInput && currentUser.fullName) nameInput.value = currentUser.fullName;
+        if (phoneInput && (currentUser.phone || currentUser.phoneNumber) && currentUser.phone !== 'N/A') {
+            phoneInput.value = currentUser.phone || currentUser.phoneNumber;
+        }
         if (badge) badge.textContent = currentUser.fullName || currentUser.email || 'Patient';
     }
 
     updateDurationDisplay();
     renderDays();
     renderSlots();
-    loadPatientHistory();
-    loadPatientTestOrders();
+    await loadAvailableDoctors();
+    await loadPatientHistory();
+    await loadPatientTestOrders();
 });
 
 // --- DIAGNOSTIC INVESTIGATION ORDERS & REPORT UPLOADS ---

@@ -1,9 +1,10 @@
 /**
  * CURA PWA Service Worker
- * Implements cache-first strategy for static assets and network-first for dynamic endpoints.
+ * Implements Network-First for HTML navigation and static scripts/styles
+ * so updates are seen immediately while preserving full offline capability.
  */
 
-const CACHE_NAME = 'cura-clinic-pwa-v1';
+const CACHE_NAME = 'cura-clinic-pwa-v6';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
@@ -21,11 +22,12 @@ const ASSETS_TO_CACHE = [
 ];
 
 self.addEventListener('install', (event) => {
+    self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('🌿 Cura Service Worker: Pre-caching app shell assets');
             return cache.addAll(ASSETS_TO_CACHE);
-        }).then(() => self.skipWaiting())
+        })
     );
 });
 
@@ -45,36 +47,44 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Skip non-GET requests and API calls for real-time fresh data
+    // Skip non-GET requests and API calls
     if (event.request.method !== 'GET' || event.request.url.includes('/api/')) {
         return;
     }
 
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                // Return cached asset, but revalidate in background
-                fetch(event.request).then((networkResponse) => {
+    // 1. HTML Navigation Requests -> NETWORK FIRST (Always get latest UI updates)
+    const acceptHeader = event.request.headers.get('accept') || '';
+    if (acceptHeader.includes('text/html')) {
+        event.respondWith(
+            fetch(event.request)
+                .then((networkResponse) => {
                     if (networkResponse && networkResponse.status === 200) {
-                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
+                        const copy = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
                     }
-                }).catch(() => {/* Offline fallback */});
-                return cachedResponse;
-            }
-
-            return fetch(event.request).then((networkResponse) => {
-                if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
                     return networkResponse;
+                })
+                .catch(() => {
+                    // Offline fallback: try cache, else fallback to index
+                    return caches.match(event.request).then((cached) => cached || caches.match('/index.html'));
+                })
+        );
+        return;
+    }
+
+    // 2. Scripts, Styles & Static Assets -> NETWORK FIRST with Cache Fallback
+    // Ensures updates are served live immediately, falling back to cache when offline
+    event.respondWith(
+        fetch(event.request)
+            .then((networkResponse) => {
+                if (networkResponse && networkResponse.status === 200) {
+                    const copy = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
                 }
-                const responseToCache = networkResponse.clone();
-                caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
                 return networkResponse;
-            }).catch(() => {
-                // If HTML navigation fails offline, fallback to index
-                if (event.request.headers.get('accept').includes('text/html')) {
-                    return caches.match('/index.html');
-                }
-            });
-        })
+            })
+            .catch(() => {
+                return caches.match(event.request);
+            })
     );
 });

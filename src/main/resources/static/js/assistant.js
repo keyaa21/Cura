@@ -85,26 +85,42 @@ async function loadAssistantTriageData() {
         }
     }
 
-    assignedDoctorEmail = currentUser.doctorEmail || 'ashwini.joshi@cura.clinic';
+    assignedDoctorEmail = currentUser.doctorEmail || '';
 
     if (doctorScopeBadge) {
         if (currentUser.role === 'ADMIN') {
             doctorScopeBadge.innerHTML = `<i class="fa-solid fa-crown" style="color: var(--warning);"></i> Admin Oversight: Viewing All Physicians`;
-        } else {
+        } else if (assignedDoctorEmail) {
             doctorScopeBadge.innerHTML = `<i class="fa-solid fa-user-doctor" style="color: var(--primary);"></i> Assisting Doctor: <strong>${assignedDoctorEmail}</strong>`;
+        } else {
+            doctorScopeBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i> Assisting Doctor: <em>Unassigned (Admin can link in Staff Directory)</em>`;
         }
     }
 
-    if (walkinDoctorInput && currentUser.role === 'ASSISTANT') {
-        walkinDoctorInput.value = assignedDoctorEmail;
+    // Populate Walk-In Physician Dropdown from Firebase
+    if (walkinDoctorInput) {
+        try {
+            const doctors = await CuraData.fetchDoctors();
+            if (doctors && doctors.length > 0) {
+                walkinDoctorInput.innerHTML = doctors.map(d => {
+                    const isSelected = assignedDoctorEmail && d.email.toLowerCase() === assignedDoctorEmail.toLowerCase();
+                    const docTitle = d.fullName.startsWith('Dr.') ? d.fullName : `Dr. ${d.fullName}`;
+                    return `<option value="${d.email}" data-name="${d.fullName}" data-spec="${d.specialization || 'Physician'}" ${isSelected ? 'selected' : ''}>${docTitle} (${d.specialization || 'General'})</option>`;
+                }).join('');
+            } else {
+                walkinDoctorInput.innerHTML = `<option value="">-- No physicians registered in clinic --</option>`;
+            }
+        } catch(e) {
+            console.warn("Could not load doctors for walk-in selector:", e);
+        }
     }
 
     // Role-based filtering: Assistant ONLY sees appointments for their specific doctor
     let appointments = [];
-    if (currentUser.role === 'ASSISTANT') {
+    if (currentUser.role === 'ASSISTANT' && assignedDoctorEmail) {
         appointments = await CuraData.fetchAppointmentsByDoctor(assignedDoctorEmail);
     } else {
-        // Admin sees all
+        // Admin or unassigned assistant sees all clinic appointments
         appointments = await CuraData.fetchAppointments();
     }
 
@@ -127,11 +143,12 @@ async function loadAssistantTriageData() {
     // Populate Queue Table
     if (tableBody) {
         if (appointments.length === 0) {
+            const scopeText = assignedDoctorEmail ? `for <strong>${assignedDoctorEmail}</strong>` : `in the clinic`;
             tableBody.innerHTML = `
                 <tr>
                     <td colspan="5" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
                         <i class="fa-solid fa-user-clock" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 8px; display: block;"></i>
-                        No scheduled patients currently in queue for <strong>${assignedDoctorEmail}</strong>.
+                        No scheduled patients currently in queue ${scopeText}.
                     </td>
                 </tr>
             `;
@@ -260,14 +277,20 @@ async function handleWalkInSubmit(e) {
 
     const currentUser = CuraAuth.getCurrentUser();
     const duration = isFirst ? 60 : (issue === 'ACUTE' ? 30 : 45);
+    
+    const docSelect = document.getElementById('walkinDoctor');
+    const selectedOption = docSelect ? docSelect.selectedOptions[0] : null;
+    const targetDocEmail = (docSelect && docSelect.value) ? docSelect.value : (assignedDoctorEmail || (currentUser ? currentUser.email : ''));
+    const targetDocName = (selectedOption && selectedOption.dataset.name) ? selectedOption.dataset.name : (targetDocEmail ? targetDocEmail.split('@')[0].replace('.', ' ') : 'Attending Physician');
+    const targetDocSpec = (selectedOption && selectedOption.dataset.spec) ? selectedOption.dataset.spec : 'Clinical Practice';
 
     const walkInApt = {
         id: "apt-" + Date.now(),
         patientName: name + ' (Walk-In)',
-        patientPhone: phone || '+91 9800000000',
-        doctorEmail: assignedDoctorEmail,
-        doctorName: assignedDoctorEmail.split('@')[0].replace('.', ' '),
-        specialization: 'Clinical Practice',
+        patientPhone: phone || 'N/A',
+        doctorEmail: targetDocEmail,
+        doctorName: targetDocName,
+        specialization: targetDocSpec,
         dayOfWeek: 'Today',
         timeSlot: 'Immediate (Walk-In)',
         allocatedDurationMinutes: duration,
@@ -282,7 +305,7 @@ async function handleWalkInSubmit(e) {
     };
 
     await CuraData.addAppointment(walkInApt);
-    showToast(`Walk-in patient ${name} registered for ${assignedDoctorEmail}!`, 'success');
+    showToast(`Walk-in patient ${name} registered successfully!`, 'success');
     document.getElementById('walkinForm').reset();
     await loadAssistantTriageData();
 }
@@ -479,7 +502,11 @@ async function handleAssistantReportSubmit(event) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    if (typeof CuraFirebase !== 'undefined' && typeof CuraFirebase.waitForAuth === 'function') {
+        await CuraFirebase.waitForAuth();
+    }
     calculateTriageBMI();
-    loadAssistantTriageData();
+    await loadAssistantTriageData();
+    await loadAssistantTestOrders();
 });

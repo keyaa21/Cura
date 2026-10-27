@@ -1,0 +1,9 @@
+# Cloudflare Pages Clean URLs and Redirects
+/index /index.html 301
+/dashboard /dashboard.html 301
+/doctor /doctor-dashboard.html 301
+/doctor-dashboard /doctor-dashboard.html 301
+/assistant /assistant-dashboard.html 301
+/assistant-dashboard /assistant-dashboard.html 301
+/patient /patient-dashboard.html 301
+/patient-dashboard /patient-dashboard.html 301

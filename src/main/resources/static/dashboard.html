@@ -88,74 +88,6 @@
         </div>
     </section>
 
-    <!-- 3-PORTAL WORKSTATION LAUNCHER -->
-    <section>
-        <div class="card-header">
-            <h3 class="card-title"><i class="fa-solid fa-compass"></i> Clinical Workstations</h3>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem;">
-            
-            <!-- Doctor Portal Card -->
-            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid var(--primary);">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem;">
-                        <div class="stat-icon green"><i class="fa-solid fa-user-doctor"></i></div>
-                        <div>
-                            <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">Doctor Portal</h4>
-                            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary); font-weight: 600;">Consultations &amp; Rx</span>
-                        </div>
-                    </div>
-                    <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.2rem;">
-                        Doctors view their assigned patient consultation queues, review vitals, author digital prescriptions, and schedule 15/30-day reviews.
-                    </p>
-                </div>
-                <a href="doctor-dashboard.html" class="btn btn-primary btn-block">
-                    Enter Doctor Workstation <i class="fa-solid fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <!-- Assistant Portal Card -->
-            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid var(--accent);">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem;">
-                        <div class="stat-icon peach"><i class="fa-solid fa-user-nurse"></i></div>
-                        <div>
-                            <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">Assistant Portal</h4>
-                            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 600;">Triage &amp; Vitals Intake</span>
-                        </div>
-                    </div>
-                    <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.2rem;">
-                        Clinical assistants take initial vitals (BP, Temp, Pulse, SpO2) and manage arrived patients strictly for their designated doctor.
-                    </p>
-                </div>
-                <a href="assistant-dashboard.html" class="btn btn-accent btn-block">
-                    Enter Assistant Workstation <i class="fa-solid fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <!-- Patient Portal Card -->
-            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid var(--warning);">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem;">
-                        <div class="stat-icon yellow"><i class="fa-solid fa-hospital-user"></i></div>
-                        <div>
-                            <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">Patient Portal</h4>
-                            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--warning); font-weight: 600;">Booking &amp; History</span>
-                        </div>
-                    </div>
-                    <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.2rem;">
-                        Patients complete the 3-question intake quiz, receive dynamic appointment durations (1 hr for 1st-visit), and track their appointments.
-                    </p>
-                </div>
-                <a href="patient-dashboard.html" class="btn btn-secondary btn-block">
-                    Enter Patient Portal <i class="fa-solid fa-arrow-right"></i>
-                </a>
-            </div>
-
-        </div>
-    </section>
-
     <!-- REGISTERED PATIENTS DIRECTORY & CONTACT MANAGEMENT -->
     <section class="card" style="border-top: 3px solid var(--warning);">
         <div class="card-header">
@@ -177,12 +109,13 @@
                         <th>Patient Name</th>
                         <th>Email Address</th>
                         <th>Phone Number</th>
+                        <th>Status</th>
                         <th>Record ID</th>
                         <th style="text-align: right;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="patientsDirectoryBody">
-                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading patients directory...</td></tr>
+                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading patients directory...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -197,9 +130,14 @@
                     Admins provision staff credentials and link each assistant to their designated physician's email.
                 </p>
             </div>
-            <button class="btn btn-primary btn-sm" onclick="openCreateUserModal()">
-                <i class="fa-solid fa-plus"></i> New Staff Account
-            </button>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-secondary btn-sm" onclick="openQuickVerifyModal()" style="border-color: #059669; color: #059669; font-weight: 600;">
+                    <i class="fa-solid fa-user-check"></i> Verify Doctor / Staff
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="openCreateUserModal()">
+                    <i class="fa-solid fa-plus"></i> New Staff Account
+                </button>
+            </div>
         </div>
 
         <div class="table-responsive">
@@ -308,7 +246,7 @@
 
             <div class="form-group">
                 <label for="editPatientPhone"><i class="fa-solid fa-phone"></i> Contact Phone Number</label>
-                <input type="tel" id="editPatientPhone" class="form-control" placeholder="+91 98230 00000">
+                <input type="tel" id="editPatientPhone" class="form-control" placeholder="+91 98000 00000">
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 1.4rem;">
@@ -334,17 +272,36 @@
         <form id="createStaffForm" onsubmit="handleStaffCreation(event)">
             <div class="form-group">
                 <label for="staffFullName"><i class="fa-regular fa-user"></i> Full Name *</label>
-                <input type="text" id="staffFullName" class="form-control" placeholder="e.g. Dr. Priya Gupta / Maya Patel" required>
+                <input type="text" id="staffFullName" class="form-control" placeholder="e.g. Dr. Jane Doe" required>
             </div>
 
             <div class="form-group">
                 <label for="staffEmail"><i class="fa-regular fa-envelope"></i> Email Address *</label>
-                <input type="email" id="staffEmail" class="form-control" placeholder="staff@cura.clinic" required>
+                <input type="email" id="staffEmail" class="form-control" placeholder="name@gmail.com" pattern=".+@gmail\.com" title="Please enter a valid @gmail.com address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="staffPhone"><i class="fa-solid fa-phone"></i> Mobile Phone (with Country Code)</label>
+                <div style="display: flex; gap: 8px;">
+                    <select id="staffCountryCode" class="form-select" style="max-width: 130px; flex-shrink: 0;">
+                        <option value="+91" selected>🇮🇳 +91 (IN)</option>
+                        <option value="+1">🇺🇸 +1 (US)</option>
+                        <option value="+44">🇬🇧 +44 (UK)</option>
+                        <option value="+61">🇦🇺 +61 (AU)</option>
+                        <option value="+971">🇦🇪 +971 (AE)</option>
+                        <option value="+65">🇸🇬 +65 (SG)</option>
+                        <option value="+49">🇩🇪 +49 (DE)</option>
+                        <option value="+33">🇫🇷 +33 (FR)</option>
+                        <option value="+81">🇯🇵 +81 (JP)</option>
+                        <option value="+86">🇨🇳 +86 (CN)</option>
+                    </select>
+                    <input type="tel" id="staffPhone" class="form-control" placeholder="98765 43210">
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="staffPassword"><i class="fa-solid fa-lock"></i> Temporary Password *</label>
-                <input type="password" id="staffPassword" class="form-control" placeholder="Minimum 6 characters" required minlength="6" value="password123">
+                <input type="password" id="staffPassword" class="form-control" placeholder="Minimum 6 characters" required minlength="6">
             </div>
 
             <div class="form-group">
@@ -357,13 +314,26 @@
 
             <div class="form-group" id="doctorRelationGroup" style="display: none;">
                 <label for="assignedDoctorEmail"><i class="fa-solid fa-link"></i> Assigned Doctor Email *</label>
-                <input type="email" id="assignedDoctorEmail" class="form-control" placeholder="e.g. ashwini.joshi@cura.clinic">
-                <small style="font-size: 0.75rem; color: var(--text-muted);">The assistant will ONLY see patients and appointments for this physician.</small>
+                <input type="email" id="assignedDoctorEmail" list="doctorDatalist" class="form-control" placeholder="e.g. doctor@gmail.com">
+                <datalist id="doctorDatalist"></datalist>
+                <small style="font-size: 0.75rem; color: var(--text-muted);">The assistant will strictly see patients and appointments for this physician.</small>
             </div>
 
             <div class="form-group" id="specializationGroup">
                 <label for="staffSpecialization"><i class="fa-solid fa-stethoscope"></i> Clinical Specialization</label>
                 <input type="text" id="staffSpecialization" class="form-control" placeholder="e.g. Homoeopathy / Allopathy / Psychology">
+            </div>
+
+            <div style="margin: 0.9rem 0; padding: 10px 14px; background: var(--bg-subtle); border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 10px;">
+                <input type="checkbox" id="staffAutoVerify" checked style="margin-top: 3px; cursor: pointer; width: 17px; height: 17px;">
+                <div>
+                    <label for="staffAutoVerify" style="margin: 0; font-weight: 600; cursor: pointer; font-size: 0.85rem; color: var(--text-primary);">
+                        <i class="fa-solid fa-user-check" style="color: var(--status-completed);"></i> Verify Account Immediately (Admin Approval)
+                    </label>
+                    <p style="margin: 3px 0 0 0; font-size: 0.76rem; color: var(--text-muted); line-height: 1.4;">
+                        Activates this staff profile right away without sending an email verification. Saves Firebase daily email quota and allows immediate sign-in.
+                    </p>
+                </div>
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
@@ -398,23 +368,38 @@
 
             <div class="form-group">
                 <label for="editStaffFullName"><i class="fa-regular fa-user"></i> Full Name *</label>
-                <input type="text" id="editStaffFullName" class="form-control" placeholder="e.g. Dr. Priya Gupta" required>
+                <input type="text" id="editStaffFullName" class="form-control" placeholder="e.g. Dr. Jane Doe" required>
             </div>
 
             <div class="form-group">
                 <label for="editStaffEmail"><i class="fa-regular fa-envelope"></i> Email Address *</label>
-                <input type="email" id="editStaffEmail" class="form-control" placeholder="staff@cura.clinic" required>
+                <input type="email" id="editStaffEmail" class="form-control" placeholder="name@gmail.com" pattern=".+@gmail\.com" title="Please enter a valid @gmail.com address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editStaffPhone"><i class="fa-solid fa-phone"></i> Contact Phone Number (with Country Code)</label>
+                <input type="tel" id="editStaffPhone" class="form-control" placeholder="+91 98765 43210">
             </div>
 
             <div class="form-group" id="editStaffDoctorRelationGroup" style="display: none;">
                 <label for="editStaffAssignedDoctor"><i class="fa-solid fa-link"></i> Assigned Doctor Email *</label>
-                <input type="email" id="editStaffAssignedDoctor" class="form-control" placeholder="e.g. ashwini.joshi@cura.clinic">
+                <input type="email" id="editStaffAssignedDoctor" list="doctorDatalist" class="form-control" placeholder="e.g. doctor@gmail.com">
                 <small style="font-size: 0.75rem; color: var(--text-muted);">The assistant will strictly see patients and appointments for this physician.</small>
             </div>
 
             <div class="form-group">
                 <label for="editStaffSpecialization"><i class="fa-solid fa-stethoscope"></i> Clinical Specialization</label>
                 <input type="text" id="editStaffSpecialization" class="form-control" placeholder="e.g. Homoeopathy / Allopathy / Psychology / Clinical Triage">
+            </div>
+
+            <div style="margin: 0.9rem 0; padding: 10px 14px; background: var(--bg-subtle); border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <label for="editStaffVerified" style="margin: 0; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-user-check" style="color: var(--status-completed);"></i> Account Verification Status
+                    </label>
+                    <span style="font-size: 0.74rem; color: var(--text-muted);">Allow user to sign in without email link verification</span>
+                </div>
+                <input type="checkbox" id="editStaffVerified" style="cursor: pointer; width: 20px; height: 20px;">
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
@@ -429,14 +414,56 @@
     </div>
 </div>
 
+<!-- QUICK VERIFY DOCTOR / STAFF MODAL -->
+<div class="modal-overlay" id="quickVerifyModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fa-solid fa-user-check" style="color: #059669;"></i> Verify Doctor or Staff Member</h3>
+            <button type="button" class="btn-close-modal" onclick="closeQuickVerifyModal()">&times;</button>
+        </div>
+
+        <p style="font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 1.2rem;">
+            Verify any physician or staff account directly in Firebase without requiring them to click an email verification link. The user will be activated immediately and can log in with their password.
+        </p>
+
+        <form id="quickVerifyForm" onsubmit="handleQuickVerifySubmit(event)">
+            <div class="form-group">
+                <label for="quickVerifyStaffSelect"><i class="fa-solid fa-user-doctor"></i> Select Staff Member to Verify</label>
+                <select id="quickVerifyStaffSelect" class="form-select" onchange="handleQuickVerifySelectChange(this)">
+                    <option value="">-- Choose Doctor or Assistant from Directory --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="quickVerifyEmail"><i class="fa-regular fa-envelope"></i> Gmail Address *</label>
+                <input type="email" id="quickVerifyEmail" class="form-control" placeholder="doctor@gmail.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quickVerifyUid"><i class="fa-solid fa-fingerprint"></i> User UID (Optional / Auto-filled)</label>
+                <input type="text" id="quickVerifyUid" class="form-control" placeholder="Firebase UID">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1.2; background: #059669; border-color: #059669; color: #fff;">
+                    <i class="fa-solid fa-shield-check"></i> Verify Immediately
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeQuickVerifyModal()" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Firebase SDK Compat Libraries -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <!-- Core App Configuration & Scripts -->
-<script src="js/firebase-config.js"></script>
-<script src="js/app.js"></script>
+<script src="js/firebase-config.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 <script>
     CuraAuth.guard(['ADMIN']);
 
@@ -447,6 +474,67 @@
 
     function closeCreateUserModal() {
         document.getElementById('createUserModal').classList.remove('active');
+    }
+
+    function openQuickVerifyModal() {
+        const modal = document.getElementById('quickVerifyModal');
+        const select = document.getElementById('quickVerifyStaffSelect');
+        if (select) {
+            CuraData.fetchStaff().then(list => {
+                const unverifiedList = list.filter(s => (s.role === 'DOCTOR' || s.role === 'ASSISTANT') && !s.emailVerified && !s.adminVerified);
+                if (unverifiedList.length === 0) {
+                    select.innerHTML = '<option value="">-- All registered Doctors & Assistants are already verified! --</option>';
+                } else {
+                    select.innerHTML = '<option value="">-- Choose Unverified Doctor or Assistant --</option>' +
+                        unverifiedList.map(s => {
+                            return `<option value="${s.email}" data-uid="${s.uid || s.id || ''}" data-name="${s.fullName}" data-role="${s.role}">${s.fullName} (${s.role}) - ${s.email}</option>`;
+                        }).join('');
+                }
+            });
+        }
+        document.getElementById('quickVerifyEmail').value = '';
+        document.getElementById('quickVerifyUid').value = '';
+        modal.classList.add('active');
+    }
+
+    function closeQuickVerifyModal() {
+        document.getElementById('quickVerifyModal').classList.remove('active');
+    }
+
+    function handleQuickVerifySelectChange(selectEl) {
+        const option = selectEl.selectedOptions[0];
+        if (option && option.value) {
+            document.getElementById('quickVerifyEmail').value = option.value;
+            document.getElementById('quickVerifyUid').value = option.dataset.uid || '';
+        }
+    }
+
+    async function handleQuickVerifySubmit(e) {
+        e.preventDefault();
+        const email = document.getElementById('quickVerifyEmail').value.trim().toLowerCase();
+        const uid = document.getElementById('quickVerifyUid').value.trim();
+        const select = document.getElementById('quickVerifyStaffSelect');
+        const opt = select ? select.selectedOptions[0] : null;
+        const name = (opt && opt.dataset.name) ? opt.dataset.name : email;
+        const role = (opt && opt.dataset.role) ? opt.dataset.role : 'DOCTOR';
+
+        if (!email) {
+            showToast('Please provide an email to verify', 'error');
+            return;
+        }
+
+        try {
+            showToast(`Verifying account for "${name}" in Firebase...`, 'peach');
+            await CuraData.verifyUserByAdmin(uid, email, true, role, name);
+            showToast(`Account for "${name}" (${email}) verified in Firebase!`, 'success');
+            closeQuickVerifyModal();
+            await CuraData.fetchUsers();
+            await loadStaffDirectory();
+            await loadPatientsDirectory();
+        } catch (err) {
+            console.error("Quick verify error:", err);
+            showToast("Failed to verify: " + err.message, 'error');
+        }
     }
 
     function handleRoleChange() {
@@ -471,10 +559,21 @@
         const assignedDoctor = document.getElementById('assignedDoctorEmail').value.trim().toLowerCase();
         const specialization = document.getElementById('staffSpecialization').value.trim();
 
+        if (!email.endsWith('@gmail.com')) {
+            showToast('Staff accounts must use a valid @gmail.com address. Other providers are not accepted.', 'error');
+            return;
+        }
+
         if (role === 'ASSISTANT' && !assignedDoctor) {
             showToast('Please specify the assigned doctor email for this assistant', 'error');
             return;
         }
+
+        const autoVerify = document.getElementById('staffAutoVerify') ? document.getElementById('staffAutoVerify').checked : true;
+
+        const rawStaffPhone = document.getElementById('staffPhone') ? document.getElementById('staffPhone').value.trim() : '';
+        const staffCountryCode = document.getElementById('staffCountryCode') ? document.getElementById('staffCountryCode').value.trim() : '+91';
+        const staffFullPhone = rawStaffPhone ? `${staffCountryCode} ${rawStaffPhone}` : 'N/A';
 
         const newStaff = {
             fullName: fullName,
@@ -482,37 +581,61 @@
             role: role,
             doctorEmail: role === 'ASSISTANT' ? assignedDoctor : null,
             specialization: specialization || (role === 'DOCTOR' ? 'General' : 'Clinical Triage'),
+            phone: staffFullPhone,
+            phoneNumber: staffFullPhone,
+            emailVerified: autoVerify,
+            adminVerified: autoVerify,
             createdAt: new Date().toISOString()
         };
+        if (autoVerify) {
+            newStaff.verifiedAt = new Date().toISOString();
+        }
 
         if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady() && CuraFirebase.auth() && CuraFirebase.db()) {
+            let secondaryApp = null;
             try {
-                // Provision account in Firebase Auth
-                const cred = await CuraFirebase.auth().createUserWithEmailAndPassword(email, password);
-                newStaff.uid = cred.user.uid;
-                await CuraFirebase.db().collection('users').doc(cred.user.uid).set(newStaff);
-                await CuraFirebase.db().collection('users').doc(email).set(newStaff);
-                showToast(`Staff account for ${fullName} (${role}) created successfully!`, 'success');
+                const activeConfig = (typeof firebaseConfig !== 'undefined' && firebaseConfig)
+                    ? firebaseConfig
+                    : (firebase.apps && firebase.apps.length ? firebase.app().options : null);
+
+                if (activeConfig) {
+                    secondaryApp = firebase.initializeApp(activeConfig, "StaffProvisioner_" + Date.now());
+                    const cred = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
+                    if (!autoVerify) {
+                        await cred.user.sendEmailVerification();
+                    }
+                    newStaff.uid = cred.user.uid;
+                    await CuraFirebase.db().collection('users').doc(cred.user.uid).set(newStaff);
+                    await secondaryApp.auth().signOut();
+                    await secondaryApp.delete();
+                } else {
+                    const cred = await CuraFirebase.auth().createUserWithEmailAndPassword(email, password);
+                    if (!autoVerify) {
+                        await cred.user.sendEmailVerification();
+                    }
+                    newStaff.uid = cred.user.uid;
+                    await CuraFirebase.db().collection('users').doc(cred.user.uid).set(newStaff);
+                }
+
+                const successMsg = autoVerify
+                    ? `Staff account for ${fullName} (${role}) created & verified! They can sign in immediately.`
+                    : `Staff account for ${fullName} (${role}) created! A verification email has been sent to ${email}.`;
+                showToast(successMsg, 'success');
                 closeCreateUserModal();
                 document.getElementById('createStaffForm').reset();
-                loadStaffDirectory();
+                await CuraData.fetchUsers();
+                await loadStaffDirectory();
                 return;
             } catch (err) {
                 console.error("Firebase staff creation error:", err);
-                // If account exists in Firebase Auth, still update Firestore record
-                if (err.code === 'auth/email-already-in-use') {
-                    try {
-                        await CuraFirebase.db().collection('users').doc(email).set(newStaff, { merge: true });
-                        showToast(`Updated staff record for ${fullName} (${role})!`, 'success');
-                        closeCreateUserModal();
-                        document.getElementById('createStaffForm').reset();
-                        loadStaffDirectory();
-                        return;
-                    } catch (dbErr) {
-                        console.error(dbErr);
-                    }
+                if (secondaryApp) {
+                    try { await secondaryApp.delete(); } catch(e) {}
                 }
-                showToast(err.message, 'error');
+                if (err.code === 'auth/email-already-in-use') {
+                    showToast(`The Gmail "${email}" is already registered. Staff account already exists.`, 'error');
+                    return;
+                }
+                showToast(err.message || 'Failed to create staff account', 'error');
                 return;
             }
         }
@@ -525,41 +648,46 @@
         showToast(`Staff account for ${fullName} (${role}) added to directory!`, 'success');
         closeCreateUserModal();
         document.getElementById('createStaffForm').reset();
-        loadStaffDirectory();
+        await loadStaffDirectory();
     }
 
     async function loadStaffDirectory() {
         const tbody = document.getElementById('staffDirectoryBody');
-        let staffList = [];
+        if (!tbody) return;
 
-        if (typeof CuraFirebase !== 'undefined' && CuraFirebase.isReady() && CuraFirebase.db()) {
-            try {
-                const snapshot = await CuraFirebase.db().collection('users').get();
-                staffList = snapshot.docs.map(doc => doc.data()).filter(u => u.role === 'DOCTOR' || u.role === 'ASSISTANT');
-            } catch (e) {
-                console.warn(e);
-            }
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;"><i class="fa-solid fa-spinner fa-spin"></i> Loading staff accounts from Firebase...</td></tr>`;
+
+        let staffList = [];
+        try {
+            staffList = await CuraData.fetchStaff();
+        } catch (e) {
+            console.warn("Could not fetch staff from CuraData:", e);
         }
 
-        // Merge with default seed staff
-        const defaults = [
-            { fullName: "Dr. Ashwini Joshi", role: "DOCTOR", email: "ashwini.joshi@cura.clinic", specialization: "Homoeopathy", doctorEmail: null },
-            { fullName: "Dr. Aarav Sharma", role: "DOCTOR", email: "aarav.sharma@cura.clinic", specialization: "Allopathy", doctorEmail: null },
-            { fullName: "Dr. Priya Gupta", role: "DOCTOR", email: "priya.gupta@cura.clinic", specialization: "Psychology", doctorEmail: null },
-            { fullName: "Sister Maya Patel", role: "ASSISTANT", email: "assistant@cura.clinic", specialization: "Clinical Triage", doctorEmail: "ashwini.joshi@cura.clinic" }
-        ];
-        const localStaff = JSON.parse(localStorage.getItem('cura_staff_accounts') || '[]');
-        staffList = staffList.concat(defaults).concat(localStaff);
+        // If offline fallback with no Firebase connection, check localStorage
+        if ((!staffList || staffList.length === 0) && (typeof CuraFirebase === 'undefined' || !CuraFirebase.isReady())) {
+            staffList = JSON.parse(localStorage.getItem('cura_staff_accounts') || '[]');
+        }
 
-        const seen = new Set();
-        staffList = staffList.filter(s => {
-            if (!s.email || seen.has(s.email.toLowerCase())) return false;
-            seen.add(s.email.toLowerCase());
-            return true;
-        });
+        if (!staffList || staffList.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        <i class="fa-solid fa-user-doctor" style="font-size: 1.8rem; margin-bottom: 8px; display: block; opacity: 0.5;"></i>
+                        No staff accounts found in Firebase.<br>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Click <strong>"+ New Staff Account"</strong> above to provision a physician or triage assistant.</span>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
 
-        const deletedStaff = JSON.parse(localStorage.getItem('cura_deleted_staff') || '[]');
-        staffList = staffList.filter(s => !deletedStaff.includes((s.email || '').toLowerCase()));
+        // Populate doctor datalist for assistant assignment
+        const datalist = document.getElementById('doctorDatalist');
+        if (datalist) {
+            const doctors = staffList.filter(s => s.role === 'DOCTOR');
+            datalist.innerHTML = doctors.map(d => `<option value="${d.email}">${d.fullName} (${d.specialization || 'Physician'})</option>`).join('');
+        }
 
         tbody.innerHTML = staffList.map(s => {
             const safeName = (s.fullName || 'Staff Member').replace(/'/g, "\\'");
@@ -567,26 +695,58 @@
             const safeRole = (s.role || 'DOCTOR').replace(/'/g, "\\'");
             const safeSpec = (s.specialization || '').replace(/'/g, "\\'");
             const safeDocEmail = (s.doctorEmail || '').replace(/'/g, "\\'");
-            const safeUid = (s.uid || '').replace(/'/g, "\\'");
+            const safeUid = (s.uid || s.id || '').replace(/'/g, "\\'");
+            const safePhone = (s.phone || s.phoneNumber || 'N/A').replace(/'/g, "\\'");
+            const isAdmin = s.role === 'ADMIN';
+            const isDoctorOrAssistant = s.role === 'DOCTOR' || s.role === 'ASSISTANT';
+            const isVerified = isAdmin || !!(s.emailVerified || s.adminVerified);
+
+            let roleBadgeClass = 'status-booked';
+            if (s.role === 'ADMIN') roleBadgeClass = 'status-report-attached';
+            else if (s.role === 'ASSISTANT') roleBadgeClass = 'status-ongoing';
+
+            let doctorInfo = '<span style="color: var(--text-muted); font-size: 0.8rem;">Independent Physician</span>';
+            if (s.role === 'ASSISTANT') {
+                doctorInfo = s.doctorEmail 
+                    ? `<span class="followup-pill"><i class="fa-solid fa-link"></i> ${s.doctorEmail}</span>` 
+                    : '<span style="color: var(--text-muted); font-size: 0.8rem;">Unassigned</span>';
+            } else if (s.role === 'ADMIN') {
+                doctorInfo = '<span style="color: var(--palette-peach, #EE7A51); font-size: 0.8rem; font-weight: 600;"><i class="fa-solid fa-shield-halved"></i> Clinic Administrator</span>';
+            }
+
+            const verificationBadge = isVerified
+                ? '<span class="status-badge status-completed"><i class="fa-solid fa-circle-check"></i> Verified</span>'
+                : '<span class="status-badge status-ongoing" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);"><i class="fa-solid fa-clock"></i> Unverified</span>';
+
+            // Show verify button ONLY for unverified doctors and assistants. Never for Admin or verified staff.
+            let verifyBtn = '';
+            if (isDoctorOrAssistant && !isVerified) {
+                const roleLabel = s.role === 'DOCTOR' ? 'Doctor' : 'Assistant';
+                verifyBtn = `
+                    <button class="btn btn-sm" style="background: #059669; color: #fff; border: 1px solid #059669; margin-right: 4px; padding: 4px 10px; font-size: 0.78rem; font-weight: 600;" onclick="handleAdminDirectVerify('${safeUid}', '${safeEmail}', '${safeName}', '${safeRole}')" title="Verify ${roleLabel} without sending email">
+                        <i class="fa-solid fa-user-check"></i> Verify ${roleLabel}
+                    </button>
+                `;
+            }
 
             return `
             <tr>
-                <td><strong>${s.fullName || 'Staff Member'}</strong></td>
                 <td>
-                    <span class="status-badge ${s.role === 'DOCTOR' ? 'status-booked' : 'status-ongoing'}">
+                    <strong>${s.fullName || 'Staff Member'}</strong>
+                    ${(safePhone && safePhone !== 'N/A') ? `<div style="font-size: 0.74rem; color: var(--text-muted);"><i class="fa-solid fa-phone" style="font-size: 0.68rem; color: var(--accent);"></i> ${safePhone}</div>` : ''}
+                </td>
+                <td>
+                    <span class="status-badge ${roleBadgeClass}">
                         ${s.role}
                     </span>
                 </td>
                 <td><code>${s.email}</code></td>
                 <td>${s.specialization || '—'}</td>
-                <td>
-                    ${s.role === 'ASSISTANT' && s.doctorEmail 
-                        ? `<span class="followup-pill"><i class="fa-solid fa-link"></i> ${s.doctorEmail}</span>` 
-                        : '<span style="color: var(--text-muted); font-size: 0.8rem;">Independent Physician</span>'}
-                </td>
-                <td><span class="status-badge status-completed"><i class="fa-solid fa-check"></i> Active</span></td>
+                <td>${doctorInfo}</td>
+                <td>${verificationBadge}</td>
                 <td style="text-align: right; white-space: nowrap;">
-                    <button class="btn btn-secondary btn-sm" onclick="openEditStaffModal('${safeUid}', '${safeEmail}', '${safeName}', '${safeRole}', '${safeSpec}', '${safeDocEmail}')" title="Edit Staff Member">
+                    ${verifyBtn}
+                    <button class="btn btn-secondary btn-sm" onclick="openEditStaffModal('${safeUid}', '${safeEmail}', '${safeName}', '${safeRole}', '${safeSpec}', '${safeDocEmail}', ${isVerified}, '${safePhone}')" title="Edit Staff Member">
                         <i class="fa-solid fa-pen-to-square"></i> Edit
                     </button>
                     <button class="btn btn-sm" style="background-color: var(--danger-light); color: var(--danger); border: 1px solid var(--danger-border); margin-left: 4px;" onclick="confirmDeleteStaff('${safeUid}', '${safeEmail}', '${safeName}', '${safeRole}')" title="Delete Staff Account">
@@ -598,7 +758,7 @@
         }).join('');
     }
 
-    function openEditStaffModal(uid, email, name, role, spec, doctorEmail) {
+    function openEditStaffModal(uid, email, name, role, spec, doctorEmail, isVerified = false, phone = '') {
         document.getElementById('editStaffUid').value = uid || '';
         document.getElementById('editStaffOrigEmail').value = email || '';
         document.getElementById('editStaffRoleDisplay').value = (role || 'DOCTOR') + ' (' + (role === 'DOCTOR' ? 'Physician' : 'Triage Assistant') + ')';
@@ -606,6 +766,8 @@
         document.getElementById('editStaffFullName').value = name || '';
         document.getElementById('editStaffEmail').value = email || '';
         document.getElementById('editStaffSpecialization').value = spec || '';
+        document.getElementById('editStaffVerified').checked = !!isVerified;
+        document.getElementById('editStaffPhone').value = (phone && phone !== 'N/A') ? phone : '';
 
         const relationGroup = document.getElementById('editStaffDoctorRelationGroup');
         const doctorInput = document.getElementById('editStaffAssignedDoctor');
@@ -634,7 +796,14 @@
         const newName = document.getElementById('editStaffFullName').value.trim();
         const newEmail = document.getElementById('editStaffEmail').value.trim().toLowerCase();
         const newSpec = document.getElementById('editStaffSpecialization').value.trim();
+        const newPhone = document.getElementById('editStaffPhone').value.trim();
         const assignedDoctor = document.getElementById('editStaffAssignedDoctor').value.trim().toLowerCase();
+        const isVerified = document.getElementById('editStaffVerified').checked;
+
+        if (!newEmail.endsWith('@gmail.com')) {
+            showToast('Staff email must be a valid @gmail.com address', 'error');
+            return;
+        }
 
         if (!newName || !newEmail) {
             showToast('Please provide both full name and email', 'error');
@@ -652,7 +821,11 @@
             email: newEmail,
             role: role,
             specialization: newSpec || (role === 'DOCTOR' ? 'General' : 'Clinical Triage'),
-            doctorEmail: role === 'ASSISTANT' ? assignedDoctor : null
+            phone: newPhone || 'N/A',
+            phoneNumber: newPhone || 'N/A',
+            doctorEmail: role === 'ASSISTANT' ? assignedDoctor : null,
+            emailVerified: isVerified,
+            adminVerified: isVerified
         };
 
         try {
@@ -687,19 +860,34 @@
         const tbody = document.getElementById('patientsDirectoryBody');
         if (!tbody) return;
 
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;"><i class="fa-solid fa-spinner fa-spin"></i> Loading patients directory from Firebase...</td></tr>`;
+
         try {
             const patients = await CuraData.fetchPatients();
 
-            if (patients.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No registered patients found.</td></tr>`;
+            if (!patients || patients.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            <i class="fa-solid fa-hospital-user" style="font-size: 1.8rem; margin-bottom: 8px; display: block; opacity: 0.5;"></i>
+                            No registered patients found in Firebase.<br>
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);">Patients who sign up with Gmail will appear here automatically.</span>
+                        </td>
+                    </tr>
+                `;
                 return;
             }
 
             tbody.innerHTML = patients.map(p => {
-                const safeName = (p.fullName || '').replace(/'/g, "\\'");
+                const safeName = (p.fullName || 'Patient').replace(/'/g, "\\'");
                 const safeEmail = (p.email || '').replace(/'/g, "\\'");
-                const safePhone = (p.phone || '').replace(/'/g, "\\'");
-                const safeUid = (p.uid || '').replace(/'/g, "\\'");
+                const safePhone = (p.phone || p.phoneNumber || 'N/A').replace(/'/g, "\\'");
+                const safeUid = (p.uid || p.id || '').replace(/'/g, "\\'");
+                const isVerified = !!(p.emailVerified || p.adminVerified);
+
+                const verificationBadge = isVerified
+                    ? '<span class="status-badge status-completed"><i class="fa-solid fa-circle-check"></i> Verified</span>'
+                    : '<span class="status-badge status-ongoing" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);"><i class="fa-solid fa-clock"></i> Unverified</span>';
 
                 return `
                     <tr>
@@ -707,8 +895,9 @@
                             <strong><i class="fa-regular fa-user" style="color: var(--primary); margin-right: 6px;"></i>${p.fullName}</strong>
                         </td>
                         <td><code>${p.email}</code></td>
-                        <td>${p.phone !== 'N/A' ? `<i class="fa-solid fa-phone" style="font-size: 0.75rem; color: var(--accent);"></i> ${p.phone}` : '<span style="color: var(--text-muted);">—</span>'}</td>
-                        <td><span style="font-size: 0.75rem; color: var(--text-muted);">${(p.uid || '').substring(0, 10)}...</span></td>
+                        <td>${(safePhone && safePhone !== 'N/A') ? `<i class="fa-solid fa-phone" style="font-size: 0.75rem; color: var(--accent);"></i> ${safePhone}` : '<span style="color: var(--text-muted);">—</span>'}</td>
+                        <td>${verificationBadge}</td>
+                        <td><span style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace;">${safeUid.substring(0, 12)}...</span></td>
                         <td style="text-align: right; white-space: nowrap;">
                             <button class="btn btn-secondary btn-sm" onclick="openEditPatientModal('${safeUid}', '${safeEmail}', '${safeName}', '${safePhone}')" title="Edit Contact Information">
                                 <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -722,7 +911,7 @@
             }).join('');
         } catch (err) {
             console.error("Error loading patients directory:", err);
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 1rem;">Failed to load patients list.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--danger); padding: 1.5rem;">Failed to load patients list: ${err.message}</td></tr>`;
         }
     }
 
@@ -788,6 +977,20 @@
         } catch (err) {
             console.error("Error deleting patient:", err);
             showToast("Error deleting patient: " + err.message, 'error');
+        }
+    }
+
+    async function handleAdminDirectVerify(uid, email, name, role) {
+        try {
+            showToast(`Verifying account for "${name}" in Firebase...`, 'peach');
+            await CuraData.verifyUserByAdmin(uid, email, true, role, name);
+            showToast(`Account "${name}" has been verified successfully!`, 'success');
+            await CuraData.fetchUsers();
+            await loadStaffDirectory();
+            await loadPatientsDirectory();
+        } catch (err) {
+            console.error("Direct verify error:", err);
+            showToast("Failed to verify account: " + err.message, 'error');
         }
     }
 
@@ -938,7 +1141,10 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (typeof CuraFirebase !== 'undefined' && typeof CuraFirebase.waitForAuth === 'function') {
+            await CuraFirebase.waitForAuth();
+        }
         loadStaffDirectory();
         loadPatientsDirectory();
         loadMasterAppointments();

@@ -55,18 +55,16 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
                 <div class="form-group">
                     <label for="patientName"><i class="fa-regular fa-user"></i> Full Name *</label>
-                    <input type="text" id="patientName" class="form-control" placeholder="e.g. Keya Joshi" required>
+                    <input type="text" id="patientName" class="form-control" placeholder="Enter your full name" required>
                 </div>
                 <div class="form-group">
                     <label for="patientPhone"><i class="fa-solid fa-phone"></i> Mobile Phone</label>
-                    <input type="tel" id="patientPhone" class="form-control" placeholder="+91 98230 12345" value="+91 98230 67890">
+                    <input type="tel" id="patientPhone" class="form-control" placeholder="+91 98000 00000">
                 </div>
                 <div class="form-group">
                     <label for="doctorSelect"><i class="fa-solid fa-user-doctor"></i> Select Physician *</label>
                     <select id="doctorSelect" class="form-select" required>
-                        <option value="Dr. Ashwini Joshi" data-email="ashwini.joshi@cura.clinic" data-spec="Homoeopathy">Dr. Ashwini Joshi (Homoeopathy Specialist)</option>
-                        <option value="Dr. Aarav Sharma" data-email="aarav.sharma@cura.clinic" data-spec="Allopathy">Dr. Aarav Sharma (Allopathy &amp; General Medicine)</option>
-                        <option value="Dr. Priya Gupta" data-email="priya.gupta@cura.clinic" data-spec="Psychology">Dr. Priya Gupta (Psychology &amp; Mental Wellness)</option>
+                        <option value="" disabled selected>Loading registered physicians...</option>
                     </select>
                 </div>
             </div>
@@ -75,7 +73,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 0.5rem; padding-top: 0.8rem; border-top: 1px dashed var(--border-color);">
                 <div class="form-group">
                     <label for="patientAge"><i class="fa-solid fa-cake-candles"></i> Age (Years)</label>
-                    <input type="number" id="patientAge" class="form-control" placeholder="e.g. 28" min="1" max="120" value="28">
+                    <input type="number" id="patientAge" class="form-control" placeholder="e.g. 28" min="1" max="120">
                 </div>
                 <div class="form-group">
                     <label for="patientGender"><i class="fa-solid fa-venus-mars"></i> Gender</label>
@@ -106,12 +104,12 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
                 <div class="form-group">
                     <label for="patientAllergies"><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Known Allergies &amp; Drug Reactions</label>
-                    <input type="text" id="patientAllergies" class="form-control" placeholder="e.g. Penicillin, Sulfa, Dust, Pollen, NSAIDs (or None)" value="Penicillin (mild hives), Dust">
+                    <input type="text" id="patientAllergies" class="form-control" placeholder="e.g. Penicillin, Sulfa, Dust, Pollen, NSAIDs (or None)">
                     <small style="font-size: 0.74rem; color: var(--text-muted);">Crucial for the physician before prescribing medications or remedies.</small>
                 </div>
                 <div class="form-group">
                     <label for="patientChronic"><i class="fa-solid fa-heart-pulse" style="color: var(--warning);"></i> Chronic Medical Conditions</label>
-                    <input type="text" id="patientChronic" class="form-control" placeholder="e.g. Hypertension, Diabetes, Asthma, Migraine, Thyroid (or None)" value="Migraine">
+                    <input type="text" id="patientChronic" class="form-control" placeholder="e.g. Hypertension, Diabetes, Asthma, Migraine, Thyroid (or None)">
                     <small style="font-size: 0.74rem; color: var(--text-muted);">Existing medical conditions you are currently managing.</small>
                 </div>
             </div>
@@ -343,8 +341,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <!-- Core App Configuration & Scripts -->
-<script src="js/firebase-config.js"></script>
-<script src="js/app.js"></script>
-<script src="js/patient.js"></script>
+<script src="js/firebase-config.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
+<script src="js/patient.js?v=6"></script>
 </body>
 </html>

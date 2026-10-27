@@ -17,8 +17,7 @@ public class AppointmentService {
     private final Map<String, Appointment> appointmentsById = new ConcurrentHashMap<>();
 
     public AppointmentService() {
-        // Seed initial clinic appointments
-        seedInitialAppointments();
+        // Operational in-memory storage for appointments
     }
 
     private void seedInitialAppointments() {

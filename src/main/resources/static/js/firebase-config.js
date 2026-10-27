@@ -36,5 +36,40 @@ window.CuraFirebase = {
     isReady: () => firebaseInitialized && typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0,
     config: firebaseConfig,
     auth: () => (typeof firebase !== 'undefined' ? firebase.auth() : null),
-    db: () => (typeof firebase !== 'undefined' ? firebase.firestore() : null)
+    db: () => (typeof firebase !== 'undefined' ? firebase.firestore() : null),
+    waitForAuth: () => {
+        return new Promise((resolve) => {
+            if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) {
+                resolve(null);
+                return;
+            }
+            try {
+                const auth = firebase.auth();
+                if (!auth) {
+                    resolve(null);
+                    return;
+                }
+                if (auth.currentUser) {
+                    resolve(auth.currentUser);
+                    return;
+                }
+                let resolved = false;
+                const unsubscribe = auth.onAuthStateChanged((user) => {
+                    if (!resolved) {
+                        resolved = true;
+                        unsubscribe();
+                        resolve(user);
+                    }
+                });
+                setTimeout(() => {
+                    if (!resolved) {
+                        resolved = true;
+                        resolve(auth.currentUser);
+                    }
+                }, 1800);
+            } catch (err) {
+                resolve(null);
+            }
+        });
+    }
 };

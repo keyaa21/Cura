@@ -67,33 +67,33 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <div class="form-group">
                             <label for="vitalsBP"><i class="fa-solid fa-gauge"></i> Blood Pressure</label>
-                            <input type="text" id="vitalsBP" class="form-control" placeholder="120/80" value="120/80">
+                            <input type="text" id="vitalsBP" class="form-control" placeholder="e.g. 120/80">
                         </div>
                         <div class="form-group">
                             <label for="vitalsTemp"><i class="fa-solid fa-temperature-half"></i> Temp (°F)</label>
-                            <input type="number" step="0.1" id="vitalsTemp" class="form-control" placeholder="98.6" value="98.6">
+                            <input type="number" step="0.1" id="vitalsTemp" class="form-control" placeholder="e.g. 98.6">
                         </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <div class="form-group">
                             <label for="vitalsPulse"><i class="fa-solid fa-heart"></i> Pulse (bpm)</label>
-                            <input type="number" id="vitalsPulse" class="form-control" placeholder="72" value="72">
+                            <input type="number" id="vitalsPulse" class="form-control" placeholder="e.g. 72">
                         </div>
                         <div class="form-group">
                             <label for="vitalsOxygen"><i class="fa-solid fa-lungs"></i> SpO2 (%)</label>
-                            <input type="number" id="vitalsOxygen" class="form-control" placeholder="99" value="99">
+                            <input type="number" id="vitalsOxygen" class="form-control" placeholder="e.g. 98">
                         </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <div class="form-group">
                             <label for="vitalsRespRate"><i class="fa-solid fa-wind"></i> Resp Rate (/min)</label>
-                            <input type="number" id="vitalsRespRate" class="form-control" placeholder="16" value="16">
+                            <input type="number" id="vitalsRespRate" class="form-control" placeholder="e.g. 16">
                         </div>
                         <div class="form-group">
                             <label for="vitalsGlucose"><i class="fa-solid fa-droplet" style="color: var(--danger);"></i> Blood Sugar (mg/dL)</label>
-                            <input type="number" id="vitalsGlucose" class="form-control" placeholder="e.g. 95" value="95">
+                            <input type="number" id="vitalsGlucose" class="form-control" placeholder="e.g. 95">
                         </div>
                     </div>
 
@@ -101,17 +101,17 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <div class="form-group">
                             <label for="vitalsHeight"><i class="fa-solid fa-ruler-vertical"></i> Height (cm)</label>
-                            <input type="number" id="vitalsHeight" class="form-control" placeholder="165" value="165" oninput="calculateTriageBMI()">
+                            <input type="number" id="vitalsHeight" class="form-control" placeholder="e.g. 165" oninput="calculateTriageBMI()">
                         </div>
                         <div class="form-group">
                             <label for="vitalsWeight"><i class="fa-solid fa-weight-scale"></i> Weight (kg)</label>
-                            <input type="number" id="vitalsWeight" class="form-control" placeholder="60" value="60" oninput="calculateTriageBMI()">
+                            <input type="number" id="vitalsWeight" class="form-control" placeholder="e.g. 60" oninput="calculateTriageBMI()">
                         </div>
                     </div>
 
                     <div style="margin-bottom: 0.6rem; padding: 6px 10px; background: var(--bg-app); border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600;">CALCULATED BMI:</span>
-                        <span id="triageBmiBadge" style="font-size: 0.85rem; font-weight: 600; color: var(--primary);">22.0 kg/m² (Normal)</span>
+                        <span id="triageBmiBadge" style="font-size: 0.85rem; font-weight: 600; color: var(--primary);">—</span>
                     </div>
 
                     <!-- Pain Scale (1-10) -->
@@ -153,12 +153,19 @@
                 <form id="walkinForm" onsubmit="handleWalkInSubmit(event)">
                     <div class="form-group">
                         <label for="walkinName">Patient Name *</label>
-                        <input type="text" id="walkinName" class="form-control" placeholder="e.g. Rajesh Patil" required>
+                        <input type="text" id="walkinName" class="form-control" placeholder="Enter patient name" required>
                     </div>
 
                     <div class="form-group">
                         <label for="walkinPhone">Phone Number</label>
-                        <input type="tel" id="walkinPhone" class="form-control" placeholder="+91 98230 00000">
+                        <input type="tel" id="walkinPhone" class="form-control" placeholder="+91 98000 00000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="walkinDoctor"><i class="fa-solid fa-user-doctor"></i> Attending Physician *</label>
+                        <select id="walkinDoctor" class="form-select" required>
+                            <option value="">Loading physicians...</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -298,8 +305,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <!-- Core App Configuration & Scripts -->
-<script src="js/firebase-config.js"></script>
-<script src="js/app.js"></script>
-<script src="js/assistant.js"></script>
+<script src="js/firebase-config.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
+<script src="js/assistant.js?v=6"></script>
 </body>
 </html>

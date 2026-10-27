@@ -20,7 +20,6 @@ public class PrescriptionService {
 
     public PrescriptionService(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
-        seedPrescriptions();
     }
 
     private void seedPrescriptions() {

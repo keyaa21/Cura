@@ -17,13 +17,7 @@ public class UserService {
     private final Map<String, User> usersById = new ConcurrentHashMap<>();
 
     public UserService() {
-        // Seed default clinic staff & sample users
-        registerSeedUser("Dr. Ashwini Joshi", "ashwini.joshi@cura.clinic", "password123", Role.DOCTOR, "+91 9823012345", "Homoeopathy");
-        registerSeedUser("Dr. Aarav Sharma", "aarav.sharma@cura.clinic", "password123", Role.DOCTOR, "+91 9823023456", "Allopathy");
-        registerSeedUser("Dr. Priya Gupta", "priya.gupta@cura.clinic", "password123", Role.DOCTOR, "+91 9823034567", "Psychology");
-        registerSeedUser("Sister Maya Patel", "assistant@cura.clinic", "password123", Role.ASSISTANT, "+91 9823045678", "Clinical Triage");
-        registerSeedUser("Admin Cura", "admin@cura.clinic", "password123", Role.ADMIN, "+91 9823056789", "Administration");
-        registerSeedUser("Keya Joshi", "keya@example.com", "password123", Role.PATIENT, "+91 9823067890", null);
+        // Operational storage for registered clinic accounts
     }
 
     private void registerSeedUser(String name, String email, String password, Role role, String phone, String spec) {
