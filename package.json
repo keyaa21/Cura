@@ -1,0 +1,12 @@
+{
+  "name": "cura",
+  "version": "1.0.0",
+  "description": "CURA Clinical Management System",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.154.0"
+  }
+}
